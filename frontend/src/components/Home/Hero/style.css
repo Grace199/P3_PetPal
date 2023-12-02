@@ -1,0 +1,37 @@
+.custom-radio-select input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+}
+
+.custom-radio-select input[type="radio"]:checked + label {
+    font-weight: bold;
+}
+
+select {    
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+}
+
+.form-container {
+    width: calc(100% - 500px);
+}
+
+@media only screen and (max-width: 1280px){
+    .form-container {
+        width: calc(100% - 100px);
+    }
+}
+
+@media only screen and (max-width: 768px){
+    .form-container {
+        width: calc(100% - 40px);
+    }
+}
+
+select > option{
+    color: #030711;
+}
