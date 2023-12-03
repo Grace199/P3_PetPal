@@ -1,7 +1,29 @@
-import React from 'react'
+import React, { useState } from 'react'
 import backdrop from '../../../assets/images/Home/heroBanner.jpg';
 import './style.css';
-const index = () => {
+import { useNavigate } from "react-router-dom";
+
+
+const Index = () => {
+    let navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        animal: 'Dog',
+        breed: null,
+        city: null,
+        age: null,
+    })
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const {animal, breed, city, age} = formData;
+        navigate(`/petlistings?animal=${animal}${breed ? `&breed=${breed}` : ''}${city ? `&city=${city}` : ''}${age ? `&age=${age}` : ''}`)
+    }
+
     return (
         <div className="w-full max-md:h-[80vh] h-[70vh] bg-black relative flex justify-center items-center flex-col">
             <img
@@ -18,16 +40,17 @@ const index = () => {
                 </h2>
             </div>
 
-            <form className="flex justify-center flex-col absolute bottom-2 md:bottom-12 w-full form-container gap-5 max-md:gap-2" action='/search'>
+            <form className="flex justify-center flex-col absolute bottom-2 md:bottom-12 w-full form-container gap-5 max-md:gap-2" onSubmit={handleSubmit}>
                 <div className="text-background flex gap-7 bg-primary p-2 px-5 rounded-xl max-md:gap-2 max-md:justify-center max-md:text-sm">
                     <label className="max-md:hidden">Choose a category: </label>
                     <div className="custom-radio-select flex gap-3 max-md:gap-1">
                         <input
                             type="radio"
                             id="Dogs"
-                            name="searchType"
-                            value="Dogs"
+                            name="animal"
+                            value="Dog"
                             defaultChecked
+                            onChange={handleInputChange}
                         />
                         <label htmlFor="Dogs" className="cursor-pointer hover:text-[#d2d2d2]">
                             Dogs
@@ -36,8 +59,9 @@ const index = () => {
                         <input
                             type="radio"
                             id="Cats"
-                            name="searchType"
-                            value="Cats"
+                            name="animal"
+                            value="Cat"
+                            onChange={handleInputChange}
                         />
                         <label htmlFor="Cats" className="cursor-pointer hover:text-[#d2d2d2]">
                             Cats
@@ -46,8 +70,9 @@ const index = () => {
                         <input
                             type="radio"
                             id="Others"
-                            name="searchType"
-                            value="Others"
+                            name="animal"
+                            value="Other"
+                            onChange={handleInputChange}
                         />
                         <label htmlFor="Others" className="cursor-pointer hover:text-[#d2d2d2]">
                             Others
@@ -61,6 +86,7 @@ const index = () => {
                         className="bg-[#727272ab] text-center col-span-2 py-6 rounded-xl border border-background placeholder-[#ffffffce] cursor-pointer hover:bg-[#ffffff87] focus:outline-none"
                         type='text'
                         placeholder='Enter Breed'
+                        onChange={handleInputChange}
                     />
 
                     <input
@@ -69,6 +95,7 @@ const index = () => {
                         className="bg-[#727272ab] text-center col-span-2 py-6 rounded-xl border border-background placeholder-[#ffffffce] cursor-pointer hover:bg-[#ffffff87] focus:outline-none"
                         type='text'
                         placeholder='Enter City'
+                        onChange={handleInputChange}
                     />
 
                     <input
@@ -77,12 +104,13 @@ const index = () => {
                         className="bg-[#727272ab] text-center col-span-2 md:col-span-1 py-6 rounded-xl border border-background placeholder-[#ffffffce] cursor-pointer hover:bg-[#ffffff87] focus:outline-none"
                         type='text'
                         placeholder='Enter Age'
+                        onChange={handleInputChange}
                     />
-                    <input value={"Search Now"} type='submit' to="/search" className="bg-accent-100 text-center col-span-2 md:col-span-1 py-6 rounded-xl border border-background cursor-pointer hover:bg-accent-200"/>
+                    <input value={"Search Now"} type='submit' className="bg-accent-100 text-center col-span-2 md:col-span-1 py-6 rounded-xl border border-background cursor-pointer hover:bg-accent-200"/>
                 </div>
             </form>
         </div>
     )
 }
 
-export default index
+export default Index
