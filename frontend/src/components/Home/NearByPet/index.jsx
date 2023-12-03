@@ -18,7 +18,7 @@ const index = () => {
 
             <Link
                 className="bg-accent-100 text-background p-5 mt-14 rounded-2xl shadow-sm hover:scale-105 duration-300 active:scale-95"
-                to="/searchPage"
+                to="/petlistings"
             >
                 See more friends
             </Link>

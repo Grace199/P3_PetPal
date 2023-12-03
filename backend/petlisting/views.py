@@ -36,10 +36,14 @@ class PetListingListCreate(ListCreateAPIView):
         queryset = PetListing.objects.all()
 
         # Take in query parameters for pet listinng
-        shelter_id = self.request.query_params.get('shelter', None)
+
+        #### Changed from id to name
+        # shelter_id = self.request.query_params.get('shelter', None)
+        shelter_name = self.request.query_params.get('shelter', None)
         status = self.request.query_params.get('status', 'AVAILABLE')
 
         # Take in query parameters for pet
+        animal = self.request.query_params.get('animal', None)
         breed = self.request.query_params.get('breed', None)
         age = self.request.query_params.get('age', None)
         size = self.request.query_params.get('size', None)
@@ -50,13 +54,19 @@ class PetListingListCreate(ListCreateAPIView):
         sort = self.request.query_params.get('sort', 'name')
 
         # Base on the query parameters, sort and filter accordingly
-        if shelter_id:
-            shelter = get_object_or_404(Shelter, id=shelter_id)
+        if shelter_name:
+            ### Query by shelter name instead
+            account = get_object_or_404(Account, name=shelter_name)
+            shelter = get_object_or_404(Shelter, account=account)
+            # shelter = get_object_or_404(Shelter, id=shelter_id)
             queryset = queryset.filter(shelter=shelter)
 
         if status:
             queryset = queryset.filter(status__iexact=status)
 
+        ###### Need to check of animal filter work
+        if animal:
+            queryset = queryset.filter(pet__animal_type__iexact=animal)
         if breed:
             queryset = queryset.filter(pet__breed__iexact=breed)
         if age:

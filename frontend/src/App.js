@@ -3,6 +3,7 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Layout from './components/Layout';
 import PetDetail from './pages/PetDetail'
+import PetListings from './pages/PetListings'
 import './App.css';
 
 
@@ -12,7 +13,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="petDetail/:petID" element={<PetDetail />} />
+          <Route path="petdetail/:petID" element={<PetDetail />} />
+          <Route path="petlistings/" element={<PetListings />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

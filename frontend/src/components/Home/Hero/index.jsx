@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 const Index = () => {
     let navigate = useNavigate();
     const [formData, setFormData] = useState({
-        animal: 'Dog',
+        animal: 'dog',
         breed: null,
         city: null,
         age: null,
@@ -21,7 +21,7 @@ const Index = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const {animal, breed, city, age} = formData;
-        navigate(`/petlistings?animal=${animal}${breed ? `&breed=${breed}` : ''}${city ? `&city=${city}` : ''}${age ? `&age=${age}` : ''}`)
+        navigate(`/petlistings?animal_type=${animal}${breed ? `&breed=${breed}` : ''}${city ? `&city=${city}` : ''}${age ? `&age=${age}` : ''}`)
     }
 
     return (
@@ -48,7 +48,7 @@ const Index = () => {
                             type="radio"
                             id="Dogs"
                             name="animal"
-                            value="Dog"
+                            value="dog"
                             defaultChecked
                             onChange={handleInputChange}
                         />
@@ -60,7 +60,7 @@ const Index = () => {
                             type="radio"
                             id="Cats"
                             name="animal"
-                            value="Cat"
+                            value="cat"
                             onChange={handleInputChange}
                         />
                         <label htmlFor="Cats" className="cursor-pointer hover:text-[#d2d2d2]">
@@ -71,7 +71,7 @@ const Index = () => {
                             type="radio"
                             id="Others"
                             name="animal"
-                            value="Other"
+                            value="other"
                             onChange={handleInputChange}
                         />
                         <label htmlFor="Others" className="cursor-pointer hover:text-[#d2d2d2]">
