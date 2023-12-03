@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Index = ({openFilter, setOpenFilter, handleInputChange, handleSubmit}) => {
+const Index = ({ openFilter, setOpenFilter, handleInputChange, handleSubmit, shelter }) => {
     return (
         <div className={openFilter ? 'block' : 'hidden'}>
             <form
@@ -81,13 +81,15 @@ const Index = ({openFilter, setOpenFilter, handleInputChange, handleSubmit}) => 
                         </select>
                     </div>
                 </div>
-
-                <div className="p-5 border-b border-light-gray">
-                    <div className="flex justify-between">
-                        <p className="text-xl self-center">Shelter</p>
-                        <input type='text' name='shelter' className='p-2 rounded-md w-1/2' onChange={handleInputChange} />
+                {
+                    !shelter && <div className="p-5 border-b border-light-gray">
+                        <div className="flex justify-between">
+                            <p className="text-xl self-center">Shelter</p>
+                            <input type='text' name='shelter' className='p-2 rounded-md w-1/2' onChange={handleInputChange} />
+                        </div>
                     </div>
-                </div>
+                }
+
 
                 <div className="p-5 border-b border-light-gray">
                     <div className="flex justify-between">

@@ -4,6 +4,7 @@ import NotFound from './pages/NotFound';
 import Layout from './components/Layout';
 import PetDetail from './pages/PetDetail'
 import PetListings from './pages/PetListings'
+import MyListings from './pages/MyListings'
 import './App.css';
 
 
@@ -15,6 +16,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="petdetail/:petID" element={<PetDetail />} />
           <Route path="petlistings/" element={<PetListings />} />
+          <Route path="mylistings/" element={<MyListings />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
