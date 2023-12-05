@@ -1,11 +1,13 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { ajax } from '../../util/ajax';
+import { UserContext } from '../../contexts/UserContext';
 
 const Login = () => {
     const [error, setError] = useState("");
     const navigate = useNavigate();
+    const { setId } = useContext(UserContext);
 
     function handle_submit(event) {
         let data = new FormData(event.target);
@@ -29,7 +31,7 @@ const Login = () => {
                         .then(userJson => {
                             localStorage.setItem('userID', userJson.id);
                             localStorage.setItem('isSeeker', userJson.is_seeker);
-
+                            setId(userJson.id);
                             navigate('/');
                         })
                         .catch(error => {

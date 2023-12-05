@@ -9,13 +9,15 @@ class CurrentUserDetail(APIView):
     def get(self, request):
         is_seeker = False
         account = request.user
-        user = Seeker.objects.get(account=account)
-        if user:
+
+        try:
+            user = Seeker.objects.get(account=account)
             is_seeker = True
-        else:
-            user = Shelter.objects.get(account=account)
-        if not user:
-            return HttpResponse(status=401)
+        except Seeker.DoesNotExist:
+            try:
+                user = Shelter.objects.get(account=account)
+            except Shelter.DoesNotExist:
+                return HttpResponse(status=401)
 
         ret_val = {
             "id": user.id,
