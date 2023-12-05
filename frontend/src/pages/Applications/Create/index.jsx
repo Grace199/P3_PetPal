@@ -1,19 +1,23 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useParams } from "react";
 
 function Index() {
     const [formData, setFormData] = useState({
         residence_type: null,
         fenced_yard: null,
         pool: null,
+        status: null,
+
         current_pets: null,
+        pet_ages: null,
         address: null,
         city: null,
         postal_code: null,
         phone_number: null,
         other: null,
+
         children: null,
         children_under_13: null,
+
         good_fit: null,
         schedule: null,
         insurance: null,
@@ -29,77 +33,17 @@ function Index() {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = () => {
         const requestOptions = {
             method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('access')}`,
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
-            
-            /*
-            body: JSON.stringify({
-                "residence_type": "condominium",
-                "fenced_yard": "yes",
-                "pool": "yes",
-                "current_pets": "1",
-                "pet_ages": "1",
-                "address": "1",
-                "city": "1",
-                "postal_code": "1",
-                "phone_number": "1",
-                "other": "1",
-                "children": 1,
-                "children_under_13": 1,
-                "good_fit": "1",
-                "schedule": "1",
-                "insurance": "1",
-                "references": "1",
-                "vet": "1",
-                "questions": "1"
-            })
-            */
-            
         };
-            
-        
 
-        /*
-        fetch(`http://localhost:8000/applications/seeker/application/${petlistingID}/`, requestOptions)
-        .then(response => {
-            console.log(response);
-            return response.text();
-        })
-        .then(bodyText => console.log('Reponse Body: ', bodyText))
-        .catch(error => {
-            console.error('Error submitting form', error);
-        });
-        */
+        fetch(`https://localhost:8000/applications/seeker/application/${petlistingID}/`, requestOptions)
+        .then(response => response.json())
+        .then(json => console.log(json));
         console.log("hello");
-
-        console.log('form', JSON.stringify(formData));
-
-        console.log('static', JSON.stringify({
-            "residence_type": "condominium",
-            "fenced_yard": "yes",
-            "pool": "yes",
-            "current_pets": "1",
-            "pet_ages": "1",
-            "address": "1",
-            "city": "1",
-            "postal_code": "1",
-            "phone_number": "1",
-            "other": "1",
-            "children": "1",
-            "children_under_13": "1",
-            "good_fit": "1",
-            "schedule": "1",
-            "insurance": "1",
-            "references": "1",
-            "vet": "1",
-            "questions": "1"}));
-
     };
 
     return <>
@@ -129,7 +73,10 @@ function Index() {
                     <div className="flex flex-col items-center">
                     {/* label for sub-form  */}
                     <div className="w-full sm:px-12">
-                        <label htmlFor="CI_sub_form" className="text-center text-xs md:text-sm text-slate-500">Step 1 of 4</label>
+                        <label
+                        htmlFor="CI_sub_form"
+                        className="text-center text-xs md:text-sm text-slate-500"
+                        >Step 1 of 4</label>>
                     </div>
                     {/* Sub-Form (Contact Information) */}
                     <div id="CI_sub_form" className="w-full flex flex-col items-center">
@@ -156,7 +103,7 @@ function Index() {
                                 <label
                                 htmlFor="CI_full_name"
                                 className="text-xs font-thin sm:text-sm text-black"
-                                >Full Name:</label>
+                                >Full Name:</label>>
                                 <input
                                 id="CI_full_name"
                                 type="text"
@@ -170,7 +117,7 @@ function Index() {
                                 <label
                                 htmlFor="CI_email"
                                 className="text-xs font-thin sm:text-sm text-black"
-                                >Email:</label>
+                                >Email:</label>>
                                 <input
                                 id="CI_email"
                                 type="text"
@@ -183,7 +130,7 @@ function Index() {
                                 <label
                                 htmlFor="CI_address"
                                 className="text-xs font-thin sm:text-sm text-black"
-                                >Address:</label>
+                                >Address:</label>>
                                 <input
                                 onChange={handleInputChange}
                                 name="address"
@@ -199,7 +146,7 @@ function Index() {
                                 <label
                                 htmlFor="CI_city"
                                 className="text-xs font-thin sm:text-sm text-black"
-                                >City:</label>
+                                >City:</label>>
                                 <input
                                 onChange={handleInputChange}
                                 name="city"
@@ -215,7 +162,7 @@ function Index() {
                                 <label
                                 htmlFor="CI_postal_code"
                                 className="text-xs font-thin sm:text-sm text-black"
-                                >Postal Code:</label>
+                                >Postal Code:</label>>
                                 <input
                                 onChange={handleInputChange}
                                 name="postal_code"
@@ -255,6 +202,7 @@ function Index() {
                         htmlFor="HH_sub_form"
                         className="text-center text-xs md:text-sm text-slate-500"
                         >Step 2 of 4</label>
+                        >
                     </div>
                     {/* Sub-Form (Housing and Household) */}
                     <div id="HH_sub_form" className="w-full flex flex-col items-center">
@@ -491,6 +439,7 @@ function Index() {
                                     htmlFor="HH_pool_yes"
                                     className="text-center text-[10px] sm:text-sm pl-2"
                                     >Yes</label>
+                                    >
                                 </div>
                                 {/* wrapper for No choice radio button and label  */}
                                 <div
@@ -545,7 +494,7 @@ function Index() {
                                 onChange={handleInputChange}
                                 name="children_under_13"
                                 id="HH_num_children_13"
-                                type="number"
+                                type="text"
                                 className="w-full text-sm px-3 py-2 border-opacity-25 border-[1.5px] focus:border-primary border-primary text-accent-100 placeholder:text-xs"
                                 required
                                 />
