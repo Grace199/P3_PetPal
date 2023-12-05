@@ -18,8 +18,6 @@ const Login = () => {
             .then(json => {
                 if ('access' in json) {
                     localStorage.setItem('access', json.access);
-                    localStorage.setItem('email', data.get('email'));
-
                     fetch('http://localhost:8000/currentuser/', {
                         method: 'GET',
                         headers: {

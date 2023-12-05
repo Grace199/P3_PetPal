@@ -14,7 +14,7 @@ class CurrentUserDetail(APIView):
             is_seeker = True
         else:
             user = Shelter.objects.get(account=account)
-        if not User:
+        if not user:
             return HttpResponse(status=401)
 
         ret_val = {
