@@ -19,7 +19,24 @@ const Login = () => {
                 if ('access' in json) {
                     localStorage.setItem('access', json.access);
                     localStorage.setItem('email', data.get('email'));
-                    navigate('/');
+
+                    fetch('http://localhost:8000/currentuser/', {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${json.access}`,
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                        .then(response => response.json())
+                        .then(userJson => {
+                            localStorage.setItem('userID', userJson.id);
+                            localStorage.setItem('isSeeker', userJson.is_seeker);
+
+                            navigate('/');
+                        })
+                        .catch(error => {
+                            console.error('Error fetching current user:', error);
+                        });
                 }
                 else if ('detail' in json) {
                     setError("Invalid username and password combination.");

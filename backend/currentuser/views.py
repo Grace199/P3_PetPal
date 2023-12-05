@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.views import View
 from django.http import JsonResponse, HttpResponse
 from accounts.models import Shelter, Seeker
 from rest_framework.views import APIView
@@ -15,6 +14,8 @@ class CurrentUserDetail(APIView):
             is_seeker = True
         else:
             user = Shelter.objects.get(account=account)
+        if not User:
+            return HttpResponse(status=401)
 
         ret_val = {
             "id": user.id,
