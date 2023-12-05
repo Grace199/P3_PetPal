@@ -2,8 +2,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Layout from './components/Layout';
-import PetDetail from './pages/PetDetail'
-import PetListings from './pages/PetListings'
+import PetDetail from './pages/PetDetail';
+import PetListings from './pages/PetListings';
+import ApplicationCreate from './pages/Applications/Create';
 import './App.css';
 
 
@@ -15,6 +16,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="petdetail/:petID" element={<PetDetail />} />
           <Route path="petlistings/" element={<PetListings />} />
+          <Route path="applications/create/:petlistingID" element={<ApplicationCreate />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -39,7 +39,7 @@ class Application(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
 
     current_pets = models.CharField(max_length=200, null=False, blank=False)
-    pet_ages = models.CharField(max_length=200, null=True, blank=True)
+    #pet_ages = models.CharField(max_length=200, null=True, blank=True)
     address = models.CharField(max_length=50, null=False, blank=False)
     city = models.CharField(max_length=50, null=False, blank=False)
     postal_code = models.CharField(max_length=20, null=False, blank=False)
