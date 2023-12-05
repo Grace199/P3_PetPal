@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useParams } from "react";
 
 function Index() {
     const [formData, setFormData] = useState({
