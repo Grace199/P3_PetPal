@@ -1,17 +1,18 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import { useSearchParams } from "react-router-dom";
 import backdrop from '../../assets/images/Home/heroBanner.jpg'
-import AnimalCardWhite from '../../components/AnimalCardWhite'
+import EditAnimalCard from '../../components/EditAnimalCard'
+import CreateAnimalCard from '../../components/CreateAnimalCard'
 import FilterForm from '../../components/FilterForm'
 
 const Index = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [totalPage, setTotalPage] = useState(20);
     const [openFilter, setOpenFilter] = useState(false);
+    const [shelter, setShelter] = useState('');
 
     const [formData, setFormData] = useState({
         animal: null,
-        shelter: null,
         status: null,
         breed: null,
         age: null,
@@ -47,7 +48,6 @@ const Index = () => {
 
     const query = useMemo(() => ({
         animal: searchParams.get("animal") ?? 'Dog',
-        shelter: searchParams.get("shelter") ?? '',
         status: searchParams.get("status") ?? '',
         breed: searchParams.get("breed") ?? '',
         age: searchParams.get("age") ?? '',
@@ -61,12 +61,13 @@ const Index = () => {
     useEffect(() => {
         // Fetch data
         setTotalPage(20);
+        setShelter("shelter name");
     }, [query]);
 
     return (
         <>
             <main className="z-0">
-            <div className="w-full flex justify-center items-center h-[300px] bg-black relative flex-col">
+                <div className="w-full flex justify-center items-center h-[300px] bg-black relative flex-col">
                     <div className="z-30">
                         <p
                             className="z-30 text-background text-8xl font-bold"
@@ -103,26 +104,25 @@ const Index = () => {
                     </div>
 
                     <div className="w-full py-10 flex flex-wrap gap-3 justify-center">
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
+                        <CreateAnimalCard />
+
+                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
+                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
+                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
+                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
+                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
+                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
+                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
+                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
+                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
+                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
+                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
+                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
+                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
+                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
+                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
+                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
+                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
                     </div>
                 </div>
                 <div className="w-full flex justify-center items-center gap-5">
@@ -155,7 +155,7 @@ const Index = () => {
                     }
                 </div>
             </main>
-            <FilterForm openFilter={openFilter} setOpenFilter={setOpenFilter} handleInputChange={handleInputChange} handleSubmit={handleSubmit} />
+            <FilterForm openFilter={openFilter} setOpenFilter={setOpenFilter} handleInputChange={handleInputChange} handleSubmit={handleSubmit} shelter={shelter} />
         </>
     )
 }
