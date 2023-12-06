@@ -1,13 +1,15 @@
 import React, { useState, useMemo, useEffect } from 'react'
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import backdrop from '../../assets/images/Home/heroBanner.jpg'
 import AnimalCardWhite from '../../components/AnimalCardWhite'
 import FilterForm from '../../components/FilterForm'
+import { ajax_or_login } from '../../util/ajax'
 
 const Index = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [totalPage, setTotalPage] = useState(20);
     const [openFilter, setOpenFilter] = useState(false);
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         animal: null,
@@ -60,13 +62,38 @@ const Index = () => {
 
     useEffect(() => {
         // Fetch data
+        const filteredQuery = Object.fromEntries(
+            Object.entries(query).filter(([_, value]) => value !== '' && value !== null)
+        );
+
+        const queryString = new URLSearchParams(filteredQuery).toString();
+        console.log(queryString);
+
+        async function fetchData() {
+            try {
+                const res = await ajax_or_login(`/petlisting${queryString ? `?${queryString}` : ''}`, {
+                    method: "GET"
+                }, navigate);
+
+                if (res.ok) {
+                    const data = await res.json();
+                    console.log(data);
+
+                } else {
+                    console.error("Error fetching data:", res.status, res.statusText);
+                }
+            } catch (error) {
+                console.error("Error during fetch:", error.message);
+            }
+        };
+        fetchData();
         setTotalPage(20);
-    }, [query]);
+    }, [query, navigate]);
 
     return (
         <>
             <main className="z-0">
-            <div className="w-full flex justify-center items-center h-[300px] bg-black relative flex-col">
+                <div className="w-full flex justify-center items-center h-[300px] bg-black relative flex-col">
                     <div className="z-30">
                         <p
                             className="z-30 text-background text-8xl font-bold"
@@ -85,7 +112,7 @@ const Index = () => {
                         <button
                             className="bg-accent-100 text-background max-sm:text-sm py-3 px-4 md:px-8 rounded-full hover:scale-105 active:scale-95 hover:bg-accent-200"
                             id="all_filter_btn"
-                            onClick={() => {setOpenFilter(true)}}
+                            onClick={() => { setOpenFilter(true) }}
                         >
                             All Filters
                         </button>
