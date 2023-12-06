@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import logo from '../../assets/images/logo.svg'
 import hamburger from '../../assets/images/hamburger.svg'
 import cross from '../../assets/images/cross.svg'
@@ -15,6 +15,7 @@ const Index = () => {
     )
     const [isSeeker, setIsSeeker] = useState(false);
     const [openProfileMenu, setOpenProfileMenu] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function fetchData() {
@@ -44,6 +45,7 @@ const Index = () => {
         setId(-1);
         setIsSeeker(null);
         setAvatar(null);
+        navigate("/");
     }
 
     return (
