@@ -6,6 +6,7 @@ import PetDetail from './pages/PetDetail'
 import PetListings from './pages/PetListings'
 import MyListings from './pages/MyListings'
 import Login from './pages/Login';
+import ShelterList from './pages/ShelterList';
 import './App.css';
 import { UserContext, useUserContext } from './contexts/UserContext';
 
@@ -20,6 +21,7 @@ function App() {
             <Route path="petlistings/" element={<PetListings />} />
             <Route path="mylistings/" element={<MyListings />} />
             <Route path="login/" element={<Login />} />
+            <Route path="shelters/" element={<ShelterList />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
