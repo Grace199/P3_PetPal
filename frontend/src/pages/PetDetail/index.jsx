@@ -65,11 +65,11 @@ const Index = () => {
             <div className="grid md:grid-cols-12 gap-[20px]">
                 <div className="md:col-span-7 bg-white rounded-3xl">
                     <div
-                        className="bg-primary text-white p-7 px-8 xl:px-16 text-5xl font-bold rounded-t-3xl flex justify-between max-md:flex-col gap-5"
+                        className="bg-primary text-white p-10 pl-8 xl:pl-16 text-2xl lg:text-4xl font-bold rounded-t-3xl flex justify-between max-md:flex-col gap-5"
                     >
                         <h1>{petListing?.pet.name}</h1>
                         <div
-                            className="text-xl bg-green-400 text-text px-6 lg:px-12 py-1 text-center rounded-xl flex justify-center items-center w-max"
+                            className="text-xl bg-green-400 text-text px-6 py-1 text-center rounded-xl flex justify-center items-center w-max"
                         >
                             <h2>{petListing?.status}</h2>
                         </div>
@@ -126,7 +126,7 @@ const Index = () => {
                     <div className="w-full max-h-[500px] rounded-3xl max-md:hidden">
                         <img
                             src={petListing?.pet.image1}
-                            className="rounded-3xl object-cover object-center w-full"
+                            className="rounded-3xl object-cover object-center w-full h-full"
                             alt='pic of animal'
                         />
                     </div>
