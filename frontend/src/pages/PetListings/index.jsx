@@ -1,13 +1,17 @@
 import React, { useState, useMemo, useEffect } from 'react'
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import backdrop from '../../assets/images/Home/heroBanner.jpg'
 import AnimalCardWhite from '../../components/AnimalCardWhite'
 import FilterForm from '../../components/FilterForm'
+import { ajax_or_login } from '../../util/ajax'
 
 const Index = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [totalPage, setTotalPage] = useState(20);
+    const [totalPage, setTotalPage] = useState(0);
     const [openFilter, setOpenFilter] = useState(false);
+    const [petlistings, setPetlistings] = useState([]);
+    const AGE_CHOICES = ["Infant", "Young", "Adult", "Senior"];
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         animal: null,
@@ -37,10 +41,11 @@ const Index = () => {
         const newSearchParams = new URLSearchParams(searchParams);
 
         for (let name in formData) {
-            if (formData[name] !== null && formData[name] !== '') {
+            if (formData[name] !== null) {
                 newSearchParams.set(name, formData[name]);
             }
         }
+        newSearchParams.set('page', 1);
 
         setSearchParams(newSearchParams);
     }
@@ -57,21 +62,52 @@ const Index = () => {
         sort: searchParams.get("sort") ?? 'name',
         page: parseInt(searchParams.get("page") ?? 1),
     }), [searchParams]);
-
     useEffect(() => {
-        // Fetch data
-        setTotalPage(20);
-    }, [query]);
+        const fetchData = async () => {
+            try {
+                const queryString = constructQueryString(query);
+
+                const res = await ajax_or_login(`/petlisting${queryString ? `?${queryString}` : ''}`, {
+                    method: "GET"
+                }, navigate);
+
+                if (res.ok) {
+                    const data = await res.json();
+                    setTotalPage(Math.ceil(data.count / 20));
+                    setPetlistings(data.results);
+                } else {
+                    handleFetchError(res);
+                }
+            } catch (error) {
+                handleFetchError(error);
+            } 
+        };
+
+        fetchData();
+    }, [query, navigate]);
+
+    const constructQueryString = (params) => {
+        return new URLSearchParams(params).toString();
+    };
+
+    const handleFetchError = (error) => {
+        console.error("Error during fetch:", error.message);
+
+        // Reset page parameter in searchParams state to 1
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.set('page', 1);
+        setSearchParams(newSearchParams);
+    };
 
     return (
         <>
             <main className="z-0">
-            <div className="w-full flex justify-center items-center h-[300px] bg-black relative flex-col">
+                <div className="w-full flex justify-center items-center h-[300px] bg-black relative flex-col">
                     <div className="z-30">
                         <p
                             className="z-30 text-background text-8xl font-bold"
                         >
-                            {query.animal.toUpperCase()}
+                            {query.animal.toUpperCase() || "DOG"}
                         </p>
                     </div>
                     <img
@@ -85,7 +121,7 @@ const Index = () => {
                         <button
                             className="bg-accent-100 text-background max-sm:text-sm py-3 px-4 md:px-8 rounded-full hover:scale-105 active:scale-95 hover:bg-accent-200"
                             id="all_filter_btn"
-                            onClick={() => {setOpenFilter(true)}}
+                            onClick={() => { setOpenFilter(true) }}
                         >
                             All Filters
                         </button>
@@ -103,26 +139,11 @@ const Index = () => {
                     </div>
 
                     <div className="w-full py-10 flex flex-wrap gap-3 justify-center">
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <AnimalCardWhite id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
+                        {petlistings && petlistings.map(petlisting => (
+                            <AnimalCardWhite key={petlisting.id} id={petlisting.id} name={petlisting.pet.name} img={petlisting.pet.image1} properties={`${AGE_CHOICES[petlisting.pet.age - 1]} • ${petlisting.pet.breed}`} />
+                        ))}
+
+                        {(!petlistings || petlistings.length === 0) && "No results"}
                     </div>
                 </div>
                 <div className="w-full flex justify-center items-center gap-5">
