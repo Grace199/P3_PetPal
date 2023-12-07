@@ -22,7 +22,6 @@ class SeekerApplicationCreate(CreateAPIView):
         return petlisting
 
     def perform_create(self, serializer):
-        print("Request Data:", self.request.data)
         petlisting = get_object_or_404(PetListing, id=self.kwargs["pk"])
         if petlisting.status != "AVAILABLE":
             raise ValidationError(

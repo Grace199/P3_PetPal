@@ -1,7 +1,10 @@
+import React from 'react';
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 function Index() {
+    const [error, setError] = useState("");
+
     const [formData, setFormData] = useState({
         residence_type: null,
         fenced_yard: null,
@@ -37,68 +40,26 @@ function Index() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(formData)
-            
-            /*
-            body: JSON.stringify({
-                "residence_type": "condominium",
-                "fenced_yard": "yes",
-                "pool": "yes",
-                "current_pets": "1",
-                "pet_ages": "1",
-                "address": "1",
-                "city": "1",
-                "postal_code": "1",
-                "phone_number": "1",
-                "other": "1",
-                "children": 1,
-                "children_under_13": 1,
-                "good_fit": "1",
-                "schedule": "1",
-                "insurance": "1",
-                "references": "1",
-                "vet": "1",
-                "questions": "1"
-            })
-            */
-            
         };
-            
+        
+        fetch(`http://localhost:8000/applications/seeker/application/${petlistingID}/`, requestOptions)
+        .then(response => response.json())
+        .then(json => {
+            if ('detail' in json) {
+                if (json.detail === "Not found.") {
+                    setError("Invalid PetListing for Application");
+                }
+                else {
+                    setError(json.detail);
+                }
+            }
+        })
+        .catch(error => {
+            setError(error);
+        });
         
 
-        /*
-        fetch(`http://localhost:8000/applications/seeker/application/${petlistingID}/`, requestOptions)
-        .then(response => {
-            console.log(response);
-            return response.text();
-        })
-        .then(bodyText => console.log('Reponse Body: ', bodyText))
-        .catch(error => {
-            console.error('Error submitting form', error);
-        });
-        */
-        console.log("hello");
-
-        console.log('form', JSON.stringify(formData));
-
-        console.log('static', JSON.stringify({
-            "residence_type": "condominium",
-            "fenced_yard": "yes",
-            "pool": "yes",
-            "current_pets": "1",
-            "pet_ages": "1",
-            "address": "1",
-            "city": "1",
-            "postal_code": "1",
-            "phone_number": "1",
-            "other": "1",
-            "children": "1",
-            "children_under_13": "1",
-            "good_fit": "1",
-            "schedule": "1",
-            "insurance": "1",
-            "references": "1",
-            "vet": "1",
-            "questions": "1"}));
+        e.preventDefault();
 
     };
 
@@ -234,7 +195,7 @@ function Index() {
                                 
                                 <input
                                 onChange={handleInputChange}
-                                name="address"
+                                name="phone_number"
                                 id="CI_phone_number"
                                 type="text"
                                 className="w-full text-xs sm:text-sm px-3 py-2 border-opacity-25 border-[1.5px] focus:border-primary border-primary text-accent-100"
@@ -774,6 +735,9 @@ function Index() {
                         className="rounded-xl bg-accent-100 px-2 sm:px-12 py-2 sm:py-3 text-white text-base font-semibold login_button justify-center text-center hover:scale-105 duration-200"
                         >Submit</button>
                     </div>
+                    </div>
+                    <div className="flex justify-center">
+                            <p className="font-semibold text-xs sm:text-sm text-red-500">{error}</p>
                     </div>
                 </form>
             </main>
