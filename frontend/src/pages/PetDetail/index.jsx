@@ -1,15 +1,64 @@
-import React from 'react'
-import {useParams, Link} from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import backdrop from '../../assets/images/Home/heroBanner.jpg'
+import { ajax_or_login } from '../../util/ajax'
 
 const Index = () => {
     const { petID } = useParams();
-    console.log(petID);
+    const navigate = useNavigate();
+    const [petListing, setPetListing] = useState(null);
+    const [shelter, setShelter] = useState(null);
+    const AGE_CHOICES = ["infant", "young", "adult", "senior"];
+    const SIZE_CHOICES = ["small", "medium", "large"];
+
+    function formatDate(timestamp) {
+        const date = new Date(timestamp);
+
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+
+        return `${year}-${month}-${day}`;
+    }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await ajax_or_login(`/petlisting/${petID}`, {
+                    method: "GET"
+                }, navigate);
+
+                if (res.ok) {
+                    const data = await res.json();
+                    setPetListing(data)
+
+                    const result = await ajax_or_login(`/accounts/shelter/${data.shelter}`, {
+                        method: "GET"
+                    }, navigate);
+
+                    if (result.ok) {
+                        const resData = await result.json();
+                        console.log(resData);
+                        setShelter(resData)
+                    }
+
+                    console.log(data)
+                } else {
+                    console.log("Cant find pet")
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        };
+
+        fetchData();
+    }, [petID, navigate])
+
     return (
         <main className="px-mobile md:px-tablet xl:px-desktop py-10">
 
             <img
-                src={backdrop}
+                src={petListing?.pet.image1}
                 className="rounded-3xl object-cover w-full max-h-[500px] mb-5 md:hidden"
                 alt='pic of animal'
             />
@@ -18,60 +67,57 @@ const Index = () => {
                     <div
                         className="bg-primary text-white p-7 px-8 xl:px-16 text-5xl font-bold rounded-t-3xl flex justify-between max-md:flex-col gap-5"
                     >
-                        <h1>Rover</h1>
+                        <h1>{petListing?.pet.name}</h1>
                         <div
                             className="text-xl bg-green-400 text-text px-6 lg:px-12 py-1 text-center rounded-xl flex justify-center items-center w-max"
                         >
-                            <h2>AVAILABLE</h2>
+                            <h2>{petListing?.status}</h2>
                         </div>
                     </div>
 
                     <div className="px-8 xl:px-16 py-5">
-                        <p>Golden Retriever & Collie mix</p>
-                        <p>Toronto, Ontario</p>
-                        <p>Adult • Female • Extra Large</p>
-                        <p>Published August 8, 2023</p>
+                        <p>{petListing?.pet.breed}</p>
+                        <p>{shelter?.city + ', ' + shelter?.province}</p>
+                        <p>{`${AGE_CHOICES[petListing?.pet.age - 1]} • ${petListing?.pet.sex} • ${SIZE_CHOICES[petListing?.pet.size - 1]}`}</p>
+                        <p>Published on {formatDate(petListing?.date_posted)}</p>
                         <hr className="text-gray my-5 opacity-50" />
                         <div className="my-3">
                             <p className="font-bold">Characteristics</p>
-                            <p>Friendly, Energetic, Adventerous</p>
+                            <ul>
+                                {petListing?.pet.is_friendly && <li>Friendly</li>}
+                                {petListing?.pet.is_adventurous && <li>Adventurous</li>}
+                                {petListing?.pet.is_energetic && <li>Energetic</li>}
+                                {petListing?.pet.is_extroverted && <li>Extroverted</li>}
+                                {petListing?.pet.is_introverted && <li>Introverted</li>}
+                            </ul>
                         </div>
                         <div className="my-3">
                             <p className="font-bold">Health</p>
-                            <p>Spayed/Neutered, Vaccinated</p>
+                            <ul>
+                                {petListing?.pet.is_spn && <li>Spayed/Neutered</li>}
+                                {petListing?.pet.is_vaccinated && <li>Vaccinated</li>}
+                            </ul>
                         </div>
                         <div className="my-3">
                             <p className="font-bold">Weight</p>
-                            <p>103 lbs</p>
-                        </div>
-                        <div className="my-3">
-                            <p className="font-bold">Coat Length</p>
-                            <p>Long, Curly</p>
+                            <p>{petListing?.pet.weight} lbs</p>
                         </div>
                         <div className="my-3">
                             <p className="font-bold">Special Needs</p>
-                            <p>Impaired hearing</p>
+                            <p>{petListing?.pet.special_needs || "None"}</p>
                         </div>
                         <div className="my-3">
                             <p className="font-bold">Colours</p>
-                            <p>Golden</p>
+                            <p>{petListing?.pet.colour}</p>
                         </div>
                         <div className="my-3">
                             <p className="font-bold">Adoption Fee</p>
-                            <p>$600</p>
+                            <p>${petListing?.adoption_fee}</p>
                         </div>
                         <hr className="text-gray my-5 opacity-50" />
-                        <h2 className="text-4xl text-primary">Say hello to Rover</h2>
+                        <h2 className="text-4xl text-primary">Say hello to {petListing?.pet.name}</h2>
                         <p className="whitespace-pre-line py-3">
-                            Hello there! I'm Rover, and I'm the perfect blend of Golden Retriever and Collie, resulting in a one-of-a-kind pup with a heart full of love and boundless enthusiasm.
-
-                            I may not have the ability to type this myself, but if I could, I'd tell you how much I adore head pats and belly rubs. Nothing makes me happier than spending time with my human friends, and I'll happily soak up all the affection you're willing to give.
-
-                            I'm a laid-back kind of guy who prefers to keep all four paws on solid ground. I've got a gentle soul and a friendly disposition that makes me the ideal companion. Walks in the park, a game of fetch, or simply lounging together are my favorite activities. I'm not just a pretty face; I'm also quite intelligent and eager to learn new tricks and commands. Treats are a fantastic motivator, so teaching me new things will be a breeze!
-
-                            I'm great with other dogs and have a knack for making friends wherever I go. You'll often find me romping around with my canine pals, enjoying some quality playtime. I'm not one to bark or cause a ruckus; I'm a well-mannered and sociable pup.
-
-                            Do you have room in your heart and home for a delightful mix like me? Whether you're looking for a faithful companion for adventures or simply a loyal friend to share your life with, I'm here, waiting for a loving forever home. Rover would thrive in a family setting or as a loyal companion to an individual or couple seeking a furry best friend.
+                            {petListing?.pet.description}
                         </p>
                     </div>
                 </div>
@@ -79,8 +125,8 @@ const Index = () => {
                 <div className="md:col-span-5 flex flex-col gap-5">
                     <div className="w-full max-h-[500px] rounded-3xl max-md:hidden">
                         <img
-                            src={backdrop}
-                            className="rounded-3xl object-cover object-center"
+                            src={petListing?.pet.image1}
+                            className="rounded-3xl object-cover object-center w-full"
                             alt='pic of animal'
                         />
                     </div>
@@ -89,9 +135,9 @@ const Index = () => {
                         className="bg-accent-100 w-full flex flex-col justify-center items-center p-5 py-20 gap-5 rounded-3xl"
                     >
                         <h2 className="text-white text-center text-2xl lg:text-3xl font-bold">
-                            Interested in adopting Rover?
+                            Interested in adopting {petListing?.pet.name}?
                         </h2>
-                        <Link to="/application"
+                        <Link to={`/application/${petID}`}
                             className="bg-white text-accent-100 rounded-3xl py-3 px-6 lg:px-12 text-xl lg:text-2xl font-bold text-center hover:scale-105 active:scale-95 duration-200"
                         >Apply Now!</Link>
                     </div>
@@ -101,20 +147,20 @@ const Index = () => {
                     >
                         <div>
                             <img
-                                src={backdrop}
+                                src={shelter?.account.avatar}
                                 className="rounded-full aspect-square h-[100px] object-cover object-center"
                                 alt='shelter'
                             />
                         </div>
                         <div>
                             <h2 className="text-primary text-center text-3xl font-semibold">
-                                Dog Society
+                                {shelter?.account.name}
                             </h2>
                             <p className="text-primary text-center text-xl font-semibold">
-                                Toronto, Ontario
+                                {shelter?.city + ', ' + shelter?.province}
                             </p>
                         </div>
-                        <Link to="/shelterDetail"
+                        <Link to={`/shelterDetail/${shelter?.id}`}
                             className="bg-white text-accent-100 text-center rounded-3xl py-3 px-6 lg:px-12 text-2xl font-bold hover:scale-105 active:scale-95 duration-200"
                         >Learn More</Link>
                     </div>

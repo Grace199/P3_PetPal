@@ -65,11 +65,7 @@ const Index = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // const filteredQuery = filterEmptyValues(query);
                 const queryString = constructQueryString(query);
-
-                // Show loading indicator
-                // setLoading(true);
 
                 const res = await ajax_or_login(`/petlisting${queryString ? `?${queryString}` : ''}`, {
                     method: "GET"
@@ -143,9 +139,11 @@ const Index = () => {
                     </div>
 
                     <div className="w-full py-10 flex flex-wrap gap-3 justify-center">
-                        {petlistings.map(petlisting => (
+                        {petlistings && petlistings.map(petlisting => (
                             <AnimalCardWhite key={petlisting.id} id={petlisting.id} name={petlisting.pet.name} img={petlisting.pet.image1} properties={`${AGE_CHOICES[petlisting.pet.age - 1]} • ${petlisting.pet.breed}`} />
                         ))}
+
+                        {(!petlistings || petlistings.length === 0) && "No results"}
                     </div>
                 </div>
                 <div className="w-full flex justify-center items-center gap-5">
