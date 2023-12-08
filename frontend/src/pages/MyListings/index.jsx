@@ -1,16 +1,19 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect, useContext } from 'react'
 import { useSearchParams } from "react-router-dom";
 import backdrop from '../../assets/images/Home/heroBanner.jpg'
 import EditAnimalCard from '../../components/EditAnimalCard'
 import CreateAnimalCard from '../../components/CreateAnimalCard'
 import FilterForm from '../../components/FilterForm'
+import {ajax_or_login} from '../../util/ajax'
+import { UserContext } from '../../contexts/UserContext';
+import { useNavigate } from 'react-router-dom';
+
 
 const Index = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [totalPage, setTotalPage] = useState(20);
     const [openFilter, setOpenFilter] = useState(false);
     const [shelter, setShelter] = useState('');
-
     const [formData, setFormData] = useState({
         animal: null,
         status: null,
@@ -20,6 +23,8 @@ const Index = () => {
         colour: null,
         sex: null,
     })
+    const { id } = useContext(UserContext);
+    const navigate = useNavigate();
 
     const handleSortChange = (event) => {
         const newSortValue = event.target.value;
@@ -57,6 +62,19 @@ const Index = () => {
         sort: searchParams.get("sort") ?? 'name',
         page: parseInt(searchParams.get("page") ?? 1),
     }), [searchParams]);
+
+
+    const getShelter = async () => {
+        const res = await ajax_or_login(`/accounts/shelter/${id}`, {method: "GET"}, navigate);
+        if (res.ok) {
+            const data = await res.json();
+            console.log(data);
+        }
+    }
+
+    useEffect(() => {  
+        getShelter();
+    }, [])
 
     useEffect(() => {
         // Fetch data
