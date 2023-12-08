@@ -23,6 +23,7 @@ from django.http import HttpResponse
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import AllowAny
 from applications.models import Application
+from rest_framework import filters
 
 
 class BaseSignUpView(CreateAPIView):
@@ -137,3 +138,25 @@ class ShelterRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 class ShelterList(ListAPIView):
     queryset = Shelter.objects.all()
     serializer_class = ShelterSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = [
+        "account__name",
+        "city",
+        "province",
+    ]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.query_params.get("search", None)
+
+        if search_query:
+            if queryset is not None:
+                queryset = (
+                    queryset.filter(account__name__icontains=search_query)
+                    | queryset.filter(city__icontains=search_query)
+                    | queryset.filter(province__icontains=search_query)
+                )
+            # else:
+            #     queryset = Shelter.objects.none()
+
+        return queryset
