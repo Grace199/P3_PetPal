@@ -28,6 +28,7 @@ class SeekerApplicationCreate(CreateAPIView):
                 detail="Cannot apply for PetListing which is not available", code=401
             )
 
+        
         shelter = petlisting.shelter
 
         serializer.validated_data['petlisting'] = petlisting

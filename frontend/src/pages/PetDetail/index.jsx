@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import backdrop from '../../assets/images/Home/heroBanner.jpg'
 import { ajax_or_login } from '../../util/ajax'
 
 const Index = () => {
@@ -10,6 +9,7 @@ const Index = () => {
     const [shelter, setShelter] = useState(null);
     const AGE_CHOICES = ["infant", "young", "adult", "senior"];
     const SIZE_CHOICES = ["small", "medium", "large"];
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     function formatDate(timestamp) {
         const date = new Date(timestamp);
@@ -56,12 +56,17 @@ const Index = () => {
 
     return (
         <main className="px-mobile md:px-tablet xl:px-desktop py-10">
+            <div className="bg-black rounded-3xl w-full max-h-[500px] mb-5 md:hidden" onClick={() => {
+                setCurrentImageIndex(prev => (prev + 1) % 3)
+                console.log(petListing?.pet[`image${currentImageIndex + 1}`]);
+            }}>
+                <img
+                    src={petListing?.pet[`image${currentImageIndex + 1}`]}
+                    className="rounded-3xl object-cover w-full max-h-[500px] mb-5 md:hidden"
+                    alt='pic of animal'
+                />
+            </div>
 
-            <img
-                src={petListing?.pet.image1}
-                className="rounded-3xl object-cover w-full max-h-[500px] mb-5 md:hidden"
-                alt='pic of animal'
-            />
             <div className="grid md:grid-cols-12 gap-[20px]">
                 <div className="md:col-span-7 bg-white rounded-3xl">
                     <div
@@ -69,7 +74,11 @@ const Index = () => {
                     >
                         <h1>{petListing?.pet.name}</h1>
                         <div
-                            className="text-xl bg-green-400 text-text px-6 py-1 text-center rounded-xl flex justify-center items-center w-max"
+                            className={`text-xl text-text px-6 py-1 text-center rounded-xl flex justify-center items-center w-max 
+                            ${petListing?.status === "AVAILABLE" ? "bg-green-400" : ""} 
+                            ${petListing?.status === "WITHDRAWN" ? "bg-red-400" : ""} 
+                            ${petListing?.status === "ADOPTED" ? "bg-yellow-400" : ""} 
+                            `}
                         >
                             <h2>{petListing?.status}</h2>
                         </div>
@@ -123,24 +132,30 @@ const Index = () => {
                 </div>
 
                 <div className="md:col-span-5 flex flex-col gap-5">
-                    <div className="w-full max-h-[500px] rounded-3xl max-md:hidden">
+                    <div className="w-full max-h-[500px] rounded-3xl max-md:hidden bg-black" onClick={() => {
+                        setCurrentImageIndex(prev => (prev + 1) % 3)
+                        console.log(petListing?.pet[`image${currentImageIndex + 1}`]);
+                    }}>
                         <img
-                            src={petListing?.pet.image1}
-                            className="rounded-3xl object-cover object-center w-full h-full"
-                            alt='pic of animal'
+                            src={petListing?.pet[`image${currentImageIndex + 1}`]}
+                            className="rounded-3xl object-cover object-center w-full h-full hover:opacity-50 hover:cursor-pointer"
+                            alt='pic of pet'
                         />
                     </div>
 
-                    <div
-                        className="bg-accent-100 w-full flex flex-col justify-center items-center p-5 py-20 gap-5 rounded-3xl"
-                    >
-                        <h2 className="text-white text-center text-2xl lg:text-3xl font-bold">
-                            Interested in adopting {petListing?.pet.name}?
-                        </h2>
-                        <Link to={`/application/${petID}`}
-                            className="bg-white text-accent-100 rounded-3xl py-3 px-6 lg:px-12 text-xl lg:text-2xl font-bold text-center hover:scale-105 active:scale-95 duration-200"
-                        >Apply Now!</Link>
-                    </div>
+                    { (JSON.parse(localStorage.getItem("isSeeker")) === true && petListing?.status === "AVAILABLE") && 
+                        <div
+                            className="bg-accent-100 w-full flex flex-col justify-center items-center p-5 py-20 gap-5 rounded-3xl"
+                        >
+                            <h2 className="text-white text-center text-2xl lg:text-3xl font-bold">
+                                Interested in adopting {petListing?.pet.name}?
+                            </h2>
+                            <Link to={`/application/${petID}`}
+                                className="bg-white text-accent-100 rounded-3xl py-3 px-6 lg:px-12 text-xl lg:text-2xl font-bold text-center hover:scale-105 active:scale-95 duration-200"
+                            >Apply Now!</Link>
+                        </div>
+                    }
+
 
                     <div
                         className="bg-light-gray w-full flex flex-col justify-center items-center p-5 py-12 gap-5 rounded-3xl"

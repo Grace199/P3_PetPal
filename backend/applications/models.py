@@ -39,15 +39,15 @@ class Application(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
 
     current_pets = models.CharField(max_length=200, null=False, blank=False)
-    pet_ages = models.CharField(max_length=200, null=True, blank=True)
+    #pet_ages = models.CharField(max_length=200, null=True, blank=True) # REMOVED
     address = models.CharField(max_length=50, null=False, blank=False)
     city = models.CharField(max_length=50, null=False, blank=False)
     postal_code = models.CharField(max_length=20, null=False, blank=False)
     phone_number = models.CharField(max_length=20, null=False, blank=False)
     other = models.CharField(max_length=50, null=True, blank=True)
 
-    children = models.PositiveIntegerField(null=False, blank=False)
-    children_under_13 = models.PositiveIntegerField(null=False, blank=False)
+    children = models.CharField(max_length=50, null=False, blank=False) # CHANGED FROM POSITIVE INT TO CHARFIELD
+    children_under_13 = models.CharField(max_length=50, null=False, blank=False) # CHANGED FROM POSITIVE INT TO CHARFIELD
 
     good_fit = models.TextField(null=False, blank=False)
     schedule = models.TextField(null=False, blank=False)

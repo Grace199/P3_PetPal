@@ -12,7 +12,7 @@ class ApplicationRetrieveSerializer(ModelSerializer):
         model = Application
         fields = '__all__'
         read_only_fields = ['residence_type', 'fenced_yard', 'pool', 'status', 'current_pets',
-                            'pet_ages', 'address', 'city', 'postal_code', 'phone_number', 'other', 
+                            'address', 'city', 'postal_code', 'phone_number', 'other', 
                             'children', 'children_under_13', 'good_fit', 'schedule', 'insurance', 
                             'references', 'vet', 'questions']
 
@@ -33,7 +33,7 @@ class ApplicationSeekerUpdateSerializer(ModelSerializer):
         model = Application
         fields = '__all__'
         read_only_fields = ['residence_type', 'fenced_yard', 'pool', 'current_pets',
-                            'pet_ages', 'address', 'city', 'postal_code', 'phone_number', 'other', 
+                            'address', 'city', 'postal_code', 'phone_number', 'other', 
                             'children', 'children_under_13', 'good_fit', 'schedule', 'insurance', 
                             'references', 'vet', 'questions']
 
