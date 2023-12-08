@@ -90,12 +90,12 @@ function Index() {
                             <div className="w-full">
                                 <div>
                                 <p className="py-2 text-xs text-thin md:text-base text-black">
-                                    Full Name:
+                                    Full Name: 
                                 </p>
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    Mishu
+                                {formData.name}
                                 </p>
                                 </div>
                             </div>
@@ -108,7 +108,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    Mishu@gmail.com
+                                {formData.email}
                                 </p>
                                 </div>
                             </div>
@@ -121,7 +121,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {address}
+                                    {formData.address}
                                 </p>
                                 </div>
                             </div>
@@ -134,7 +134,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {city}
+                                {formData.city}
                                 </p>
                                 </div>
                             </div>
@@ -147,7 +147,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {postal_code}
+                                    {formData.city}
                                 </p>
                                 </div>
                             </div>
@@ -160,7 +160,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {phone_number}
+                                    {formData.phone_number}
                                 </p>
                                 </div>
                             </div>
@@ -201,7 +201,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {residence_type}
+                                    {formData.residence_type}
                                 </p>
                                 </div>
                             </div>
@@ -215,7 +215,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {fenced_yard}
+                                    {formData.fenced_yard}
                                 </p>
                                 </div>
                             </div>
@@ -229,7 +229,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {pool}
+                                    {formData.pool}
                                 </p>
                                 </div>
                             </div>
@@ -245,7 +245,7 @@ function Index() {
                                 <p
                                     className="px-2 text-xs text-center sm:text-left md:text-sm text-slate-500"
                                 >
-                                    {children}
+                                    {formData.children}
                                 </p>
                                 </div>
                             </div>
@@ -260,7 +260,7 @@ function Index() {
                                 <p
                                     className="px-2 text-xs text-center sm:text-left md:text-sm text-slate-500"
                                 >
-                                    {children_under_13}
+                                    {formData.children_under_13}
                                 </p>
                                 </div>
                             </div>
@@ -275,7 +275,7 @@ function Index() {
                                 <p
                                     className="px-2 text-xs text-center sm:text-left md:text-sm text-slate-500"
                                 >
-                                    {current_pets}
+                                    {formData.current_pets}
                                 </p>
                                 </div>
                             </div>
@@ -316,7 +316,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {good_fit}
+                                    {formData.good_fit}
                                 </p>
                                 </div>
                             </div>
@@ -330,7 +330,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {schedule}
+                                    {formData.schedule}
                                 </p>
                                 </div>
                             </div>
@@ -343,7 +343,7 @@ function Index() {
                                 </div>
                                 <div className="sm:text-left">
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {insurance}
+                                    {formData.insurance}
                                 </p>
                                 </div>
                             </div>
@@ -385,7 +385,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                   {references}
+                                   {formData.references}
                                 </p>
                                 </div>
                             </div>
@@ -398,7 +398,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {vet}
+                                    {formData.vet}
                                 </p>
                                 </div>
                             </div>
@@ -411,7 +411,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {questions}
+                                    {formData.questions}
                                 </p>
                                 </div>
                             </div>
