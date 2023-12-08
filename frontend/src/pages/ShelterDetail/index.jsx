@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { UserContext } from '../../contexts/UserContext'
+import ShelterListings from '../../components/ShelterListings'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ajax_or_login } from '../../util/ajax';
 
@@ -33,22 +33,12 @@ const ShelterDetail = () => {
     }, [shelterID, navigate]);
 
     useEffect(() => {
-        if (isSeeker === false) {
-            if (id == shelterID) {
-                setIsSelf(true);
-            } else {
-                setIsSelf(false);
-            }
-        } else {
-            setIsSelf(false);
-        }
+        setIsSelf(!isSeeker && id == shelterID);
     }, [isSeeker, id, shelterID]);
 
     const formattedPhoneNumber = (phoneNumber) => {
-        // Convert to string if it's a number
         const phoneNumberString = phoneNumber.toString();
 
-        // Assuming phoneNumber is a string like "1234567890"
         const areaCode = phoneNumberString.slice(0, 3);
         const firstPart = phoneNumberString.slice(3, 6);
         const secondPart = phoneNumberString.slice(6, 10);
@@ -118,33 +108,21 @@ const ShelterDetail = () => {
                 <div class="w-full gap-14 flex flex-col">
                     <div class="w-full flex flex-col justify-center bg-background gap-14 pb-14 px-mobile md:px-tablet xl:px-desktop">
                         <div class="flex justify-center md:justify-start">
-                            <p class="text-primary text-[32px] mx-8 mt-14 md:mx-12 xl:mx-28 font-medium">Pets from Dog Society</p>
+                            {shelter ? <p class="text-primary text-[32px] mx-8 mt-14 md:mx-12 xl:mx-28 font-medium">Pets from Dog Society</p> : <p></p>}
                         </div>
                         <div class="flex flex-col md:flex-row justify-center gap-14 md:gap-10 lg:gap-12 xl:gap-14 2xl:gap-[78px]">
-                            <a href="../petDetail/petDetail.html" class="flex flex-col drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:scale-105 duration-200">
-                                <img src="../../assets/images/shelter-cat.png" class="rounded-t-[30px]" />
-                                <div class="w-full bg-background h-[87px] rounded-b-[20px] flex flex-col justify-center items-center">
-                                    <p class="text-accent-100 text-[24px] font-semibold">Poppy</p>
-                                    <p class="text-accent-100 text-base">Young • Siberian</p>
-                                </div>
-                            </a>
-                            <a href="../petDetail/petDetail.html" class="flex flex-col drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:scale-105 duration-200">
-                                <img src="../../assets/images/shelter-cat.png" class="rounded-t-[30px]" />
-                                <div class="w-full bg-background h-[87px] rounded-b-[20px] flex flex-col justify-center items-center">
-                                    <p class="text-accent-100 text-[24px] font-semibold">Poppy</p>
-                                    <p class="text-accent-100 text-base">Young • Siberian</p>
-                                </div>
-                            </a>
-                            <a href="../petDetail/petDetail.html" class="flex flex-col drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] hover:scale-105 duration-200">
-                                <img src="../../assets/images/shelter-cat.png" class="rounded-t-[30px]" />
-                                <div class="w-full bg-background h-[87px] rounded-b-[20px] flex flex-col justify-center items-center">
-                                    <p class="text-accent-100 text-[24px] font-semibold">Poppy</p>
-                                    <p class="text-accent-100 text-base">Young • Siberian</p>
-                                </div>
-                            </a>
+                            <ShelterListings shelterName={shelter?.account.name} />
                         </div>
                         <div class="flex justify-center">
-                            <a href="../petListings/petListingUserView.html" class="rounded-[30px] bg-accent-100 px-9 py-4 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center hover:scale-105 duration-200">View our pets</a>
+                            {isSelf === true ?
+                                <Link
+                                    to={`/mylistings/`}
+                                    className="rounded-[30px] bg-accent-100 px-9 py-4 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center hover:scale-105 duration-200">View your pets</Link>
+                                :
+                                <Link
+                                    to={`/petlistings?shelter=${shelter?.account.name}`}
+                                    className="rounded-[30px] bg-accent-100 px-9 py-4 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center hover:scale-105 duration-200">View our pets</Link>
+                            }
                         </div>
                     </div>
                 </div>

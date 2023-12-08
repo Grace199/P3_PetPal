@@ -46,7 +46,7 @@ const Index = () => {
         setId(-1);
         setIsSeeker(null);
         setAvatar(null);
-        navigate("/");
+        navigate("/login/");
     }
 
     return (
