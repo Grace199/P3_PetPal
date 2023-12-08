@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import ShelterCard from '../../ShelterCard'
-import backdrop from '../../../assets/images/Home/heroBanner.jpg';
 import { Link, useNavigate } from 'react-router-dom';
 import { ajax_or_login } from '../../../util/ajax'
 
@@ -25,11 +24,12 @@ const Index = () => {
             <h1 className="text-5xl font-bold mb-3 text-center">Shelters & Rescues</h1>
             <h2 className="text-3xl text-center">trusted adoption centers</h2>
             <div className="w-full flex justify-evenly mt-12 gap-3 text-accent-100">
-                {shelters &&
-                    shelters.map(shelter => (
-                        <ShelterCard key={shelter.id} name={shelter.account.name} id={1} img={shelter.account.avatar} />
-                    ))
-                }
+                {shelters && (<>
+                    {shelters[0] && <ShelterCard key={shelters[0].id} name={shelters[0].account.name} id={1} img={shelters[0].account.avatar} />}
+                    {shelters[1] && <ShelterCard key={shelters[1].id} name={shelters[1].account.name} id={1} img={shelters[1].account.avatar} />}
+                    {shelters[2] && <ShelterCard key={shelters[2].id} name={shelters[2].account.name} id={1} img={shelters[2].account.avatar} />}
+                </>
+            )}
             </div>
 
             <Link
