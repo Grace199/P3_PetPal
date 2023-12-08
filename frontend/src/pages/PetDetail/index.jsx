@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom'
 import { ajax_or_login } from '../../util/ajax'
 
 const Index = () => {
-    const { petID } = useParams();
+    const { petListingID } = useParams();
     const navigate = useNavigate();
     const [petListing, setPetListing] = useState(null);
     const [shelter, setShelter] = useState(null);
@@ -24,7 +24,7 @@ const Index = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await ajax_or_login(`/petlisting/${petID}`, {
+                const res = await ajax_or_login(`/petlisting/${petListingID}`, {
                     method: "GET"
                 }, navigate);
 
@@ -52,7 +52,7 @@ const Index = () => {
         };
 
         fetchData();
-    }, [petID, navigate])
+    }, [petListingID, navigate])
 
     return (
         <main className="px-mobile md:px-tablet xl:px-desktop py-10">
@@ -150,7 +150,7 @@ const Index = () => {
                             <h2 className="text-white text-center text-2xl lg:text-3xl font-bold">
                                 Interested in adopting {petListing?.pet.name}?
                             </h2>
-                            <Link to={`/application/${petID}`}
+                            <Link to={`/applications/create/${petListingID}`}
                                 className="bg-white text-accent-100 rounded-3xl py-3 px-6 lg:px-12 text-xl lg:text-2xl font-bold text-center hover:scale-105 active:scale-95 duration-200"
                             >Apply Now!</Link>
                         </div>
