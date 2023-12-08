@@ -1,9 +1,12 @@
 import React from 'react';
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { ajax_or_login } from '../../../util/ajax';
+import { useNavigate } from 'react-router-dom';
 
 function Index() {
     const [error, setError] = useState("");
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         residence_type: null,
@@ -32,34 +35,30 @@ function Index() {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSubmit = (e) => {
+    async function handleSubmit(e) {
+        e.preventDefault();
+
         const requestOptions = {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('access')}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(formData)
         };
         
-        fetch(`http://localhost:8000/applications/seeker/application/${petlistingID}/`, requestOptions)
-        .then(response => response.json())
-        .then(json => {
-            if ('detail' in json) {
-                if (json.detail === "Not found.") {
+        const res = await ajax_or_login(`/applications/seeker/application/${petlistingID}/`, requestOptions, navigate);
+
+        if (!res.ok) {
+            const data = await res.json();
+            if ('detail' in data) {
+                if (data.detail === "Not found.") {
                     setError("Invalid PetListing for Application");
                 }
                 else {
-                    setError(json.detail);
+                    setError(data.detail);
                 }
             }
-        })
-        .catch(error => {
-            setError(error);
-        });
-        
-
-        e.preventDefault();
+        }
 
     };
 
@@ -112,33 +111,6 @@ function Index() {
                             <div
                             className="w-full grid grid-rows-6 grid-cols-1 gap-4 px-4 md:px-12 py-8 md:py-12"
                             >
-                            {/* wrapper for full name input label and input field  */}
-                            <div className="w-full">
-                                <label
-                                htmlFor="CI_full_name"
-                                className="text-xs font-thin sm:text-sm text-black"
-                                >Full Name:</label>
-                                <input
-                                id="CI_full_name"
-                                type="text"
-                                className="w-full text-xs sm:text-sm px-3 py-2 border-opacity-25 border-[1.5px] focus:border-primary border-primary text-accent-100 placeholder:text-xs placeholder:font-thin sm:placeholder:test-sm"
-                                placeholder="First and last"
-                                required
-                                />
-                            </div>
-                            {/* wrapper for email input label and input field  */}
-                            <div className="w-full">
-                                <label
-                                htmlFor="CI_email"
-                                className="text-xs font-thin sm:text-sm text-black"
-                                >Email:</label>
-                                <input
-                                id="CI_email"
-                                type="text"
-                                className="w-full text-xs sm:text-sm px-3 py-2 border-opacity-25 border-[1.5px] focus:border-primary border-primary text-accent-100"
-                                required
-                                />
-                            </div>
                             {/* wrapper for address input label and input field  */}
                             <div className="w-full">
                                 <label
