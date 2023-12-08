@@ -9,7 +9,7 @@ const Index = () => {
     const [formData, setFormData] = useState({
         animal: 'dog',
         breed: null,
-        city: null,
+        size: null,
         age: null,
     })
 
@@ -20,8 +20,8 @@ const Index = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const {animal, breed, city, age} = formData;
-        navigate(`/petlistings?animal=${animal}${breed ? `&breed=${breed}` : ''}${city ? `&city=${city}` : ''}${age ? `&age=${age}` : ''}`)
+        const { animal, breed, size, age } = formData;
+        navigate(`/petlistings?animal=${animal}${breed ? `&breed=${breed}` : ''}${size ? `&size=${size}` : ''}${age ? `&age=${age}` : ''}`)
     }
 
     return (
@@ -89,24 +89,31 @@ const Index = () => {
                         onChange={handleInputChange}
                     />
 
-                    <input
-                        name="city"
-                        id="city"
+                    <select
+                        name="size"
+                        id="size"
                         className="bg-[#727272ab] text-center col-span-2 py-6 rounded-xl border border-background placeholder-[#ffffffce] cursor-pointer hover:bg-[#ffffff87] focus:outline-none"
-                        type='text'
-                        placeholder='Enter City'
                         onChange={handleInputChange}
-                    />
+                    >
+                        <option value="">Select Size</option>
+                        <option value="1">Small</option>
+                        <option value="2">Medium</option>
+                        <option value="3">Large</option>
+                    </select>
 
-                    <input
+                    <select
                         name="age"
                         id="age"
                         className="bg-[#727272ab] text-center col-span-2 md:col-span-1 py-6 rounded-xl border border-background placeholder-[#ffffffce] cursor-pointer hover:bg-[#ffffff87] focus:outline-none"
-                        type='text'
-                        placeholder='Enter Age'
                         onChange={handleInputChange}
-                    />
-                    <input value={"Search Now"} type='submit' className="bg-accent-100 text-center col-span-2 md:col-span-1 py-6 rounded-xl border border-background cursor-pointer hover:bg-accent-200"/>
+                    >
+                        <option value="">Select Age</option>
+                        <option value="1">Infant</option>
+                        <option value="2">Young</option>
+                        <option value="3">Adult</option>
+                        <option value="4">Senior</option>
+                    </select>
+                    <input value={"Search Now"} type='submit' className="bg-accent-100 text-center col-span-2 md:col-span-1 py-6 rounded-xl border border-background cursor-pointer hover:bg-accent-200" />
                 </div>
             </form>
         </div>
