@@ -13,7 +13,7 @@ const Index = () => {
     const [avatar, setAvatar] = useState(
         localStorage.getItem('avatar') || null,
     )
-    const [isSeeker, setIsSeeker] = useState(false);
+    const [isSeeker, setIsSeeker] = useState(null);
     const [openProfileMenu, setOpenProfileMenu] = useState(false);
     const navigate = useNavigate();
 
