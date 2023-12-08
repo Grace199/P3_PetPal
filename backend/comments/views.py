@@ -27,8 +27,12 @@ class ReviewListCreate(ListCreateAPIView):
         shelter = get_object_or_404(Shelter, id=self.kwargs["shelter_id"])
         serializer.save(owner=self.request.user, shelter=shelter)
 
-        message_url = reverse('comments:review', kwargs={'review_id': serializer.instance.id})
-        notification = Notification(user=shelter.account, url=message_url, msg="New review!")
+        message_url = reverse(
+            "comments:review", kwargs={"review_id": serializer.instance.id}
+        )
+        notification = Notification(
+            user=shelter.account, url=message_url, msg="New review!"
+        )
         notification.save()
         return super().perform_create(serializer)
 
@@ -66,11 +70,21 @@ class MessageListCreate(ListCreateAPIView):
             serializer.save(owner=user, application=application)
             application.save()
 
-            message_url = reverse('comments:message', kwargs={'message_id': serializer.instance.id})
+            message_url = reverse(
+                "comments:message", kwargs={"message_id": serializer.instance.id}
+            )
             if application.seeker.account == user:
-                notification = Notification(user=application.shelter.account, url=message_url, msg="New message from seeker!")
+                notification = Notification(
+                    user=application.shelter.account,
+                    url=message_url,
+                    msg="New message from seeker!",
+                )
             else:
-                notification = Notification(user=application.seeker.account, url=message_url, msg="New message from shelter!")
+                notification = Notification(
+                    user=application.seeker.account,
+                    url=message_url,
+                    msg="New message from shelter!",
+                )
             notification.save()
             return super().perform_create(serializer)
         else:  # the user is not a seeker or shelter of the application chatroom it is trying to talk in
@@ -108,10 +122,18 @@ class ReplyListCreate(ListCreateAPIView):
 
     def perform_create(self, serializer):
         review = get_object_or_404(Review, id=self.kwargs["review_id"])
+        review.hasReplies = True
+        review.save()
         serializer.save(owner=self.request.user, review=review)
 
-        message_url = reverse('comments:reply', kwargs={'reply_id': serializer.instance.id})
-        notification = Notification(user=review.shelter.account, url=message_url, msg="Someone replied to your review!")
+        message_url = reverse(
+            "comments:reply", kwargs={"reply_id": serializer.instance.id}
+        )
+        notification = Notification(
+            user=review.shelter.account,
+            url=message_url,
+            msg="Someone replied to your review!",
+        )
         notification.save()
 
         return super().perform_create(serializer)

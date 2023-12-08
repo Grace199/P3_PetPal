@@ -66,8 +66,10 @@ const ShelterDetail = () => {
                                     <div className="flex flex-row gap-3 items-center">
                                         <p className="text-primary text-lg sm:text-3xl text-center sm:text-left">Our Mission</p>
                                         {isSelf === true ?
-                                            <Link to={`/shelter/${shelterID}/edit/`}>
-                                                <i className="uil uil-edit text-primary text-xl"></i>
+                                            <Link
+                                                to={`/shelter/${shelterID}/edit/`}
+                                                className="text-primary hover:scale-105 duration-200 active:scale-95">
+                                                <i className="uil uil-edit text-xl"></i>
                                             </Link>
                                             :
                                             <></>

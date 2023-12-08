@@ -18,6 +18,7 @@ class Review(models.Model):
     rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES, default=5)
     content = models.CharField(max_length=500, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+    hasReplies = models.BooleanField(default=False)
 
 
 # Reply
