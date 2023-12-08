@@ -24,7 +24,7 @@ const Index = () => {
                 const apiUrl = `/accounts/${isSeeker ? 'seeker' : 'shelter'}/${id}/`;
                 const res = await ajax_or_login(apiUrl, {
                     method: "GET",
-                });
+                }, navigate);
 
                 if (res.ok) {
                     const data = await res.json();
@@ -33,10 +33,11 @@ const Index = () => {
                     setIsSeeker(isSeeker);
                 }
             }
+            setId(parseInt(localStorage.getItem("userID")));
         }
 
         fetchData();
-    }, [id]);
+    }, [id, navigate]);
 
     function handleLogout() {
         localStorage.removeItem('avatar');
@@ -45,7 +46,7 @@ const Index = () => {
         setId(-1);
         setIsSeeker(null);
         setAvatar(null);
-        navigate("/");
+        navigate("/login/");
     }
 
     return (
@@ -109,7 +110,7 @@ const Index = () => {
                                         className="rounded-full hover:scale-105 active:scale-95 duration-200 w-[35px] aspect-square object-cover" />
                                 </button>
                                 <div id="profile-dropdown-menu" className={`absolute flex-col mt-2 w-[200px] right-0 ${openProfileMenu ? 'flex' : 'hidden'}`}>
-                                    <Link to="/manageaccount"
+                                    <Link to={isSeeker ? "/manageaccount" : `/shelterDetail/${id}/`}
                                         className="bg-white px-5 py-3 hover:bg-[#949494] rounded-t-lg">Manage Account</Link>
                                     <button className="bg-white px-5 py-3 hover:bg-[#949494] rounded-b-lg" onClick={handleLogout}>Sign Out</button>
                                 </div>
@@ -145,7 +146,7 @@ const Index = () => {
             <div
                 className={"w-full bg-secondary flex-col md:hidden justify-between z-40 absolute h-screen " + (openNav ? 'block' : 'hidden')}
                 id="mobile_menu"
-                onClick={() => {setOpenNav(false)}}
+                onClick={() => { setOpenNav(false) }}
             >
                 <div className="w-full flex flex-col">
                     <Link
@@ -174,7 +175,7 @@ const Index = () => {
 
                         <Link
                             className="w-full bg-[#c57f2f] p-8 text-xl text-background hover:bg-accent-200"
-                            to="/manageAccount"
+                            to={isSeeker ? "/manageaccount" : `/shelterDetail/${id}/`}
                         >Manage Account</Link>
                         <button
                             className="w-full bg-[#b22626] p-8 text-xl text-background hover:bg-accent-200 text-left"

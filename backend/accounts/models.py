@@ -8,10 +8,12 @@ email and password are used for authentication.
 avatar for user to include a profile picture.
 Each account is either assigned as a seeker or a shelter.
 """
+
+
 class Account(AbstractUser):
     username = None
     email = models.EmailField(unique=True)
-    name = models.CharField(max_length=255, null=False, blank=False)
+    name = models.CharField(max_length=255, null=False, blank=False, unique=True)
     avatar = models.ImageField(
         upload_to="avatars/", default="avatars/default-avatar.jpg"
     )
@@ -30,6 +32,8 @@ city and province provides the location of the seeker.
 phone_number for additional contact information.
 includes preference to generate notifications when a petlisting of interest is created.
 """
+
+
 class Seeker(models.Model):
     account = models.OneToOneField(Account, on_delete=models.CASCADE)
     city = models.CharField(max_length=255, null=True, blank=True)
@@ -63,15 +67,11 @@ class Seeker(models.Model):
         max_length=255, choices=ANIMAL_CHOICES, null=True, blank=True
     )
     breed_preference = models.CharField(max_length=255, null=True, blank=True)
-    age_preference = models.IntegerField(
-        choices=AGE_CHOICES, null=True, blank=True
-    )
+    age_preference = models.IntegerField(choices=AGE_CHOICES, null=True, blank=True)
     sex_preference = models.CharField(
         max_length=255, choices=SEX_CHOICES, null=True, blank=True
     )
-    size_preference = models.IntegerField(
-        choices=SIZE_CHOICES, null=True, blank=True
-    )
+    size_preference = models.IntegerField(choices=SIZE_CHOICES, null=True, blank=True)
     open_to_special_needs_animals = models.BooleanField(
         null=False, blank=False, default=True
     )
@@ -83,6 +83,7 @@ class Seeker(models.Model):
     def __str__(self):
         return self.account.name
 
+
 """
 The model for shelter.
 account is the django user that the shelter is associated with.
@@ -90,6 +91,8 @@ address, city and province provides the location of the shelter.
 phone_number for additional contact information.
 description for additional information about the shelter such as mission statement.
 """
+
+
 class Shelter(models.Model):
     account = models.OneToOneField(Account, on_delete=models.CASCADE)
     address = models.CharField(max_length=255, null=False, blank=False)
