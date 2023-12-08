@@ -1,7 +1,20 @@
-import { useState, useParams } from "react";
+import React, { useEffect } from 'react';
+import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { ajax_or_login } from '../../../../util/ajax';
+import { useNavigate } from 'react-router-dom';
 
 function Index() {
+    const [error, setError] = useState("");
+    const [statusChange, setStatusChange] = useState("");
+
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
+        seeker: null,
+        shelter: null,
+        petlisting: null,
+
         residence_type: null,
         fenced_yard: null,
         pool: null,
@@ -26,25 +39,69 @@ function Index() {
         questions: null
     });
 
-    const { petlistingID } = useParams();
+    const { applicationID } = useParams();
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+    async function handleStatusChange(e) {
+        e.preventDefault();
+
+        const postRequestOptions = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "status": e.target.value
+            })
+        };
+        
+        const res = await ajax_or_login(`/applications/shelter/${applicationID}/`, postRequestOptions, navigate);
+
+        if (!res.ok) {
+            const data = await res.json();
+            if ('detail' in data) {
+                if (data.detail === "Not found.") {
+                    setError("Invalid Application");
+                }
+                else {
+                    setError(data.detail);
+                }
+            }
+        }
+        else {
+            navigate("./")
+            setFormData({...FormData, status: e.target.value});
+            if (e.target.value === "accepted") {
+                setStatusChange("Application Accepted Successfully");
+            }
+            else if (e.target.value === "denied") {
+                setStatusChange("Application Denied Successfully");
+            }
+        }
+
     };
 
-    const handleSubmit = () => {
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData)
+    useEffect(() => {
+        const getRequestOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
         };
 
-        fetch(`https://localhost:8000/applications/seeker/application/${petlistingID}/`, requestOptions)
-        .then(response => response.json())
-        .then(json => console.log(json));
-        console.log("hello");
-    };
+        const fetchData = async () => {
+          try {
+            const response = await ajax_or_login(`/applications/shelter/${applicationID}/`, getRequestOptions, navigate);
+            const result = await response.json();
+            setFormData(result);
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          }
+        };
+    
+        fetchData();
+    }, [applicationID, navigate, formData?.status]);
+
+    
 
     return <>
             <main className="px-mobile md:px-tablet xl:px-desktop py-10">
@@ -59,11 +116,68 @@ function Index() {
                         <p
                             className="py-10 text-xl text-center md:text-5xl text-white font-semibold"
                         >
-                            Your Application Response
+                            Seeker Application
                         </p>
                         </div>
                     </div>
                     </div>
+
+                    {/* wrapper for step label and sub-form (Contact Information)*/}
+                    <div className="flex flex-col items-center">
+                    {/* Sub-Form (Application Information)*/}
+                    <div id="CI_sub_form" className="w-full flex flex-col items-center">
+                        {/* wrapper for sub-form label and fields*/}
+                        <div className="w-full">
+                        {/* label */}
+                        <div className="flex items-left rounded-t-xl bg-secondary md:px-5">
+                            <div>
+                            <p
+                                className="text-xs font-thin px-2 py-1 sm:font-semibold sm:text-base sm:px-3 sm:py-2 text-black"
+                            >
+                                Application Information
+                            </p>
+                            </div>
+                        </div>
+                        {/* fields */}
+                        <div className="flex items-center rounded-md bg-background">
+                            {/* grid for fields */}
+                            <div
+                            className="w-full grid grid-rows-2 grid-cols-1 gap-4 px-4 md:px-12 py-8 md:py-12"
+                            >
+                            {/* wrapper for pet name */}
+                            <div className="w-full">
+                                <div>
+                                <p className="py-2 text-xs text-thin md:text-base text-black">
+                                    Pet:
+                                </p>
+                                </div>
+                                <div>
+                                <p className="px-2 text-xs md:text-sm text-slate-500">
+                                {formData?.petlisting?.pet?.name}
+                                </p>
+                                </div>
+                            </div>
+                            {/* wrapper for status */}
+                            <div className="w-full">
+                                <div>
+                                <p className="py-2 text-xs text-thin md:text-base text-black">
+                                    Status:
+                                </p>
+                                </div>
+                                <div>
+                                <p className="px-2 text-xs md:text-sm text-slate-500">
+                                    {formData?.status}
+                                </p>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+
+
+
                     {/* wrapper for step label and sub-form (Contact Information)*/}
                     <div className="flex flex-col items-center">
                     {/* Sub-Form (Contact Information)*/}
@@ -95,7 +209,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                {formData.name}
+                                {formData?.seeker?.account?.name}
                                 </p>
                                 </div>
                             </div>
@@ -108,7 +222,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                {formData.email}
+                                {formData?.seeker?.account?.name}
                                 </p>
                                 </div>
                             </div>
@@ -121,7 +235,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {formData.address}
+                                    {formData?.address}
                                 </p>
                                 </div>
                             </div>
@@ -134,7 +248,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                {formData.city}
+                                {formData?.city}
                                 </p>
                                 </div>
                             </div>
@@ -147,7 +261,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {formData.city}
+                                    {formData?.city}
                                 </p>
                                 </div>
                             </div>
@@ -160,7 +274,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {formData.phone_number}
+                                    {formData?.phone_number}
                                 </p>
                                 </div>
                             </div>
@@ -201,7 +315,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {formData.residence_type}
+                                    {formData?.residence_type}
                                 </p>
                                 </div>
                             </div>
@@ -215,7 +329,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {formData.fenced_yard}
+                                    {formData?.fenced_yard}
                                 </p>
                                 </div>
                             </div>
@@ -229,7 +343,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {formData.pool}
+                                    {formData?.pool}
                                 </p>
                                 </div>
                             </div>
@@ -245,7 +359,7 @@ function Index() {
                                 <p
                                     className="px-2 text-xs text-center sm:text-left md:text-sm text-slate-500"
                                 >
-                                    {formData.children}
+                                    {formData?.children}
                                 </p>
                                 </div>
                             </div>
@@ -260,7 +374,7 @@ function Index() {
                                 <p
                                     className="px-2 text-xs text-center sm:text-left md:text-sm text-slate-500"
                                 >
-                                    {formData.children_under_13}
+                                    {formData?.children_under_13}
                                 </p>
                                 </div>
                             </div>
@@ -275,7 +389,7 @@ function Index() {
                                 <p
                                     className="px-2 text-xs text-center sm:text-left md:text-sm text-slate-500"
                                 >
-                                    {formData.current_pets}
+                                    {formData?.current_pets}
                                 </p>
                                 </div>
                             </div>
@@ -316,7 +430,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {formData.good_fit}
+                                    {formData?.good_fit}
                                 </p>
                                 </div>
                             </div>
@@ -330,7 +444,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {formData.schedule}
+                                    {formData?.schedule}
                                 </p>
                                 </div>
                             </div>
@@ -343,7 +457,7 @@ function Index() {
                                 </div>
                                 <div className="sm:text-left">
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {formData.insurance}
+                                    {formData?.insurance}
                                 </p>
                                 </div>
                             </div>
@@ -385,7 +499,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                   {formData.references}
+                                   {formData?.references}
                                 </p>
                                 </div>
                             </div>
@@ -398,7 +512,7 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {formData.vet}
+                                    {formData?.vet}
                                 </p>
                                 </div>
                             </div>
@@ -411,18 +525,21 @@ function Index() {
                                 </div>
                                 <div>
                                 <p className="px-2 text-xs md:text-sm text-slate-500">
-                                    {formData.questions}
+                                    {formData?.questions}
                                 </p>
                                 </div>
                             </div>
+
+                        
                             </div>
                         </div>
                         </div>
                     </div>
                     </div>
 
-                    {/* wrapper for return button */}
-                    <div className="w-full flex flex-row justify-center items-center">
+
+                    {/* wrapper for status changing buttons */}
+                    <div className="w-full flex flex-row justify-center items-center gap-3">
                     <div className="flex">
                         <a
                         href="../UserDetail/userApplicationsOverview.html"
@@ -430,6 +547,34 @@ function Index() {
                         className="rounded-xl bg-accent-100 px-4 sm:px-12 py-2 sm:py-3 text-white text-lg font-semibold login_button justify-center text-center hover:scale-105 duration-200"
                         >Return</a>
                     </div>
+                    <>
+                        {formData?.status === "pending" ? (
+                            <>
+                            <div className="flex">
+                            <button
+                            onClick={handleStatusChange}
+                            value="accepted"
+                            name="button_submit"
+                            className="rounded-xl bg-green-400 px-2 sm:px-12 py-2 sm:py-3 text-white text-base font-semibold login_button justify-center text-center hover:scale-105 duration-200"
+                            >Accept Application</button>
+                            </div>
+                            <div className="flex">
+                            <button
+                            onClick={handleStatusChange}
+                            value="denied"
+                            name="button_submit"
+                            className="rounded-xl bg-red-400 px-2 sm:px-12 py-2 sm:py-3 text-white text-base font-semibold login_button justify-center text-center hover:scale-105 duration-200"
+                            >Deny Application</button>
+                            </div>
+                            </>
+                        ) : null}
+                    </>
+                    </div>
+                    <div className="flex justify-center">
+                            <p className="font-semibold text-xs sm:text-sm text-green-500">{statusChange}</p>
+                    </div>
+                    <div className="flex justify-center">
+                            <p className="font-semibold text-xs sm:text-sm text-red-500">{error}</p>
                     </div>
                 </form>
             </main>

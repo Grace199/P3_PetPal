@@ -9,6 +9,9 @@ import MyListings from './pages/MyListings'
 import Login from './pages/Login';
 import ShelterList from './pages/ShelterList';
 import SignupSeeker from './pages/Signup/Seeker';
+import SignupShelter from './pages/Signup/Shelter';
+import ApplicationUpdateSeeker from './pages/Applications/Update/Seeker';
+import ApplicationUpdateShelter from './pages/Applications/Update/Shelter'
 import './App.css';
 import { UserContext, useUserContext } from './contexts/UserContext';
 
@@ -23,8 +26,11 @@ function App() {
           <Route path="petlistings/" element={<PetListings />} />
           <Route path="mylistings/" element={<MyListings />} />
           <Route path="signup/seeker/" element={<SignupSeeker />} />
+          <Route path="signup/shelter/" element={<SignupShelter />} />
           <Route path="login/" element={<Login />} />
           <Route path="applications/create/:petlistingID" element={<ApplicationCreate />} />
+          <Route path="applications/update/seeker/:applicationID" element={<ApplicationUpdateSeeker />} />
+          <Route path="applications/update/shelter/:applicationID" element={<ApplicationUpdateShelter />} />
           <Route path="shelters/" element={<ShelterList />} />
         </Route>
         <Route path="*" element={<NotFound />} />
