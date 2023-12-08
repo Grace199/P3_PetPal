@@ -147,7 +147,7 @@ const Index = () => {
                     </div>
                 </div>
                 <div className="w-full flex justify-center items-center gap-5">
-                    {query.page > 1 &&
+                    {query.page > 1 ?
                         <button
                             className="bg-transparent border border-primary text-primary font-bold px-10 py-3 rounded-xl hover:scale-105 active:scale-95"
                             onClick={() => {
@@ -159,9 +159,19 @@ const Index = () => {
                         >
                             Previous
                         </button>
+
+                        :
+
+                        <button
+                            className="bg-transparent border border-secondary text-secondary font-bold px-10 py-3 rounded-xl"
+                        >
+                            Previous
+                        </button>
                     }
 
-                    {query.page < totalPage &&
+                    <p>Page {query.page} of {totalPage}</p>
+
+                    {query.page < totalPage ?
                         <button
                             className="bg-transparent border border-primary text-primary font-bold px-10 py-3 rounded-xl hover:scale-105 active:scale-95"
                             onClick={() => {
@@ -170,6 +180,14 @@ const Index = () => {
                                 newSearchParams.set('page', newPage);
                                 setSearchParams(newSearchParams);
                             }}
+                        >
+                            Next
+                        </button>
+
+                        :
+
+                        <button
+                            className="bg-transparent border border-secondary text-secondary font-bold px-10 py-3 rounded-xl"
                         >
                             Next
                         </button>
