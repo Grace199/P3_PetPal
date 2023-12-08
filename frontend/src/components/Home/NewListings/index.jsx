@@ -29,7 +29,7 @@ const Index = () => {
             <div className="w-full flex justify-evenly mt-12 gap-3 text-background">
             {petListings && 
                 petListings.map(listing => (
-                    <AnimalCardBlue name={listing.pet.name} id={listing.id} img={listing.pet.image1} />
+                    <AnimalCardBlue key={listing.id} name={listing.pet.name} id={listing.id} img={listing.pet.image1} />
                 ))
             }
             </div>
