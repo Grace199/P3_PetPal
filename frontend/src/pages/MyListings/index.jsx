@@ -1,21 +1,25 @@
-import React, { useState, useMemo, useEffect, useContext } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { useSearchParams } from "react-router-dom";
-import backdrop from '../../assets/images/Home/heroBanner.jpg'
+import backdrop from '../../assets/images/MyListing.png'
 import EditAnimalCard from '../../components/EditAnimalCard'
 import CreateAnimalCard from '../../components/CreateAnimalCard'
 import FilterForm from '../../components/FilterForm'
 import {ajax_or_login} from '../../util/ajax'
-import { UserContext } from '../../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
 
 
 const Index = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [totalPage, setTotalPage] = useState(20);
+    const [totalPage, setTotalPage] = useState(0);
     const [openFilter, setOpenFilter] = useState(false);
-    const [shelter, setShelter] = useState('');
+    const [petlistings, setPetlistings] = useState([]);
+    const AGE_CHOICES = ["Infant", "Young", "Adult", "Senior"];
+    const navigate = useNavigate();
+    const [shelter, setShelter] = useState(null);
+
     const [formData, setFormData] = useState({
         animal: null,
+        shelter: null,
         status: null,
         breed: null,
         age: null,
@@ -23,8 +27,6 @@ const Index = () => {
         colour: null,
         sex: null,
     })
-    const { id } = useContext(UserContext);
-    const navigate = useNavigate();
 
     const handleSortChange = (event) => {
         const newSortValue = event.target.value;
@@ -43,10 +45,11 @@ const Index = () => {
         const newSearchParams = new URLSearchParams(searchParams);
 
         for (let name in formData) {
-            if (formData[name] !== null && formData[name] !== '') {
+            if (formData[name] !== null) {
                 newSearchParams.set(name, formData[name]);
             }
         }
+        newSearchParams.set('page', 1);
 
         setSearchParams(newSearchParams);
     }
@@ -62,25 +65,60 @@ const Index = () => {
         sort: searchParams.get("sort") ?? 'name',
         page: parseInt(searchParams.get("page") ?? 1),
     }), [searchParams]);
+    
+    const fetchData = async () => {
+        try {
+            const queryString = constructQueryString(query);
+            const res = await ajax_or_login(`/petlisting${queryString ? `?${queryString}&shelter=${shelter}` : `?shelter=${shelter}`}`, {
+                method: "GET"
+            }, navigate);
 
+            if (res.ok) {
+                const data = await res.json();
+                setTotalPage(Math.ceil(data.count / 20));
+                setPetlistings(data.results);
+                console.log(data)
+            } else {
+                handleFetchError(res);
+            }
+        } catch (error) {
+            handleFetchError(error);
+        } 
+    };
+
+    useEffect(() => {
+        if (shelter !== null && shelter !== '') {
+            fetchData();
+        }
+    }, [query, shelter]);
+
+    const constructQueryString = (params) => {
+        return new URLSearchParams(params).toString();
+    };
+
+    const handleFetchError = (error) => {
+        console.error("Error during fetch:", error.message);
+
+        // Reset page parameter in searchParams state to 1
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.set('page', 1);
+        setSearchParams(newSearchParams);
+    };
 
     const getShelter = async () => {
+        const id = parseInt(localStorage.getItem("userID"), 10);
         const res = await ajax_or_login(`/accounts/shelter/${id}`, {method: "GET"}, navigate);
         if (res.ok) {
             const data = await res.json();
             console.log(data);
+            setShelter(data.account.name);
         }
     }
 
-    useEffect(() => {  
+    useEffect(() => {
         getShelter();
     }, [])
 
-    useEffect(() => {
-        // Fetch data
-        setTotalPage(20);
-        setShelter("shelter name");
-    }, [query]);
 
     return (
         <>
@@ -123,24 +161,11 @@ const Index = () => {
 
                     <div className="w-full py-10 flex flex-wrap gap-3 justify-center">
                         <CreateAnimalCard />
+                        {petlistings && petlistings.map(petlisting => (
+                            <EditAnimalCard key={petlisting.id} id={petlisting.id} name={petlisting.pet.name} img={petlisting.pet.image1} properties={`${AGE_CHOICES[petlisting.pet.age - 1]} • ${petlisting.pet.breed}`} />
+                        ))}
 
-                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
-                        <EditAnimalCard id={1} name={"bobby"} img={backdrop} properties={"Puppy • Shiba Inu"} />
+                        {(!petlistings || petlistings.length === 0) && "No results"}
                     </div>
                 </div>
                 <div className="w-full flex justify-center items-center gap-5">
