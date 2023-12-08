@@ -56,8 +56,8 @@ class PetListingListCreate(ListCreateAPIView):
         # Base on the query parameters, sort and filter accordingly
         if shelter_name:
             ### Query by shelter name instead
-            account = get_object_or_404(Account, name=shelter_name)
-            shelter = get_object_or_404(Shelter, account=account)
+            account = Account.objects.filter(name=shelter_name).first()
+            shelter = Shelter.objects.filter(account=account).first()
             # shelter = get_object_or_404(Shelter, id=shelter_id)
             queryset = queryset.filter(shelter=shelter)
 

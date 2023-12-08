@@ -280,4 +280,4 @@ class ShelterSerializer(ModelSerializer):
 
     class Meta:
         model = Shelter
-        exclude = ["id"]
+        fields = '__all__'

@@ -9,10 +9,11 @@ import MyListings from './pages/MyListings'
 import Login from './pages/Login';
 import SignupSeeker from './pages/Signup/Seeker';
 import './App.css';
-
+import { UserContext, useUserContext } from './contexts/UserContext';
 
 function App() {
   return (
+   <UserContext.Provider value={useUserContext()}>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
@@ -27,6 +28,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
+  </UserContext.Provider>
   );
 }
 
