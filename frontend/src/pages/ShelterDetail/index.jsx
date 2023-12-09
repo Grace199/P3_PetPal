@@ -152,7 +152,7 @@ const ShelterDetail = () => {
                             <div className="flex flex-col">
                                 <p className="text-text text-xl font-bold mb-1">All Reviews</p>
                                 <div className="border-t-2 mb-4"></div>
-                                <AllReviews key={shelterID} name="reviews" shelterID={shelterID}></AllReviews>
+                                <AllReviews key={shelterID} name="reviews" shelterID={shelterID} isSelf={isSelf}></AllReviews>
                             </div>
                         </div>
                     </div>
