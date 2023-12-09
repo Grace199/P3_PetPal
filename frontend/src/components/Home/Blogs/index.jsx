@@ -11,7 +11,7 @@ const index = () => {
             <div className="grid grid-cols-5 w-full gap-3 max-md:grid-cols-1 mt-12">
                 <Link
                     className="bg-primary md:col-span-2 h-[300px] rounded-3xl text-text flex justify-center items-center flex-col gap-5 p-10 duration-200 hover:scale-[1.02]"
-                    to="/blogs/pet-training"
+                    to="/blogs?type=pet_training"
                 >
                     <h2 className="text-center text-4xl underline font-bold">
                         Pet Training
@@ -22,7 +22,7 @@ const index = () => {
                 </Link>
                 <Link
                     className="bg-secondary md:col-span-3 h-[300px] rounded-3xl text-text flex justify-center items-center flex-col gap-5 p-10 duration-200 hover:scale-[1.02]"
-                    to="/blogs/pet-care"
+                    to="/blogs?type=pet_care"
                 >
                     <h2 className="text-center text-4xl underline font-bold">Pet Care</h2>
                     <p className="text-center">
@@ -31,7 +31,7 @@ const index = () => {
                 </Link>
                 <Link
                     className="bg-text md:col-span-3 h-[300px] text-background flex justify-center items-center flex-col gap-5 p-10 rounded-3xl duration-200 hover:scale-[1.02]"
-                    to="/blogs/adoption-tips"
+                    to="/blogs?type=adoption_tips"
                 >
                     <h2 className="text-center text-4xl underline font-bold">
                         Adoption Tips
@@ -42,7 +42,7 @@ const index = () => {
                 </Link>
                 <Link
                     className="bg-accent-100 md:col-span-2 h-[300px] text-background flex justify-center items-center flex-col gap-5 p-10 rounded-3xl duration-200 hover:scale-[1.02]"
-                    to="/blogs/others"
+                    to="/blogs?type=others"
                 >
                     <h2 className="text-center text-4xl underline font-bold">Others</h2>
                     <p className="text-center">

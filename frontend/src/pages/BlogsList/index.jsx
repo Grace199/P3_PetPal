@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import backdrop from '../../assets/images/Home/heroBanner.jpg'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ajax_or_login } from '../../util/ajax';
 import BlogListCard from '../../components/BlogListCard';
 
@@ -8,7 +8,7 @@ const Blogs = () => {
     const [query, setQuery] = useState({ search: "", page: 1 });
     const [totalPages, setTotalPages] = useState(1);
     const [blogs, setBlogs] = useState([]);
-    const [type, setType] = useState("other");
+    const [type, setType] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -67,6 +67,7 @@ const Blogs = () => {
                             onChange={handleTypeChange}
                             className="hover:cursor-pointer bg-[#F2F5FD] text-sm sm:text-base p-3 sm:p-6 rounded-xl border border-primary"
                         >
+                            <option value="" className="text-sm sm:text-base"></option>
                             <option value="other" className="text-sm sm:text-base">Other</option>
                             <option value="pet_training" className="text-sm sm:text-base">Pet Training</option>
                             <option value="pet_care" className="text-sm sm:text-base">Pet Care</option>

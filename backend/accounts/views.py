@@ -104,6 +104,7 @@ class SeekerRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 
 
 class ShelterRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
+    parser_classes = (MultiPartParser, FormParser)
     queryset = Shelter.objects.all()
     serializer_class = ShelterSerializer
 

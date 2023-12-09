@@ -23,14 +23,15 @@ const ApplicationListSeeker = () => {
             params.append('status', query.status);
             params.append('sort', query.sort);
             params.append('page', query.page);
-            
+
             const url = '/applications/shelter/list';
             const urlWithParams = `${url}?${params.toString()}`;
             try {
                 const res = await ajax_or_login(urlWithParams, { method: "GET" }, navigate);
                 if (res.ok) {
                     const data = await res.json();
-                    setTotalPages(Math.ceil(data.count / 20));
+                    const tot = Math.ceil(data.count / 20);
+                    setTotalPages(Math.max(tot, 1));
                     setApplications(data.results);
                 } else {
                     console.error("Error during fetch: ", res);
@@ -58,11 +59,11 @@ const ApplicationListSeeker = () => {
                     />
                 </div>
                 <div className="flex gap-3 max-xs:gap-1 px-mobile md:px-tablet xl:px-desktop max-sm:flex-col">
-                        <div className="flex max-sm:justify-start justify-center items-center gap-1 py-3 px-4 sm:px-2 md:px-8 rounded-full group">   
-                         <label
-                                htmlFor="filter_by_status"
-                                className="text-xs font-thin sm:text-sm text-black"
-                                >Filter by Status:
+                    <div className="flex max-sm:justify-start justify-center items-center gap-1 py-3 px-4 sm:px-2 md:px-8 rounded-full group">
+                        <label
+                            htmlFor="filter_by_status"
+                            className="text-xs font-thin sm:text-sm text-black"
+                        >Filter by Status:
                         </label>
                         <form id="filter_by_status">
                             <select name="status" value={query.status} onChange={handleQueryChange} className='hover:cursor-pointer px-1 py-1 flex flex-col place-items-center rounded-3xl bg-primary w-full text-xs md:text-sm lg:text-base xl:text-lg'>
@@ -73,13 +74,13 @@ const ApplicationListSeeker = () => {
                                 <option value="withdrawn">withdrawn</option>
                             </select>
                         </form>
-                        </div>
+                    </div>
 
-                        <div className="flex justify-center max-sm:justify-start items-center gap-1 py-3 px-4 max-sm:px-2 md:px-8 rounded-full group">
+                    <div className="flex justify-center max-sm:justify-start items-center gap-1 py-3 px-4 max-sm:px-2 md:px-8 rounded-full group">
                         <label
-                                htmlFor="sort_by_time"
-                                className="text-xs font-thin sm:text-sm text-black"
-                                >Sort by Create or Update Time:
+                            htmlFor="sort_by_time"
+                            className="text-xs font-thin sm:text-sm text-black"
+                        >Sort by Create or Update Time:
                         </label>
                         <form id="sort_by_time">
                             <select name="sort" value={query.sort} onChange={handleQueryChange} className='hover:cursor-pointer px-1 py-1 flex flex-col place-items-center rounded-3xl bg-primary w-full text-xs md:text-sm lg:text-base xl:text-lg'>
@@ -88,7 +89,7 @@ const ApplicationListSeeker = () => {
                                 <option value="update_time">update</option>
                             </select>
                         </form>
-                        </div>
+                    </div>
                 </div>
                 <div className="w-full gap-8 flex flex-col px-mobile md:px-tablet xl:px-desktop pt-6 sm:pt-16">
                     {applications && applications.map(application => (

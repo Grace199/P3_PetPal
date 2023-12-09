@@ -175,7 +175,7 @@ const Index = () => {
 
                         <Link
                             className="w-full bg-[#c57f2f] p-8 text-xl text-background hover:bg-accent-200"
-                            to={isSeeker ? "/manageaccount" : `/shelterDetail/${id}/`}
+                            to={isSeeker ? "/seekerDetail" : `/shelterDetail/${id}/`}
                         >Manage Account</Link>
                         <button
                             className="w-full bg-[#b22626] p-8 text-xl text-background hover:bg-accent-200 text-left"

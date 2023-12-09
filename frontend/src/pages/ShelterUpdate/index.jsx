@@ -94,18 +94,26 @@ const ShelterUpdate = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const shelterData = {
-                // account: {
-                //     avatar: profilePic
-                // },
-                description: description,
-                address: address,
-                city: city,
-                province: province,
-                phone_number: phoneNumber
+            // const shelterData = {
+            //     account: {
+            //         avatar: profilePic
+            //     },
+            //     description: description,
+            //     address: address,
+            //     city: city,
+            //     province: province,
+            //     phone_number: phoneNumber
+            // }
+            let formData = new FormData();
+            if (profilePic) {
+                formData.append("account.avatar", profilePic);
             }
+            formData.append("address", address);
+            formData.append("city", city);
+            formData.append("province", province);
+            formData.append("phone_number", phoneNumber);
 
-            const res = await ajax_or_login(`/accounts/shelter/${shelterID}/`, { method: "PATCH", body: JSON.stringify(shelterData), headers: { 'Content-Type': 'application/json' } }, navigate);
+            const res = await ajax_or_login(`/accounts/shelter/${shelterID}/`, { method: "PATCH", body: formData }, navigate);
 
             if (!res.ok) {
                 if (res.status === 400) {

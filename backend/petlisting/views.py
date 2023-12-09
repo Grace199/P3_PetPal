@@ -8,7 +8,11 @@ from .models import *
 from accounts.models import *
 from rest_framework.exceptions import PermissionDenied
 
+from rest_framework.parsers import MultiPartParser, FormParser
+
+
 class PetListingDetail(RetrieveUpdateDestroyAPIView):
+    parser_classes = (MultiPartParser, FormParser)
     queryset = PetListing.objects.all()
     serializer_class = PetListingSerializer
 
@@ -16,7 +20,7 @@ class PetListingDetail(RetrieveUpdateDestroyAPIView):
         # Check if the current user is the petlisting shelter
         if serializer.instance.shelter.account == self.request.user:
             serializer.save()
-        else: # If not then request is denied
+        else:  # If not then request is denied
             raise PermissionDenied("You do not have permission to update this listing.")
 
     def perform_destroy(self, instance):
@@ -24,11 +28,12 @@ class PetListingDetail(RetrieveUpdateDestroyAPIView):
         if instance.shelter.account == self.request.user:
             instance.pet.delete()
             instance.delete()
-        else: # If not then request is denied
+        else:  # If not then request is denied
             raise PermissionDenied("You do not have permission to delete this listing.")
 
 
 class PetListingListCreate(ListCreateAPIView):
+    parser_classes = (MultiPartParser, FormParser)
     serializer_class = PetListingSerializer
 
     def get_queryset(self):
@@ -39,19 +44,19 @@ class PetListingListCreate(ListCreateAPIView):
 
         #### Changed from id to name
         # shelter_id = self.request.query_params.get('shelter', None)
-        shelter_name = self.request.query_params.get('shelter', None)
-        status = self.request.query_params.get('status', 'AVAILABLE')
+        shelter_name = self.request.query_params.get("shelter", None)
+        status = self.request.query_params.get("status", "AVAILABLE")
 
         # Take in query parameters for pet
-        animal = self.request.query_params.get('animal', None)
-        breed = self.request.query_params.get('breed', None)
-        age = self.request.query_params.get('age', None)
-        size = self.request.query_params.get('size', None)
-        colour = self.request.query_params.get('colour', None)
-        sex = self.request.query_params.get('sex', None)
+        animal = self.request.query_params.get("animal", None)
+        breed = self.request.query_params.get("breed", None)
+        age = self.request.query_params.get("age", None)
+        size = self.request.query_params.get("size", None)
+        colour = self.request.query_params.get("colour", None)
+        sex = self.request.query_params.get("sex", None)
 
         # Take in query parameters for sort
-        sort = self.request.query_params.get('sort', 'name')
+        sort = self.request.query_params.get("sort", "name")
 
         # Base on the query parameters, sort and filter accordingly
         if shelter_name:
@@ -78,16 +83,16 @@ class PetListingListCreate(ListCreateAPIView):
         if sex:
             queryset = queryset.filter(pet__sex__iexact=sex)
 
-        if sort == 'age':
-            queryset = queryset.order_by('pet__age')
-        elif sort == 'name':
-            queryset = queryset.order_by('pet__name')
-        elif sort == 'size':
-            queryset = queryset.order_by('pet__size')
+        if sort == "age":
+            queryset = queryset.order_by("pet__age")
+        elif sort == "name":
+            queryset = queryset.order_by("pet__name")
+        elif sort == "size":
+            queryset = queryset.order_by("pet__size")
 
         # Return the sorted and filtered data set
         return queryset
-    
+
     def perform_create(self, serializer):
         # Check if the current user is a seeker
         seeker = Seeker.objects.filter(account=self.request.user)
@@ -96,7 +101,7 @@ class PetListingListCreate(ListCreateAPIView):
                 detail="You do not have permission to create a pet listing",
                 code=401,
             )
-        
+
         # Get the shelter associated with the currrent user
         shelter = Shelter.objects.get(account=self.request.user)
         if shelter:
@@ -104,7 +109,7 @@ class PetListingListCreate(ListCreateAPIView):
             serializer.save(shelter=shelter)
 
             # Extract information of the pet
-            pet_data = self.request.data.get('pet', {})
+            pet_data = self.request.data.get("pet", {})
             animal = pet_data.get("animal_type")
             breed = pet_data.get("breed")
             age = pet_data.get("age")
@@ -115,8 +120,8 @@ class PetListingListCreate(ListCreateAPIView):
                 is_special_needs = True
             else:
                 is_special_needs = False
-            
-            petlisting_detail_url = f'/petdetail/{serializer.instance.id}'
+
+            petlisting_detail_url = f"/petdetail/{serializer.instance.id}"
             all_seekers = Seeker.objects.all()
             message = "A new pet you might like!"
             send_notif = False
@@ -138,10 +143,12 @@ class PetListingListCreate(ListCreateAPIView):
 
                 # If any preference matches, then generate a notification to alert the user
                 if send_notif:
-                    notification = Notification(user=seeker.account, url=petlisting_detail_url, msg=message)
+                    notification = Notification(
+                        user=seeker.account, url=petlisting_detail_url, msg=message
+                    )
                     notification.save()
         else:
             raise PermissionDenied(
-                    detail="You do not have permission to create a pet listing",
-                    code=401,
-                )
+                detail="You do not have permission to create a pet listing",
+                code=401,
+            )
