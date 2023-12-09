@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ajax_or_login } from '../../util/ajax'
 import FieldError from "../../components/FieldError";
 
 const Index = () => {
     const navigate = useNavigate();
+    const { petlistingID } = useParams();
 
     const [errors, setErrors] = useState({
       pet: {
@@ -37,38 +38,61 @@ const Index = () => {
 
     useEffect(() => {
       setErrors({});
-    }, [navigate]);
+    }, [navigate, petlistingID]);
 
     const [formData, setFormData] = useState({
       pet: {
-        is_friendly: "False",
-        is_adventurous: "False",
-        is_extroverted: "False",
-        is_introverted: "False",
-        is_energetic: "False",
-        is_spn: "False",
-        is_vaccinated: "False",
-        animal_type: null,
-        name: null,
-        age: null,
-        sex: null,
-        size: null,
-        colour: null,
-        breed: null,
-        description: null,
-        special_needs: null, // not required
-        weight: null,
+        is_friendly: false,
+        is_adventurous: false,
+        is_extroverted: false,
+        is_introverted: false,
+        is_energetic: false,
+        is_spn: false,
+        is_vaccinated: false,
+        animal_type: "",
+        name: "",
+        age: "",
+        sex: "",
+        size: "",
+        colour: "",
+        breed: "",
+        description: "",
+        special_needs: "", // not required
+        weight: "",
       },
 
-      status: null,
-      adoption_fee: null
+      status: "",
+      adoption_fee: ""
 
     });
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await ajax_or_login(`/petlisting/${petlistingID}`, { method: "GET" }, navigate);
+                if (res.ok) {
+                    const data = await res.json();
+                    const { pet: { image1, image2, image3, ...restOfPet }, ...restOfData } = data;
+
+                    setFormData({
+                        pet: restOfPet,
+                        ...restOfData,
+                    });
+
+                } else {
+                    console.error("Error during fetch: ", res);
+                }
+            } catch (error) {
+                console.error("Error during fetch: ", error);
+            }
+        };
+        fetchData();
+    }, [navigate, petlistingID]);
 
     async function handle_submit(event) {
       event.preventDefault();
       const requestOptions = {
-          method: 'Post',
+          method: 'Put',
           headers: {
               'Content-Type': 'application/json'
           },
@@ -77,20 +101,44 @@ const Index = () => {
 
       try {
         console.log(JSON.stringify(formData));
-        const res = await ajax_or_login(`/petlisting/`, requestOptions, navigate);
+        const res = await ajax_or_login(`/petlisting/${petlistingID}/`, requestOptions, navigate);
 
         if (!res.ok) {
           const json = await res.json();
-          console.log(json);
           setErrors(json);
         }
         else {
-          navigate("../../Login/");
+          navigate("/petlistings/");
         }
       } catch (error) {
         console.error("Error during fetch: ", error);
       }
     };
+
+    async function handle_delete(event) {
+        event.preventDefault();
+        const requestOptions = {
+            method: 'Delete',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        };
+  
+        try {
+          const res = await ajax_or_login(`/petlisting/${petlistingID}`, requestOptions, navigate);
+  
+          if (!res.ok) {
+            const json = await res.json();
+            setErrors(json);
+          }
+          else {
+            navigate("/petlistings/");
+          }
+        } catch (error) {
+          console.error("Error during fetch: ", error);
+        }
+      };
 
     const handleInputChangeForm = (e) => {
       const { name, value} = e.target;
@@ -106,7 +154,7 @@ const Index = () => {
 
     const handleInputChangeFormPetBool = (e) => {
       const { name, checked} = e.target;
-      const value = checked ? "True" : "False";
+      const value = checked ? true : false;
       setFormData({ ...formData, pet: {
         ...formData.pet, [name]: value
       } });
@@ -161,6 +209,7 @@ const Index = () => {
                     >Pet Name:</label>
                   <input onChange={handleInputChangeFormPet}
                     name="name"
+                    value={formData?.pet?.name ?? ''}
                     id="PD_pet_name"
                     type="text"
                     className="w-full rounded-md text-sm px-3 py-2 border-opacity-25 border-[1.5px] focus:border-primary border-primary text-accent-100"
@@ -193,6 +242,7 @@ const Index = () => {
                         id="animal_type_dog"
                         className="form-radio h-3 w-3"
                         name="animal_type"
+                        checked={formData?.pet?.animal_type === "dog"}
                         value="dog"
                         required
                       />
@@ -210,6 +260,7 @@ const Index = () => {
                         id="animal_type_cat"
                         className="form-radio h-3 w-3"
                         name="animal_type"
+                        checked={formData?.pet?.animal_type === "cat"}
                         value="cat"
                         required
                       />
@@ -228,6 +279,7 @@ const Index = () => {
                         id="animal_type_other"
                         className="form-radio h-3 w-3"
                         name="animal_type"
+                        checked={formData?.pet?.animal_type === "other"}
                         value="other"
                         required
                       />
@@ -265,7 +317,7 @@ const Index = () => {
                         className="form-checkbox h-3 w-3"
                         name="is_friendly"
                         value="True"
-                        
+                        checked={formData?.pet?.is_friendly === true ?? false}
                       />
                       <label
                         htmlFor="PD_friendly"
@@ -282,7 +334,7 @@ const Index = () => {
                         className="form-checkbox h-3 w-3"
                         name="is_adventurous"
                         value="True"
-                        
+                        checked={formData?.pet?.is_adventurous === true ?? false}
                       />
                       <label
                         htmlFor="PD_adventurous"
@@ -299,7 +351,7 @@ const Index = () => {
                         className="form-checkbox h-3 w-3"
                         name="is_extroverted"
                         value="True"
-                        
+                        checked={formData?.pet?.is_extroverted === true ?? false}
                       />
                       <label
                         htmlFor="PD_extroverted"
@@ -316,6 +368,7 @@ const Index = () => {
                         className="form-checkbox h-3 w-3"
                         name="is_introverted"
                         value="True"
+                        checked={formData?.pet?.is_introverted === true ?? false}
                         
                       />
                       <label
@@ -333,7 +386,7 @@ const Index = () => {
                         className="form-checkbox h-3 w-3"
                         name="is_energetic"
                         value="True"
-                        
+                        checked={formData?.pet?.is_energetic === true ?? false}
                       />
                       <label
                         htmlFor="PD_energetic"
@@ -368,7 +421,7 @@ const Index = () => {
                         className="form-checkbox h-3 w-3"
                         name="is_spn"
                         value="True"
-                        
+                        checked={formData?.pet?.is_spn === true ?? false}
                       />
                       <label
                         htmlFor="PD_spayed"
@@ -385,7 +438,7 @@ const Index = () => {
                         className="form-checkbox h-3 w-3"
                         name="is_vaccinated"
                         value="True"
-                        
+                        checked={formData?.pet?.is_vaccinated === true ?? false}
                       />
                       <label
                         htmlFor="PD_vaccinated"
@@ -405,6 +458,7 @@ const Index = () => {
                     id="PD_weight"
                     type="text"
                     name="weight"
+                    value={formData?.pet?.weight ?? ''}
                     className="w-full rounded-md text-sm px-3 py-2 border-opacity-25 border-[1.5px] focus:border-primary border-primary text-accent-100"
                     required
                   />
@@ -423,6 +477,7 @@ const Index = () => {
                     id="PD_breed"
                     type="text"
                     name="breed"
+                    value={formData?.pet?.breed ?? ''}
                     className="w-full rounded-md text-sm px-3 py-2 border-opacity-25 border-[1.5px] focus:border-primary border-primary text-accent-100"
                     required
                   />
@@ -455,6 +510,7 @@ const Index = () => {
                         className="form-radio h-3 w-3"
                         name="age"
                         value="1"
+                        checked={formData?.pet?.age === "1" || formData?.pet?.age === 1}
                         required
                       />
                       <label
@@ -472,6 +528,7 @@ const Index = () => {
                         className="form-radio h-3 w-3"
                         name="age"
                         value="2"
+                        checked={formData?.pet?.age === "2" || formData?.pet?.age === 2}
                         required
                       />
                       <label
@@ -489,6 +546,7 @@ const Index = () => {
                         className="form-radio h-3 w-3"
                         name="age"
                         value="3"
+                        checked={formData?.pet?.age === "3" || formData?.pet?.age === 3}
                         required
                       />
                       <label
@@ -507,6 +565,7 @@ const Index = () => {
                         className="form-radio h-3 w-3"
                         name="age"
                         value="4"
+                        checked={formData?.pet?.age === "4" || formData?.pet?.age === 4}
                         required
                       />
                       <label
@@ -543,6 +602,7 @@ const Index = () => {
                         className="form-radio h-3 w-3"
                         name="sex"
                         value="male"
+                        checked={formData?.pet?.sex === "male" ?? false}
                         required
                       />
                       <label
@@ -560,6 +620,7 @@ const Index = () => {
                         className="form-radio h-3 w-3"
                         name="sex"
                         value="female"
+                        checked={formData?.pet?.sex === "female" ?? false}
                         required
                       />
                       <label
@@ -596,6 +657,7 @@ const Index = () => {
                         className="form-radio h-3 w-3"
                         name="size"
                         value="1"
+                        checked={formData?.pet?.size === "1" || formData?.pet?.size === 1}
                         required
                       />
                       <label
@@ -613,6 +675,7 @@ const Index = () => {
                         className="form-radio h-3 w-3"
                         name="size"
                         value="2"
+                        checked={formData?.pet?.size === "2" || formData?.pet?.size === 2}
                         required
                       />
                       <label
@@ -630,6 +693,7 @@ const Index = () => {
                         className="form-radio h-3 w-3"
                         name="size"
                         value="3"
+                        checked={formData?.pet?.size === "3" || formData?.pet?.size === 3}
                         required
                       />
                       <label
@@ -666,6 +730,7 @@ const Index = () => {
                         className="form-radio h-3 w-3"
                         name="colour"
                         value="black"
+                        checked={formData?.pet?.colour === "black" ?? false}
                         required
                       />
                       <label
@@ -683,6 +748,7 @@ const Index = () => {
                         className="form-radio h-3 w-3"
                         name="colour"
                         value="white"
+                        checked={formData?.pet?.colour === "white" ?? false}
                         required
                       />
                       <label
@@ -700,6 +766,7 @@ const Index = () => {
                         className="form-radio h-3 w-3"
                         name="colour"
                         value="golden"
+                        checked={formData?.pet?.colour === "golden" ?? false}
                         required
                       />
                       <label
@@ -723,6 +790,7 @@ const Index = () => {
                     onChange={handleInputChangeFormPet}
                     id="PD_introduction"
                     name="description"
+                    value={formData?.pet?.description ?? ''}
                     className="rounded-md text-start align-top resize-none w-full text-sm px-3 py-2 h-40 border-opacity-25 border-[1.5px] focus:border-primary border-primary text-accent-100"
                     required
                   ></textarea>
@@ -739,6 +807,7 @@ const Index = () => {
                     id="PD_special_needs"
                     type="text"
                     name="special_needs"
+                    value={formData?.pet?.special_needs ?? ''}
                     className="w-full rounded-md text-sm px-3 py-2 border-opacity-25 border-[1.5px] focus:border-primary border-primary text-accent-100"
                   />
                 </div>
@@ -795,6 +864,7 @@ const Index = () => {
                     id="adoption_fee"
                     type="number"
                     name="adoption_fee"
+                    value={formData?.adoption_fee ?? ''}
                     className="w-full rounded-md text-sm px-3 py-2 border-opacity-25 border-[1.5px] focus:border-primary border-primary text-accent-100"
                   />
                 </div>
@@ -808,7 +878,7 @@ const Index = () => {
                           >Status:
                   </label>
                   <div id="status">
-                      <select name="status" onChange={handleInputChangeForm} className='hover:cursor-pointer'>
+                      <select name="status" value={formData?.status ?? ''} onChange={handleInputChangeForm} className='hover:cursor-pointer'>
                           <option value=""></option>
                           <option value="AVAILABLE">available</option>
                           <option value="WITHDRAWN">withdrawn</option>
@@ -830,18 +900,18 @@ const Index = () => {
           className="flex flex-col gap-5 sm:gap-10 sm:flex-row justify-center items-center"
         >
           <div className="flex">
-            <Link
-              to='/petlistings/'
+          <button
+              onClick={handle_delete}
               name="button_cancel"
               className="rounded-xl bg-red-400 px-2 sm:px-12 py-2 sm:py-3 text-white text-base font-semibold text-center hover:scale-105 duration-200"
-              >Cancel</Link>
+              >Delete Listing</button>
           </div>
           <div className="flex">
             <button
               onClick={handle_submit}
               name="button_create"
               className="rounded-xl bg-accent-100 px-2 sm:px-12 py-2 sm:py-3 text-white text-base font-semibold text-center hover:scale-105 duration-200"
-              >Create</button>
+              >Confirm Changes</button>
           </div>
           </div>
       </form>
