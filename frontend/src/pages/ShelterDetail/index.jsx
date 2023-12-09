@@ -157,7 +157,7 @@ const ShelterDetail = () => {
                         </div>
                     </div>
                 </div>
-            </main >
+            </main>
         </>
     )
 }
