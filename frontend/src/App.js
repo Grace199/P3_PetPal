@@ -13,6 +13,8 @@ import SignupShelter from './pages/Signup/Shelter';
 import ApplicationUpdateSeeker from './pages/Applications/Update/Seeker';
 import ApplicationUpdateShelter from './pages/Applications/Update/Shelter'
 import ShelterDetail from './pages/ShelterDetail';
+import SeekerDetail from './pages/SeekerDetail';
+import Notifications from './pages/Notifications';
 import './App.css';
 import { UserContext, useUserContext } from './contexts/UserContext';
 
@@ -34,6 +36,8 @@ function App() {
             <Route path="applications/update/shelter/:applicationID" element={<ApplicationUpdateShelter />} />
             <Route path="shelter/all/" element={<ShelterList />} />
             <Route path="shelterDetail/:shelterID" element={<ShelterDetail />} />
+            <Route path="notifications/" element={<Notifications />} />
+            <Route path="seekerdetail/" element={<SeekerDetail />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
