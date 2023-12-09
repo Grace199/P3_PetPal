@@ -39,11 +39,17 @@ class NotificationsListView(ListAPIView):
 
     def get_queryset(self):
         queryset = Notification.objects.filter(user = self.request.user)
-        sort = self.request.query_params.get('sort', 'creation_time')
-        is_read = self.request.query_params.get('is_read', False)
+        sort = self.request.query_params.get('sort', 'newest')
+        is_read = self.request.query_params.get('is_read', "false")
+
+        isreadvalue = True
+        if is_read == "false":
+            isreadvalue = False
+        elif is_read == "true":
+            isreadvalue = True
 
         if is_read:
-            queryset = queryset.filter(is_read = is_read)
+            queryset = queryset.filter(is_read = isreadvalue)
         if sort == 'newest':
             queryset = queryset.order_by('-creation_time')
         elif sort == 'oldest':

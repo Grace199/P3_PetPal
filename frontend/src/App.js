@@ -13,6 +13,8 @@ import SignupShelter from './pages/Signup/Shelter';
 import ApplicationUpdateSeeker from './pages/Applications/Update/Seeker';
 import ApplicationUpdateShelter from './pages/Applications/Update/Shelter'
 import ShelterDetail from './pages/ShelterDetail';
+import SeekerDetail from './pages/SeekerDetail';
+import Notifications from './pages/Notifications';
 import ApplicationListSeeker from './pages/Applications/List/Seeker';
 import ApplicationListShelter from './pages/Applications/List/Shelter';
 import CreatePetListing from './pages/CreatePetListing';
@@ -40,6 +42,8 @@ function App() {
             <Route path="applications/update/shelter/:applicationID" element={<ApplicationUpdateShelter />} />
             <Route path="shelter/all/" element={<ShelterList />} />
             <Route path="shelterDetail/:shelterID" element={<ShelterDetail />} />
+            <Route path="notifications/" element={<Notifications />} />
+            <Route path="seekerdetail/" element={<SeekerDetail />} />
             <Route path="applications/list/seeker/" element={<ApplicationListSeeker />} />
             <Route path="applications/list/shelter/" element={<ApplicationListShelter />} />
             <Route path="petlisting/create/" element={<CreatePetListing />} />
