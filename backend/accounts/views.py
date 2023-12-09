@@ -25,6 +25,8 @@ from rest_framework.permissions import AllowAny
 from applications.models import Application
 from rest_framework import filters
 
+from rest_framework.parsers import MultiPartParser, FormParser
+
 
 class BaseSignUpView(CreateAPIView):
     # serializer_class = None
@@ -45,6 +47,7 @@ class ShelterCreate(BaseSignUpView):
 
 
 class SeekerRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
+    parser_classes = (MultiPartParser, FormParser)
     queryset = Seeker.objects.all()
     serializer_class = SeekerSerializer
 
