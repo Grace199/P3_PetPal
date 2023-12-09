@@ -23,7 +23,7 @@ const Index = () => {
         >
             <h1 className="text-5xl font-bold mb-3 text-center">Shelters & Rescues</h1>
             <h2 className="text-3xl text-center">trusted adoption centers</h2>
-            <div className="w-full flex justify-evenly mt-12 gap-3 text-accent-100">
+            <div className="max-sm:flex-col w-full flex justify-evenly mt-12 gap-3 text-accent-100">
                 {shelters && (<>
                     {shelters[0] && <ShelterCard key={shelters[0].id} name={shelters[0].account.name} id={1} img={shelters[0].account.avatar} />}
                     {shelters[1] && <ShelterCard key={shelters[1].id} name={shelters[1].account.name} id={1} img={shelters[1].account.avatar} />}
