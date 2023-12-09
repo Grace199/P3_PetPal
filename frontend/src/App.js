@@ -15,6 +15,9 @@ import ApplicationUpdateShelter from './pages/Applications/Update/Shelter'
 import ShelterDetail from './pages/ShelterDetail';
 import ApplicationListSeeker from './pages/Applications/List/Seeker';
 import ApplicationListShelter from './pages/Applications/List/Shelter';
+import Chatroom from './pages/Chatroom';
+
+
 import './App.css';
 import { UserContext, useUserContext } from './contexts/UserContext';
 
@@ -39,6 +42,7 @@ function App() {
             <Route path="applications/list/seeker/" element={<ApplicationListSeeker />} />
             <Route path="applications/list/shelter/" element={<ApplicationListShelter />} />
           </Route>
+          <Route path="chatroom/" element={<Chatroom />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

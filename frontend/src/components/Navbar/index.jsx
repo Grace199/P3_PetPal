@@ -156,7 +156,7 @@ const Index = () => {
                     {avatar ? (<>
                         <Link
                             className="w-full bg-primary p-8 text-xl text-background hover:bg-accent-200"
-                            to="/chats"
+                            to="/chatroom"
                         >Chats</Link>
                         <Link
                             className="w-full bg-primary p-8 text-xl text-background hover:bg-accent-200"
