@@ -7,7 +7,7 @@ const ShelterUpdate = () => {
     const [id, setId] = useState(0);
     const [isSeeker, setIsSeeker] = useState(null);
     const [shelter, setShelter] = useState(null);
-    const [name, setName] = useState("");
+    const [oriName, setOriName] = useState("");
     const [description, setDescription] = useState("");
     const [address, setAddress] = useState("");
     const [city, setCity] = useState("");
@@ -30,13 +30,13 @@ const ShelterUpdate = () => {
                     setIsSeeker(JSON.parse(localStorage.getItem("isSeeker")));
                     setId(parseInt(localStorage.getItem("userID")));
 
-                    setName(data.account.name);
+                    setOriName(data.account.name);
                     setDescription(data.description);
                     setAddress(data.address);
                     setCity(data.city);
                     setProvince(data.province);
                     setPhoneNumber(data.phone_number);
-                    setProfilePic(data.account.avatar);
+
                 } else {
                     console.error("Error during fetch: ", res);
                 }
@@ -46,12 +46,6 @@ const ShelterUpdate = () => {
         };
         fetchData();
     }, [shelterID, navigate]);
-
-
-    const handleNameChange = (event) => {
-        const newName = event.target.value;
-        setName(newName);
-    }
 
     const handleDescriptionChange = (event) => {
         const newDescription = event.target.value;
@@ -87,23 +81,36 @@ const ShelterUpdate = () => {
         event.preventDefault();
         try {
             const shelterData = {
-                name: name,
+                // account: {
+                //     avatar: profilePic
+                // },
                 description: description,
                 address: address,
                 city: city,
                 province: province,
-                phone_number: phoneNumber,
-                account__avatar: profilePic
+                phone_number: phoneNumber
             }
+            console.log(shelterData);
+
             const res = await ajax_or_login(`/accounts/shelter/${shelterID}/`, { method: "PATCH", body: JSON.stringify(shelterData), headers: { 'Content-Type': 'application/json' } }, navigate);
+
             if (!res.ok) {
-                const data = await res.json();
-                if ('detail' in data) {
-                    if (data.detail === "Not found.") {
-                        setError("Invalid Application");
-                    }
-                    else {
-                        setError(data.detail);
+                if (res.status === 400) {
+                    const responseBody = await res.json();
+                    if (responseBody) {
+                        if (responseBody.account) {
+                            if (responseBody.account.avatar) {
+                                setError("Invalid profile picture");
+                            }
+                        } else if (responseBody.address) {
+                            setError("Address must not be blank");
+                        } else if (responseBody.city) {
+                            setError("City must not be blank");
+                        } else if (responseBody.province) {
+                            setError("Province must not be blank");
+                        } else if (responseBody.phone_number) {
+                            setError("Please enter a valid Canadian phone number");
+                        }
                     }
                 }
                 console.error("Error during fetch: ", res);
@@ -119,16 +126,12 @@ const ShelterUpdate = () => {
                 <div className="bg-[#F2F5FD] w-full rounded-b-2xl">
                     <div className="rounded-2xl flex flex-col overflow-hidden gap-4">
                         <div className="bg-secondary flex flex-row justify-between items-center h-12 px-4 sm:px-12">
-                            <p class="text-text text-xl font-semibold">Update Account</p>
+                            <p className="text-text text-xl font-semibold">Update Account</p>
                             <Link to={`/shelterDetail/${shelterID}/`}>
                                 <i className="uil uil-times text-text text-3xl"></i>
                             </Link>
                         </div>
-                        <div className="flex flex-col px-6 sm:px-12 md:px-20 gap-6 pb-8">
-                            <div className="flex flex-col gap-2">
-                                <p className="max-sm:text-sm">Shelter Name:</p>
-                                <textarea rows="1" className="w-full p-3 border border-secondary rounded-[7px] font-light resize-none max-sm:text-sm" value={name} onChange={handleNameChange} />
-                            </div>
+                        <form className="flex flex-col px-6 sm:px-12 md:px-20 gap-6 pb-8" onSubmit={handleSubmit}>
                             <div className="flex flex-col gap-2">
                                 <p className="max-sm:text-sm">Mission Statement:</p>
                                 <textarea rows="5" className="w-full p-3 border border-secondary rounded-[7px] font-light resize-none max-sm:text-sm" value={description} onChange={handleDescriptionChange} />
@@ -157,9 +160,9 @@ const ShelterUpdate = () => {
                                 <p className="font-semibold text-xs sm:text-sm text-red-500">{error}</p>
                             </div>
                             <div className="flex justify-center md:justify-end">
-                                <button className="bg-accent-100 rounded-full px-10 py-4 text-[#F2F5FD] font-bold text-lg" onClick={handleSubmit}>Update</button>
+                                <button type="submit" className="bg-accent-100 rounded-full px-10 py-4 text-[#F2F5FD] font-bold text-lg">Update</button>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </main>
