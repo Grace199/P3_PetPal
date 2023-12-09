@@ -4,6 +4,7 @@ from notification.models import Notification
 from .serializers import (
     ReviewSerializer,
     MessageSerializer,
+    MessageCreateSerializer,
     ReplySerializer,
 )
 from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
@@ -47,14 +48,18 @@ class ReviewRetrieve(RetrieveAPIView):
 
 # Message -> List/Create
 class MessageListCreate(ListCreateAPIView):
-    serializer_class = MessageSerializer
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return MessageCreateSerializer
+        else:
+            return MessageSerializer
 
     def get_queryset(self):
         user = self.request.user
         application = get_object_or_404(Application, id=self.kwargs["application_id"])
         if application.seeker.account == user or application.shelter.account == user:
             queryset = Message.objects.filter(application=application).order_by(
-                "-timestamp"
+                "timestamp"
             )
             return queryset
         else:  # the user is not a seeker or shelter of the application chatroom it is trying to view

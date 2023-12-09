@@ -4,9 +4,13 @@ from django.urls import reverse
 from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView, ListAPIView
 
 from notification.models import Notification
-from .serializers import ApplicationRetrieveSerializer, ApplicationSeekerCreateSerializer, ApplicationUpdateSerializer
+from .serializers import (
+    ApplicationRetrieveSerializer,
+    ApplicationSeekerCreateSerializer,
+    ApplicationUpdateSerializer,
+)
 from .models import Application
-from accounts.models import Shelter, Seeker
+from accounts.models import Account, Shelter, Seeker
 from .permissions import IsSeeker, IsShelter
 from petlisting.models import PetListing
 from rest_framework.response import Response
@@ -18,7 +22,7 @@ class SeekerApplicationCreate(CreateAPIView):
     permission_classes = [IsSeeker]
 
     def get_queryset(self):
-        petlisting = get_object_or_404(PetListing, id=self.kwargs['pk'])
+        petlisting = get_object_or_404(PetListing, id=self.kwargs["pk"])
         return petlisting
 
     def perform_create(self, serializer):
@@ -28,13 +32,14 @@ class SeekerApplicationCreate(CreateAPIView):
                 detail="Cannot apply for PetListing which is not available", code=401
             )
 
-        
         shelter = petlisting.shelter
 
-        serializer.validated_data['petlisting'] = petlisting
-        serializer.validated_data['shelter'] = shelter
-        serializer.validated_data['seeker'] = get_object_or_404(Seeker, account=self.request.user)
-        serializer.validated_data['status'] = 'pending'
+        serializer.validated_data["petlisting"] = petlisting
+        serializer.validated_data["shelter"] = shelter
+        serializer.validated_data["seeker"] = get_object_or_404(
+            Seeker, account=self.request.user
+        )
+        serializer.validated_data["status"] = "pending"
 
         serializer.save()
 
@@ -52,7 +57,7 @@ class SeekerApplicationUpdate(RetrieveUpdateAPIView):
         if self.request.method in ["PUT", "PATCH"]:
             return ApplicationUpdateSerializer
         return self.serializer_class
-    
+
     def get_object(self):
         seeker = self.request.user.seeker
         application = get_object_or_404(Application, id=self.kwargs["pk"])
@@ -97,7 +102,7 @@ class ShelterApplicationUpdate(RetrieveUpdateAPIView):
         if self.request.method in ["PUT", "PATCH"]:
             return ApplicationUpdateSerializer
         return self.serializer_class
-    
+
     def get_object(self):
         shelter = self.request.user.shelter
         application = get_object_or_404(Application, id=self.kwargs["pk"])
@@ -149,22 +154,26 @@ class ShelterApplicationList(ListAPIView):
 
         status_filters = self.request.query_params.get("status", None)
         sorts = self.request.query_params.get("sort", None)
-        
+
         print(status_filters)
 
         if status_filters:
             status_list = status_filters.split(self.query_separator)
             for sl in status_list:
-                if sl not in ['pending', 'accepted', 'denied', 'withdrawn']:
-                    raise ValidationError(detail='Invalid status parameter', code=401)
+                if sl not in ["pending", "accepted", "denied", "withdrawn"]:
+                    raise ValidationError(detail="Invalid status parameter", code=401)
             qs = qs.filter(status__in=status_filters.split(self.query_separator))
-        
 
         if sorts:
             sort_list = sorts.split(self.query_separator)
             for sl in sort_list:
-                if sl not in ['create_time', '-create_time', 'update_time', '-update_time']:
-                    raise ValidationError(detail='Invalid sort parameter', code=401)
+                if sl not in [
+                    "create_time",
+                    "-create_time",
+                    "update_time",
+                    "-update_time",
+                ]:
+                    raise ValidationError(detail="Invalid sort parameter", code=401)
             qs = qs.order_by(*sort_list)
 
         return qs
@@ -177,6 +186,7 @@ class ShelterApplicationList(ListAPIView):
         return query_set.order_by('-create_time', '-update_time')
         """
 
+
 class SeekerApplicationList(ListAPIView):
     serializer_class = ApplicationRetrieveSerializer
     permission_classes = [IsSeeker]
@@ -187,22 +197,44 @@ class SeekerApplicationList(ListAPIView):
 
         status_filters = self.request.query_params.get("status", None)
         sorts = self.request.query_params.get("sort", None)
-        
+
         print(status_filters)
 
         if status_filters:
             status_list = status_filters.split(self.query_separator)
             for sl in status_list:
-                if sl not in ['pending', 'accepted', 'denied', 'withdrawn']:
-                    raise ValidationError(detail='Invalid status parameter', code=401)
+                if sl not in ["pending", "accepted", "denied", "withdrawn"]:
+                    raise ValidationError(detail="Invalid status parameter", code=401)
             qs = qs.filter(status__in=status_filters.split(self.query_separator))
-        
 
         if sorts:
             sort_list = sorts.split(self.query_separator)
             for sl in sort_list:
-                if sl not in ['create_time', '-create_time', 'update_time', '-update_time']:
-                    raise ValidationError(detail='Invalid sort parameter', code=401)
+                if sl not in [
+                    "create_time",
+                    "-create_time",
+                    "update_time",
+                    "-update_time",
+                ]:
+                    raise ValidationError(detail="Invalid sort parameter", code=401)
             qs = qs.order_by(*sort_list)
 
         return qs
+
+
+class ApplicationList(ListAPIView):
+    serializer_class = ApplicationRetrieveSerializer
+
+    def get_queryset(self):
+        account = Account.objects.get(id=self.request.user.id)
+        seeker = Seeker.objects.filter(account=account).first()
+        shelter = Shelter.objects.filter(account=account).first()
+
+        if seeker:
+            queryset = Application.objects.filter(seeker=seeker)
+        elif shelter:
+            queryset = Application.objects.filter(shelter=shelter)
+        else:
+            queryset = Application.objects.none()
+
+        return queryset

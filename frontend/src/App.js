@@ -26,6 +26,7 @@ import Chatroom from './pages/Chatroom';
 
 import './App.css';
 import { UserContext, useUserContext } from './contexts/UserContext';
+import ShelterUpdate from './pages/ShelterUpdate';
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
             <Route path="applications/list/shelter/" element={<ApplicationListShelter />} />
             <Route path="petlisting/create/" element={<CreatePetListing />} />
             <Route path="petlisting/update/:petlistingID" element={<UpdatePetListing />} />
+            <Route path="shelter/:shelterID/edit/" element={<ShelterUpdate />} />
           </Route>
           <Route path="signup/seeker/" element={<SignupSeeker />} />
           <Route path="signup/shelter/" element={<SignupShelter />} />
