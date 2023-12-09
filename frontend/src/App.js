@@ -18,6 +18,9 @@ import ApplicationListShelter from './pages/Applications/List/Shelter';
 import CreatePetListing from './pages/CreatePetListing';
 import UpdatePetListing from './pages/UpdatePetListing';
 
+import Chatroom from './pages/Chatroom';
+
+
 import './App.css';
 import { UserContext, useUserContext } from './contexts/UserContext';
 
@@ -44,6 +47,7 @@ function App() {
             <Route path="petlisting/create/" element={<CreatePetListing />} />
             <Route path="petlisting/update/:petlistingID" element={<UpdatePetListing />} />
           </Route>
+          <Route path="chatroom/" element={<Chatroom />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
