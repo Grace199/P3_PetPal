@@ -23,7 +23,7 @@ const Index = ({ messages }) => {
             </div>
 
 
-            <form className="w-full relative flex items-center h-14 mt-4" onSubmit={handleSubmit}>
+            <form className="w-full relative flex items-center h-14 mt-4 py-2" onSubmit={handleSubmit}>
                 <input type="text" name='newMessage' value={newMessage} onChange={handleChange} className="absolute top-0 left-0 w-full h-full bg-background border-[#A4A4A4] border-[0.5px] rounded-[28px] px-6" placeholder="Send a message..." />
                 <button className="absolute text-accent-100 right-6">Send</button>
             </form>
