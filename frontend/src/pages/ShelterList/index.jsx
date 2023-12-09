@@ -35,7 +35,7 @@ const Shelters = () => {
             <main className="h-full">
                 <div className="w-full flex justify-center items-center h-[300px] bg-black relative flex-col">
                     <div className="z-30">
-                        <p className="z-30 text-background text-5xl sm:text-8xl font-bold">
+                        <p className="z-30 text-background text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-bold">
                             SHELTERS
                         </p>
                     </div>
