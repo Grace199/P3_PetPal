@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ajax_or_login } from '../../util/ajax';
 import NewCommment from '../../components/NewComment'
+import AllComments from '../../components/AllComments';
 
 const formatBlogType = (type) => {
     switch (type) {
@@ -60,6 +61,11 @@ const BlogsDetail = () => {
         <>
             <main className="h-full">
                 <div className="w-full flex flex-col gap-4 px-mobile md:px-tablet xl:px-desktop pt-6 sm:pt-16">
+                    <Link
+                        to={`/blogs/`}
+                        className="text-primary flex items-center hover:text-accent-100 w-max hover:scale-105 duration-200 active:scale-95 pb-3">
+                        <i className="uil uil-angle-left text-3xl"></i>All Blogs
+                    </Link>
                     <div className="flex">
                         <p className="text-gray font-semibold text-sm sm:text-base">{formattedBlogType}</p>
                     </div>
@@ -89,7 +95,7 @@ const BlogsDetail = () => {
                             <div className="flex flex-col">
                                 <p className="text-text text-xl font-bold mb-1">All Comments</p>
                                 <div className="border-t-2 mb-4"></div>
-                                {/* <AllReviews key={shelterID} name="reviews" shelterID={shelterID} isSelf={isSelf}></AllReviews> */}
+                                <AllComments key={blogID} blogID={blogID}></AllComments>
                             </div>
                         </div>
                     </div>
