@@ -86,10 +86,10 @@ const Index = () => {
                             {
                                 isSeeker ?
                                     (
-                                        <a href="/applications" className="text-base hover:text-secondary hover:scale-105">My Applications</a>
+                                        <Link to="/applications/list/seeker/" className="text-base hover:text-secondary hover:scale-105">My Applications</Link>
                                     ) :
                                     (
-                                        <a href="/mypets" className="text-base hover:text-secondary hover:scale-105">My Pets</a>
+                                        <Link to="/mylistings" className="text-base hover:text-secondary hover:scale-105">My Pets</Link>
                                     )
                             }
                         </>
@@ -166,11 +166,11 @@ const Index = () => {
                         {isSeeker ? (
                             <Link
                                 className="w-full bg-primary p-8 text-xl text-background hover:bg-accent-200"
-                                to="/myapplications"
+                                to="/applications/list/seeker/"
                             >My Applications</Link>) : (
                             <Link
                                 className="w-full bg-primary p-8 text-xl text-background hover:bg-accent-200"
-                                to="/mypets"
+                                to="/mylistings"
                             >My Pets</Link>)}
 
                         <Link

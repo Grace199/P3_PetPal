@@ -1,5 +1,6 @@
 import React from 'react';
-import { useEffect, useState } from "react";
+import { useEffect } from 'react';
+import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import FieldError from "../../../components/FieldError";
 import { ajax_or_login } from '../../../util/ajax';
@@ -8,9 +9,14 @@ const Index = () => {
     const navigate = useNavigate();
 
     const [errors, setErrors] = useState({
+        name: null,
         account: null,
-        phone_number: null
-    });
+        address: null,
+        city: null,
+        province: null,
+        phone_number: null,
+        description: null
+    },);
 
     useEffect(() => {
       setErrors({});
@@ -24,9 +30,11 @@ const Index = () => {
             password1: null,
             password2: null
         },
+        address: null,
         city: null,
         province: null,
-        phone_number: null
+        phone_number: null,
+        description: null
     });
 
     const handleInputChangeForm = (e) => {
@@ -55,7 +63,7 @@ const Index = () => {
       };
 
       try {
-        const res = await ajax_or_login(`/accounts/seeker/signup/`, requestOptions, navigate);
+        const res = await ajax_or_login(`/accounts/shelter/signup/`, requestOptions, navigate);
 
         if (!res.ok) {
           const json = await res.json();
@@ -97,7 +105,7 @@ const Index = () => {
               <label
                 htmlFor="name"
                 className="absolute text-gray-800 pointer-events-none top-0 left-0 px-2 py-1 text-sm"
-                >Name</label>
+                >Shelter Name</label>
               
             </div>
             <FieldError fielderror={errors?.account?.name} />
@@ -151,9 +159,26 @@ const Index = () => {
             </div>
             <FieldError fielderror={errors?.account?.password2} />
 
+            {/* Address row */}
+            <div className="w-full relative h-16">
+              <input onChange={handleInputChangeForm}
+                required
+                type="text"
+                id="address"
+                name="address"
+                className="absolute top-0 left-0 focus:outline-accent-100 text-xm text-accent-100 h-16 rounded-[5px] border-[#D2D1D3] border-[1px] w-full pt-5 px-5 text-lg font-semibold"
+              />
+              <label
+                htmlFor="address"
+                className="absolute text-gray-800 pointer-events-none top-0 left-0 px-2 py-1 text-sm"
+                >Address</label>
+            </div>
+            <FieldError fielderror={errors?.address} />
+
             {/* City row */}
             <div className="w-full relative h-16">
               <input onChange={handleInputChangeForm}
+                required
                 type="text"
                 id="city"
                 name="city"
@@ -164,10 +189,12 @@ const Index = () => {
                 className="absolute text-gray-800 pointer-events-none top-0 left-0 px-2 py-1 text-sm"
                 >City</label>
             </div>
+            <FieldError fielderror={errors?.city} />
 
             {/* Province row */}
             <div className="w-full relative h-16">
               <input onChange={handleInputChangeForm}
+                required
                 type="text"
                 id="province"
                 name="province"
@@ -178,10 +205,12 @@ const Index = () => {
                 className="absolute text-gray-800 pointer-events-none top-0 left-0 px-2 py-1 text-sm"
                 >Province</label>
             </div>
+            <FieldError fielderror={errors?.province} />
 
             {/* Phone number row */}
             <div className="w-full relative h-16">
               <input onChange={handleInputChangeForm}
+                required
                 type="text"
                 id="phone_number"
                 name="phone_number"
@@ -193,6 +222,22 @@ const Index = () => {
                 >Phone Number</label>
             </div>
             <FieldError fielderror={errors?.phone_number} />
+
+            {/* Description row */}
+            <div className="w-full relative h-16">
+              <input onChange={handleInputChangeForm}
+                required
+                type="text"
+                id="description"
+                name="description"
+                className="absolute top-0 left-0 focus:outline-accent-100 text-xm text-accent-100 h-16 rounded-[5px] border-[#D2D1D3] border-[1px] w-full pt-5 px-5 text-lg font-semibold"
+              />
+              <label
+                htmlFor="description"
+                className="absolute text-gray-800 pointer-events-none top-0 left-0 px-2 py-1 text-sm"
+                >Description</label>
+            </div>
+            <FieldError fielderror={errors?.description} />
 
 
             {/* Sign up button row */}
@@ -206,8 +251,8 @@ const Index = () => {
                 <p className="text-center text-sm">
                   Already have an account?
                   <Link to="../../Login/" className="text-accent-100 font-semibold"> Login</Link>
-                  |Signing up as a shelter?
-                  <Link to="../signUp/signupUser.html" className="text-accent-100 font-semibold"> Sign Up</Link>
+                  |Signing up as a seeker?
+                  <Link to="/signup/seeker/" className="text-accent-100 font-semibold"> Sign Up</Link>
                 </p>
               </div>
             </div>

@@ -17,9 +17,9 @@ const index = ({ id, img, name, properties }) => {
             </h3>
             <h3 className="max-md:text-sm pb-2 md:pb-3 px-3 bg-white rounded-b-3xl">{properties}</h3>
             <div
-                class="absolute right-[43%] top-[33%] hidden group-hover:block"
+                className="absolute right-[43%] top-[33%] hidden group-hover:block"
             >
-                <i class="uil uil-edit-alt text-white text-5xl"></i>
+                <i className="uil uil-edit-alt text-white text-5xl"></i>
             </div>
         </Link>
     )

@@ -149,7 +149,7 @@ const Index = () => {
                 <div className="w-full flex justify-center items-center gap-5">
                     {query.page > 1 ?
                         <button
-                            className="bg-transparent border border-primary text-primary font-bold px-10 py-3 rounded-xl hover:scale-105 active:scale-95"
+                            className="bg-transparent border border-primary text-primary font-bold px-5 py-3 rounded-xl hover:scale-105 active:scale-95"
                             onClick={() => {
                                 const newPage = query.page - 1;
                                 const newSearchParams = new URLSearchParams(searchParams);
@@ -157,15 +157,15 @@ const Index = () => {
                                 setSearchParams(newSearchParams);
                             }}
                         >
-                            Previous
+                            Prev
                         </button>
 
                         :
 
                         <button
-                            className="bg-transparent border border-secondary text-secondary font-bold px-10 py-3 rounded-xl"
+                            className="bg-transparent border border-secondary text-secondary font-bold px-5 py-3 rounded-xl"
                         >
-                            Previous
+                            Prev
                         </button>
                     }
 
@@ -173,7 +173,7 @@ const Index = () => {
 
                     {query.page < totalPage ?
                         <button
-                            className="bg-transparent border border-primary text-primary font-bold px-10 py-3 rounded-xl hover:scale-105 active:scale-95"
+                            className="bg-transparent border border-primary text-primary font-bold px-5 py-3 rounded-xl hover:scale-105 active:scale-95"
                             onClick={() => {
                                 const newPage = query.page + 1;
                                 const newSearchParams = new URLSearchParams(searchParams);
@@ -187,7 +187,7 @@ const Index = () => {
                         :
 
                         <button
-                            className="bg-transparent border border-secondary text-secondary font-bold px-10 py-3 rounded-xl"
+                            className="bg-transparent border border-secondary text-secondary font-bold px-5 py-3 rounded-xl"
                         >
                             Next
                         </button>

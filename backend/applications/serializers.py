@@ -2,11 +2,13 @@ from rest_framework.serializers import ModelSerializer, DateTimeField, ListField
     PrimaryKeyRelatedField, HyperlinkedRelatedField, ReadOnlyField
 from .models import Application
 from petlisting.serializers import PetListingSerializer
+from accounts.serializers import SeekerSerializer, ShelterSerializer
+from petlisting.serializers import PetListingSerializer
 
 class ApplicationRetrieveSerializer(ModelSerializer):
-    seeker = PrimaryKeyRelatedField(read_only=True)
-    petlisting = PrimaryKeyRelatedField(read_only=True)
-    shelter = PrimaryKeyRelatedField(read_only=True)
+    seeker = SeekerSerializer(read_only=True)
+    petlisting = PetListingSerializer(read_only=True)
+    shelter = ShelterSerializer(read_only=True)
     
     class Meta:
         model = Application
@@ -25,10 +27,10 @@ class ApplicationSeekerCreateSerializer(ModelSerializer):
         model = Application
         fields = '__all__'
 
-class ApplicationSeekerUpdateSerializer(ModelSerializer):
-    seeker = PrimaryKeyRelatedField(read_only=True)
-    petlisting = PrimaryKeyRelatedField(read_only=True)
-    shelter = PrimaryKeyRelatedField(read_only=True)
+class ApplicationUpdateSerializer(ModelSerializer):
+    seeker = SeekerSerializer(read_only=True)
+    petlisting = PetListingSerializer(read_only=True)
+    shelter = ShelterSerializer(read_only=True)
     class Meta:
         model = Application
         fields = '__all__'
