@@ -23,6 +23,7 @@ import UpdatePetListing from './pages/UpdatePetListing';
 import BlogsList from './pages/BlogsList';
 import Chatroom from './pages/Chatroom';
 import BlogsCreate from './pages/BlogsCreate';
+import BlogsDetail from './pages/BlogsDetail';
 
 import './App.css';
 import { UserContext, useUserContext } from './contexts/UserContext';
@@ -53,6 +54,7 @@ function App() {
             <Route path="blogs/" element={<BlogsList />}></Route>
             <Route path="shelter/:shelterID/edit/" element={<ShelterUpdate />} />
             <Route path="blogs/create/" element={<BlogsCreate />}></Route>
+            <Route path="blogs/:blogID/" element={<BlogsDetail />}></Route>
           </Route>
           <Route path="signup/seeker/" element={<SignupSeeker />} />
           <Route path="signup/shelter/" element={<SignupShelter />} />

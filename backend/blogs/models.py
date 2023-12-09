@@ -6,7 +6,7 @@ from accounts.models import Shelter, Account
 class Blog(models.Model):
     shelter = models.ForeignKey(Shelter, on_delete=models.CASCADE)
     title = models.CharField(max_length=125, blank=False, null=False)
-    content = models.CharField(max_length=1000, blank=False, null=False)
+    content = models.TextField(blank=False, null=False)
     timestamp = models.DateTimeField(auto_now_add=True)
     BLOG_CHOICES = (
         ("pet_training", "Pet Training"),
