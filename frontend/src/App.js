@@ -35,9 +35,6 @@ function App() {
             <Route path="petdetail/:petListingID" element={<PetDetail />} />
             <Route path="petlistings/" element={<PetListings />} />
             <Route path="mylistings/" element={<MyListings />} />
-            <Route path="signup/seeker/" element={<SignupSeeker />} />
-            <Route path="signup/shelter/" element={<SignupShelter />} />
-            <Route path="login/" element={<Login />} />
             <Route path="applications/create/:petlistingID" element={<ApplicationCreate />} />
             <Route path="applications/update/seeker/:applicationID" element={<ApplicationUpdateSeeker />} />
             <Route path="applications/update/shelter/:applicationID" element={<ApplicationUpdateShelter />} />
@@ -49,6 +46,9 @@ function App() {
             <Route path="petlisting/update/:petlistingID" element={<UpdatePetListing />} />
             <Route path="shelter/:shelterID/edit/" element={<ShelterUpdate />} />
           </Route>
+          <Route path="signup/seeker/" element={<SignupSeeker />} />
+          <Route path="signup/shelter/" element={<SignupShelter />} />
+          <Route path="login/" element={<Login />} />
           <Route path="chatroom/" element={<Chatroom />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

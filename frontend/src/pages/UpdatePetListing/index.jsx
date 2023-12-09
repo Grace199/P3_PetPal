@@ -108,7 +108,7 @@ const Index = () => {
           setErrors(json);
         }
         else {
-          navigate("/petlistings/");
+          navigate("/mylistings/");
         }
       } catch (error) {
         console.error("Error during fetch: ", error);

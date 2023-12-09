@@ -162,7 +162,7 @@ const Index = () => {
                             </div>
                         </div>
 
-                        <Link to="/createListing" className='text-center py-3 px-4 max-sm:px-2 md:px-8 rounded-full bg-primary hover:bg-secondary'><i className="uil uil-plus"></i> Create Listing</Link>
+                        <Link to="/petlisting/create/" className='text-center py-3 px-4 max-sm:px-2 md:px-8 rounded-full bg-primary hover:bg-secondary'><i className="uil uil-plus"></i> Create Listing</Link>
                     </div>
 
                     <div className="w-full py-10 flex flex-wrap gap-3 justify-center">
