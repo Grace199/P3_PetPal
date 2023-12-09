@@ -123,9 +123,9 @@ const ShelterDetail = () => {
                             {isSelf === true ?
                                 <div className="flex flex-row gap-4">
                                     <Link
-                                        to={`/myapplications/`}
+                                        to={`/mylistings/`}
                                         className="rounded-[30px] bg-accent-100 px-9 py-4 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center hover:scale-105 duration-200">View your pets</Link>
-                                    <Link to={`/mylistings/`}
+                                    <Link to={`/applications/list/shelter/`}
                                         className="rounded-[30px] bg-accent-100 px-9 py-4 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center hover:scale-105 duration-200">View your applications</Link>
                                 </div>
                                 :
