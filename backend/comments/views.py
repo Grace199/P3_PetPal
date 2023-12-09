@@ -27,9 +27,8 @@ class ReviewListCreate(ListCreateAPIView):
         shelter = get_object_or_404(Shelter, id=self.kwargs["shelter_id"])
         serializer.save(owner=self.request.user, shelter=shelter)
 
-        message_url = reverse(
-            "comments:review", kwargs={"review_id": serializer.instance.id}
-        )
+        message_url = f"/comments/{serializer.instance.id}"
+
         notification = Notification(
             user=shelter.account, url=message_url, msg="New review!"
         )
@@ -70,9 +69,8 @@ class MessageListCreate(ListCreateAPIView):
             serializer.save(owner=user, application=application)
             application.save()
 
-            message_url = reverse(
-                "comments:message", kwargs={"message_id": serializer.instance.id}
-            )
+            message_url = f"/comments/{serializer.instance.id}"
+
             if application.seeker.account == user:
                 notification = Notification(
                     user=application.shelter.account,
@@ -126,9 +124,7 @@ class ReplyListCreate(ListCreateAPIView):
         review.save()
         serializer.save(owner=self.request.user, review=review)
 
-        message_url = reverse(
-            "comments:reply", kwargs={"reply_id": serializer.instance.id}
-        )
+        message_url = f'/comments/{serializer.instance.id}'
         notification = Notification(
             user=review.shelter.account,
             url=message_url,

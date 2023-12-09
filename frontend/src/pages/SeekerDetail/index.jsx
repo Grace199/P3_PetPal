@@ -1,117 +1,205 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { ajax_or_login } from "../../util/ajax";
+import { useNavigate } from "react-router-dom";
 
-const index = () => {
+const Index = () => {
+  const [formData, setFormData] = useState({
+    account: {
+      avatar: "",
+      email: "",
+      name: "",
+    },
+    province: "",
+    city: "",
+    phone_number: "",
+    animal_preference: "",
+    age_preference: "",
+    sex_preference: "",
+    size_preference: "",
+    open_to_special_needs_animals: "",
+    breed_preference: "",
+  });
+  const [toDelete, setDelete] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name.includes("account.")) {
+      setFormData((prevData) => ({
+        ...prevData,
+        account: {
+          ...prevData.account,
+          [name.split("account.")[1]]: value,
+        },
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!toDelete) {
+      try {
+        const rest = await ajax_or_login(
+          `/accounts/seeker/${
+            parseInt(localStorage.getItem("userID"), 10) || ""
+          }/`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          },
+          navigate
+        );
+        if (!rest.ok) {
+          const json = await rest.json();
+          console.log(json);
+        }
+        if (rest.ok) {
+          const data = await rest.json();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const fetchUserData = async () => {
+    try {
+      const rest = await ajax_or_login(
+        `/accounts/seeker/${
+          parseInt(localStorage.getItem("userID"), 10) || ""
+        }/`,
+        { method: "GET" },
+        navigate
+      );
+      if (rest.ok) {
+        const data = await rest.json();
+
+        setFormData({
+          account: {
+            avatar: data.account.avatar || null,
+            email: data.account.email || "",
+            name: data.account.name || "",
+          },
+          province: data.province || "",
+          city: data.city || "",
+          phone_number: data.phone_number || "",
+          animal_preference: data.animal_preference || "",
+          age_preference: data.age_preference || "",
+          sex_preference: data.sex_preference || "",
+          size_preference: data.size_preference || "",
+          open_to_special_needs_animals:
+            data.open_to_special_needs_animals || "",
+          breed_preference: data.breed_preference || "",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
   return (
     <main>
-      <form>
-        <div className="mt-9 mx-mobile md:mx-tablet xl:mx-desktop flex justify-center items-center drop-shadow-xl">
-          <div className="w-[1179px] max-2xl:w-[900px] drop-shadow-xl">
+      <form onSubmit={handleSubmit}>
+        <div className="mt-9 mx-mobile md:mx-tablet xl:mx-desktop flex flex-col gap-6 justify-center items-center drop-shadow-xl">
+          <div className="rounded-full w-1/2 flex justify-center self-center aspect-square bg-black group relative cursor-pointer md:hidden">
+            <img
+              src={localStorage.getItem("avatar")}
+              className="w-full group-hover:opacity-50 rounded-full border border-primary"
+            />
+            <i className="uil uil-edit-alt absolute left-[35%] top-[30%] hidden group-hover:block text-white text-2xl"></i>
+          </div>
+          <div className="w-full drop-shadow-xl">
             <div className="bg-primary flex justify-center items-center h-28 rounded-t-3xl max-md:justify-evenly">
-              <div className="flex justify-center items-center">
-                <h1 className="font-bold text-5xl text-white text text-center max-sm:text-3xl">
-                  Mishu
-                </h1>
-                <Link to="userAccountUpdateName.html">
-                  <button className="hover:scale-125 duration-200 ease-linear">
-                    <i className="uil uil-edit text-2xl text-white ml-3"></i>
-                  </button>
-                </Link>
-              </div>
-              <div className="rounded-full w-20 aspect-square bg-black group relative cursor-pointer md:hidden">
-                <img
-                  src={localStorage.getItem("avatar")}
-                  className="w-full group-hover:opacity-50 rounded-full border border-primary"
+              <div className="flex justify-center items-center px-8">
+                <input
+                  name="account.name"
+                  className="font-bold w-full text-5xl text-white text text-center max-sm:text-3xl bg-transparent"
+                  value={formData.account.name}
+                  onChange={handleInputChange}
                 />
-                <i className="uil uil-edit-alt absolute left-[35%] top-[30%] hidden group-hover:block text-white text-2xl"></i>
               </div>
             </div>
-            <div className="bg-white flex justify-center items-center rounded-b-3xl flex-row h-80 max-md:h-96 gap-20 max-2xl:gap-16 max-lg:gap-10">
-              <div>
-                <h1 className="font-medium text-3xl max-sm:text-2xl text-primary pb-2">
+            <div className="bg-white flex justify-center items-center rounded-b-3xl flex-row gap-20 max-2xl:gap-16 max-lg:gap-10 p-10 w-full">
+              <div className="basis-2/3 w-full">
+                <h1 className="font-medium text-3xl max-sm:text-2xl text-primary mb-2">
                   Your Location
                 </h1>
-                <hr className="text-[#D7D7D7] w-[580px] max-2xl:w-96 mb-6 max-md:w-72 max-sm:w-52" />
-                <div className="flex flex-col gap-2 md:hidden visible">
-                  <div className="flex flex-col">
-                    <label for="Country" className="text-base text-text">
-                      Country:
-                    </label>
-                    <input
-                      type="text"
-                      className="border-primary rounded-md h-11 w-72 border border-opacity-50 bg-white max-sm:w-52"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <label for="Province" className="text-base text-text">
-                      Province:
-                    </label>
-                    <input
-                      type="text"
-                      className="border-primary rounded-md h-11 w-72 border border-opacity-50 bg-white max-sm:w-52"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <label for="City" className="text-base text-text">
+                <div className="flex flex-row gap-6 mb-10 max-lg:flex-col w-full">
+                  <div className="flex flex-col w-full">
+                    <label htmlFor="City" className="text-base text-text">
                       City:
                     </label>
                     <input
-                      type="text"
-                      className="border-primary rounded-md h-11 w-72 border border-opacity-50 bg-white max-sm:w-52"
+                      id="City"
+                      name="city"
+                      value={formData.city}
+                      onChange={handleInputChange}
+                      className="border-primary rounded-md h-11 w-full border border-opacity-50 bg-white px-5"
                     />
                   </div>
-                  <div className="flex flex-col">
-                    <label for="Postal Code" className="text-base text-text">
-                      Postal Code:
-                    </label>
-                    <input
-                      type="text"
-                      className="border-primary rounded-md h-11 w-72 border border-opacity-50 bg-white max-sm:w-52"
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-row gap-6 mb-2 max-md:hidden">
-                  <div className="flex flex-col">
-                    <label for="Country" className="text-base text-text">
-                      Country:
-                    </label>
-                    <input
-                      type="text"
-                      className="border-primary rounded-md h-11 w-72 max-2xl:w-52 max-lg:w-40 border border-opacity-50 bg-white"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <label for="Province" className="text-base text-text">
+                  <div className="flex flex-col w-full">
+                    <label htmlFor="Province" className="text-base text-text">
                       Province:
                     </label>
                     <input
+                      value={formData.province}
+                      name="province"
+                      id="Province"
                       type="text"
-                      className="border-primary rounded-md h-11 w-72 max-2xl:w-52 max-lg:w-40 border border-opacity-50 bg-white"
+                      onChange={handleInputChange}
+                      className="border-primary rounded-md h-11 w-full border border-opacity-50 bg-white px-5"
                     />
                   </div>
                 </div>
-                <div className="flex flex-row gap-6 max-md:hidden">
-                  <div className="flex flex-col">
-                    <label for="City" className="text-base text-text">
-                      City:
+                <h1 className="font-medium text-3xl max-sm:text-2xl text-primary mb-2">
+                  Contact Information
+                </h1>
+                <div className="flex flex-row gap-6 mb-8 max-lg:flex-col">
+                  <div className="flex flex-col w-full">
+                    <label htmlFor="Email" className="text-base text-text ">
+                      Email Address:
                     </label>
                     <input
+                      name="account.email"
+                      value={formData.account.email}
                       type="text"
-                      className="border-primary rounded-md h-11 w-72  max-2xl:w-52 max-lg:w-40 border border-opacity-50 bg-white"
+                      onChange={handleInputChange}
+                      className="border-primary rounded-md h-11 w-full border border-opacity-50 bg-white px-5"
                     />
                   </div>
-                  <div className="flex flex-col">
-                    <label for="Postal Code" className="text-base text-text">
-                      Postal Code:
+                  <div className="flex flex-col w-full">
+                    <label
+                      htmlFor="phone_number"
+                      className="text-base text-text"
+                    >
+                      Phone Number:
                     </label>
                     <input
+                      name="phone_number"
+                      value={formData.phone_number}
                       type="text"
-                      className="border-primary rounded-md h-11 w-72  max-2xl:w-52 max-lg:w-40 border border-opacity-50 bg-white"
+                      onChange={handleInputChange}
+                      className="border-primary rounded-md h-11 w-full border border-opacity-50 bg-white px-5"
                     />
                   </div>
                 </div>
               </div>
-              <div className="rounded-full w-[270px] max-2xl:w-[200px] max-md:w-[100px] aspect-square bg-black group relative cursor-pointer max-md:hidden">
+              <div className="rounded-full min-h-[200px] aspect-square bg-black group relative cursor-pointer max-md:hidden basis-1/3">
                 <img
                   src={localStorage.getItem("avatar")}
                   className="w-full group-hover:opacity-50 rounded-full border border-primary"
@@ -121,234 +209,98 @@ const index = () => {
             </div>
           </div>
         </div>
-        <div className="mt-9 mx-mobile md:mx-tablet xl:mx-desktop flex justify-center items-center drop-shadow-xl max-md:hidden">
-          <div className="w-[1179px] max-2xl:w-[900px] drop-shadow-xl">
-            <div className="flex flex-col">
-              <div className="flex md:flex-row justify-between items-start flex-col max-md:gap-5">
-                <div className="flex flex-col gap-5">
-                  <div className="bg-white flex justify-center items-center w-[520px] flex-col rounded-3xl h-[280px] max-2xl:w-[380px] drop-shadow-xl">
-                    <h1 className="font-medium text-3xl max-sm:text-2xl text-primary pb-2 mt-8 mb-5">
-                      Contact Information
-                    </h1>
-                    <div className="flex flex-col gap-2 mb-8">
-                      <div className="flex flex-col">
-                        <label for="Email" className="text-base text-text">
-                          Email Address:
-                        </label>
-                        <input
-                          type="text"
-                          className="border-primary rounded-md h-11 w-72 border border-opacity-50 bg-white max-sm:w-52"
-                        />
-                      </div>
-                      <div className="flex flex-col">
-                        <label for="Phone" className="text-base text-text">
-                          Phone Number:
-                        </label>
-                        <input
-                          type="text"
-                          className="border-primary rounded-md h-11 w-72 border border-opacity-50 bg-white max-sm:w-52"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex justify-center items-center flex-col bg-secondary w-[520px] h-[280px] max-2xl:w-[380px] drop-shadow-xl rounded-3xl">
-                    <h1 className="font-medium text-3xl max-sm:text-2xl text-text pb-2 mt-8 mb-5">
-                      Receive Alerts
-                    </h1>
-                    <div className="flex flex-row gap-3 mb-8">
-                      <div className="flex flex-col">
-                        <input type="checkbox" className="mt-1 mb-3" />
-                        <input type="checkbox" className="mb-3" />
-                        <input type="checkbox" />
-                      </div>
-                      <div className="flex flex-col">
-                        <label for="messages">Messages</label>
-                        <label for="status updates">Status Updates</label>
-                        <label for="pet listings">New Pet Listings</label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-primary flex justify-center items-center flex-col h-[580px] w-[500px] max-2xl:w-[380px] max-xl:w-[480px] max-lg:w-[280px] max-md:w-[280px] rounded-3xl drop-shadow-xl">
-                  <h1 className="font-medium text-3xl text-white pb-2 mb-3">
-                    Preferences
-                  </h1>
-                  <div className="flex flex-col mb-2">
-                    <label for="Pet" className="text-white">
-                      Pet:
-                    </label>
-                    <input
-                      type="text"
-                      className="border-primary rounded-md h-11 w-72 border border-opacity-50 max-lg:w-52 bg-white"
-                    />
-                  </div>
-                  <div className="flex flex-col mb-2">
-                    <label for="Age" className="text-white">
-                      Age:
-                    </label>
-                    <input
-                      type="text"
-                      className="border-primary rounded-md h-11 w-72 border border-opacity-50 max-lg:w-52 bg-white"
-                    />
-                  </div>
-                  <div className="flex flex-col mb-2">
-                    <label for="Gender" className="text-white">
-                      Gender:
-                    </label>
-                    <input
-                      type="text"
-                      className="border-primary rounded-md h-11 w-72 border border-opacity-50 max-lg:w-52 bg-white"
-                    />
-                  </div>
-                  <div className="flex flex-col mb-2">
-                    <label for="Size" className="text-white">
-                      Size:
-                    </label>
-                    <input
-                      type="text"
-                      className="border-primary rounded-md h-11 w-72 border border-opacity-50 max-lg:w-52 bg-white"
-                    />
-                  </div>
-                  <div className="flex flex-col mb-2">
-                    <label for="specialneeds" className="text-white">
-                      Open to Special Needs:
-                    </label>
-                    <input
-                      type="text"
-                      className="border-primary rounded-md h-11 w-72 border border-opacity-50 max-lg:w-52 bg-white"
-                    />
-                  </div>
-                  <div className="flex flex-col mb-2">
-                    <label for="Breed" className="text-white">
-                      Breed:
-                    </label>
-                    <input
-                      type="text"
-                      className="border-primary rounded-md h-11 w-72 border border-opacity-50 max-lg:w-52 bg-white"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="flex justify-center items-center mt-16">
-                {" "}
-                <button className="bg-accent-100 font-bold text-white w-64 h-20 justify-center items-center text-2xl rounded-3xl">
-                  Update Profile
-                </button>
-              </div>
-            </div>
+
+        <div className="bg-primary mt-9 mx-mobile md:mx-tablet xl:mx-desktop flex justify-center items-center drop-shadow-xl flex-col rounded-3xl p-8">
+          <h1 className="font-medium text-3xl text-white pb-2 mb-3">
+            Preferences
+          </h1>
+          <div className="flex flex-col mb-2 w-full">
+            <select
+              name="animal_preference"
+              value={formData.animal_preference}
+              onChange={handleInputChange}
+              className="border-primary rounded-md h-11 border border-opacity-50 bg-white"
+            >
+              <option value="">Select a pet type</option>
+              <option value="dog">Dog</option>
+              <option value="cat">Cat</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div className="flex flex-col mb-2 w-full">
+            <select
+              name="age_preference"
+              value={formData.age_preference}
+              onChange={handleInputChange}
+              className="border-primary rounded-md h-11 border border-opacity-50 bg-white"
+            >
+              <option value="">Select an age</option>
+              <option value={1}>Infant</option>
+              <option value={2}>Young</option>
+              <option value={3}>Adult</option>
+              <option value={4}>Senior</option>
+            </select>
+          </div>
+          <div className="flex flex-col mb-2 w-full">
+            <select
+              name="sex_preference"
+              value={formData.sex_preference}
+              onChange={handleInputChange}
+              className="border-primary rounded-md h-11 border border-opacity-50 bg-white"
+            >
+              <option value="">Select a gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+          <div className="flex flex-col mb-2 w-full">
+            <select
+              name="size_preference"
+              value={formData.size_preference}
+              onChange={handleInputChange}
+              className="border-primary rounded-md h-11 border border-opacity-50 bg-white"
+            >
+              <option value="">Select a size</option>
+              <option value={1}>Small</option>
+              <option value={2}>Medium</option>
+              <option value={3}>Large</option>
+            </select>
+          </div>
+          <div className="flex flex-col mb-2 w-full">
+            <select
+              name="open_to_special_needs_animals"
+              value={formData.open_to_special_needs_animals}
+              onChange={handleInputChange}
+              className="border-primary rounded-md h-11 border border-opacity-50 bg-white"
+            >
+              <option value="">Open to special needs?</option>
+              <option value={true}>Yes</option>
+              <option value={false}>No</option>
+            </select>
+          </div>
+          <div className="flex flex-col mb-2 w-full">
+            <label htmlFor="Breed" className="text-white">
+              Breed:
+            </label>
+            <input
+              name="breed_preference"
+              type="text"
+              className="border-primary rounded-md h-11 border border-opacity-50 bg-white px-5"
+            />
           </div>
         </div>
-        <div className="mt-9 mx-mobile md:mx-tablet xl:mx-desktop flex justify-center items-center drop-shadow-xl md:hidden">
-          <div className="w-[1179px] max-2xl:w-[900px] bg-white flex justify-center items-center flex-col rounded-3xl">
-            <h1 className="font-medium text-3xl max-sm:text-2xl text-primary pb-2 mt-8 mb-5 text-center">
-              Contact Information
-            </h1>
-            <div className="flex flex-col gap-2 mb-8">
-              <div className="flex flex-col">
-                <label for="Email" className="text-base text-text">
-                  Email Address:
-                </label>
-                <input
-                  type="text"
-                  className="border-primary rounded-md h-11 w-72 border border-opacity-50 bg-white max-sm:w-52"
-                />
-              </div>
-              <div className="flex flex-col">
-                <label for="Phone" className="text-base text-text">
-                  Phone Number:
-                </label>
-                <input
-                  type="text"
-                  className="border-primary rounded-md h-11 w-72 border border-opacity-50 bg-white max-sm:w-52"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="mt-9 mx-mobile md:mx-tablet xl:mx-desktop flex justify-center items-center drop-shadow-xl md:hidden">
-          <div className="w-[1179px] max-2xl:w-[900px] bg-secondary flex justify-center items-center flex-col rounded-3xl">
-            <h1 className="font-medium text-3xl max-sm:text-2xl text-text pb-2 mt-8 mb-5 text-center">
-              Receive Alerts
-            </h1>
-            <div className="flex flex-row gap-3 mb-8">
-              <div className="flex flex-col">
-                <input type="checkbox" className="mt-1 mb-3" />
-                <input type="checkbox" className="mb-3" />
-                <input type="checkbox" />
-              </div>
-              <div className="flex flex-col">
-                <label for="messages">Messages</label>
-                <label for="status updates">Status Updates</label>
-                <label for="pet listings">New Pet Listings</label>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="mt-9 mx-mobile md:mx-tablet xl:mx-desktop flex justify-center items-center drop-shadow-xl md:hidden">
-          <div className="w-[1179px] max-2xl:w-[900px] bg-primary flex justify-center items-center flex-col rounded-3xl">
-            <h1 className="font-medium text-3xl text-white pb-2 mb-3 mt-5 text-center">
-              Preferences
-            </h1>
-            <div className="flex flex-col mb-2">
-              <label for="Pet" className="text-white">
-                Pet:
-              </label>
-              <input
-                type="text"
-                className="border-primary rounded-md h-11 w-72 border border-opacity-50 max-lg:w-52 bg-white"
-              />
-            </div>
-            <div className="flex flex-col mb-2">
-              <label for="Age" className="text-white">
-                Age:
-              </label>
-              <input
-                type="text"
-                className="border-primary rounded-md h-11 w-72 border border-opacity-50 max-lg:w-52 bg-white"
-              />
-            </div>
-            <div className="flex flex-col mb-2">
-              <label for="Gender" className="text-white">
-                Gender:
-              </label>
-              <input
-                type="text"
-                className="border-primary rounded-md h-11 w-72 border border-opacity-50 max-lg:w-52 bg-white"
-              />
-            </div>
-            <div className="flex flex-col mb-2">
-              <label for="Size" className="text-white">
-                Size:
-              </label>
-              <input
-                type="text"
-                className="border-primary rounded-md h-11 w-72 border border-opacity-50 max-lg:w-52 bg-white"
-              />
-            </div>
-            <div className="flex flex-col mb-2">
-              <label for="specialneeds" className="text-white">
-                Open to Special Needs:
-              </label>
-              <input
-                type="text"
-                className="border-primary rounded-md h-11 w-72 border border-opacity-50 max-lg:w-52 bg-white"
-              />
-            </div>
-            <div className="flex flex-col mb-5">
-              <label for="Breed" className="text-white">
-                Breed:
-              </label>
-              <input
-                type="text"
-                className="border-primary rounded-md h-11 w-72 border border-opacity-50 max-lg:w-52 bg-white"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="flex justify-center items-center mt-16 md:hidden">
-          {" "}
-          <button className="bg-accent-100 font-bold text-white w-64 h-20 justify-center items-center text-2xl rounded-3xl">
+        <div className="flex justify-center items-center mt-16 gap-16 max-md:flex-col max-md:gap-3">
+          <button
+            className="bg-accent-100 font-bold text-white w-64 h-20 justify-center items-center text-2xl rounded-3xl"
+            onClick={() => setDelete(false)}
+          >
             Update Profile
+          </button>
+          <button
+            className="bg-accent-100 font-bold text-white w-64 h-20 justify-center items-center text-2xl rounded-3xl"
+            onClick={() => setDelete(true)}
+          >
+            Delete Profile
           </button>
         </div>
       </form>
@@ -356,4 +308,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

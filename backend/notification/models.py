@@ -10,7 +10,7 @@ msg is the message that describe the notification.
 """
 class Notification(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
-    url = models.URLField()
+    url = models.CharField(max_length=200)
     is_read = models.BooleanField(default=False)
     creation_time = models.DateTimeField(auto_now_add=True)
     msg = models.CharField(max_length=200)

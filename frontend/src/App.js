@@ -14,6 +14,7 @@ import ApplicationUpdateSeeker from './pages/Applications/Update/Seeker';
 import ApplicationUpdateShelter from './pages/Applications/Update/Shelter'
 import ShelterDetail from './pages/ShelterDetail';
 import SeekerDetail from './pages/SeekerDetail';
+import SeekerView from './pages/SeekerView';
 import Notifications from './pages/Notifications';
 import ApplicationListSeeker from './pages/Applications/List/Seeker';
 import ApplicationListShelter from './pages/Applications/List/Shelter';
@@ -43,6 +44,7 @@ function App() {
             <Route path="shelterDetail/:shelterID" element={<ShelterDetail />} />
             <Route path="notifications/" element={<Notifications />} />
             <Route path="seekerdetail/" element={<SeekerDetail />} />
+            <Route path="seekerview/" element={<SeekerView />} />
             <Route path="applications/list/seeker/" element={<ApplicationListSeeker />} />
             <Route path="applications/list/shelter/" element={<ApplicationListShelter />} />
             <Route path="petlisting/create/" element={<CreatePetListing />} />

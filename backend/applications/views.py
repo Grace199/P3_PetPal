@@ -38,7 +38,7 @@ class SeekerApplicationCreate(CreateAPIView):
 
         serializer.save()
 
-        application_url = reverse('applications:shelter_application_update', kwargs={'pk': serializer.instance.id})
+        application_url = f'/applications/{serializer.instance.id}'
         notification = Notification(user=serializer.instance.shelter.account, url=application_url, msg="Check out your new application!")
         notification.save()
 
@@ -119,7 +119,7 @@ class ShelterApplicationUpdate(RetrieveUpdateAPIView):
                     application.status = new_status
                     application.save()
 
-                    application_url = reverse('applications:seeker_application_update', kwargs={'pk': serializer.instance.id})
+                    application_url = f'/applications/{serializer.instance.id}'
                     notification = Notification(user=application.seeker.account, url=application_url, msg="Your application status has changed.")
                     notification.save()
                     return Response({"status": application.status})

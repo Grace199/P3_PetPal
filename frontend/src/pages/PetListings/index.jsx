@@ -73,7 +73,7 @@ const Index = () => {
 
                 if (res.ok) {
                     const data = await res.json();
-                    setTotalPage(Math.ceil(data.count / 20));
+                    setTotalPage(Math.max(1, Math.ceil(data.count / 20)));
                     setPetlistings(data.results);
                 } else {
                     handleFetchError(res);

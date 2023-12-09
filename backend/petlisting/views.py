@@ -116,7 +116,7 @@ class PetListingListCreate(ListCreateAPIView):
             else:
                 is_special_needs = False
             
-            petlisting_detail_url = reverse('petlisting:petlisting_detail', kwargs={'pk': serializer.instance.id})
+            petlisting_detail_url = f'/petdetail/{serializer.instance.id}'
             all_seekers = Seeker.objects.all()
             message = "A new pet you might like!"
             send_notif = False

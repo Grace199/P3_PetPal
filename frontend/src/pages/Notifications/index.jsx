@@ -5,8 +5,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Index = () => {
   const [notifications, setNotifications] = useState([]);
-  const [totalPage, setTotalPage] = useState(0);
+  const [totalPage, setTotalPage] = useState(1);
   const [unreadFilter, setUnread] = useState(false);
+  const [notifDelete, setDelete] = useState(false);
   const [allFilter, setAll] = useState(true);
   const [readFilter, setRead] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -23,8 +24,7 @@ const Index = () => {
       );
       if (rest.ok) {
         const data = await rest.json();
-        setTotalPage(Math.ceil(data.count / 20));
-        console.log(data);
+        setTotalPage(Math.max(1, Math.ceil(data.count / 20)));
         setNotifications(data.results);
       }
     } catch (error) {
@@ -94,7 +94,8 @@ const Index = () => {
 
   useEffect(() => {
     fetchNotifications();
-  }, [query]);
+    setDelete(false);
+  }, [query, notifDelete]);
 
   return (
     <main>
@@ -158,14 +159,16 @@ const Index = () => {
               creation_date={formatDate(notification?.creation_time)}
               is_read={notification?.is_read}
               url={notification?.url}
+              ID={notification?.id}
               key={notification?.id}
+              setDelete={setDelete}
             />
           ))}
       </div>
       <div className="w-full flex justify-center items-center gap-5 pt-16">
         {query.page > 1 ? (
           <button
-            className="bg-transparent border border-primary text-primary font-bold px-10 py-3 rounded-xl hover:scale-105 active:scale-95"
+            className="bg-transparent border border-primary text-primary font-bold px-5 py-3 rounded-xl hover:scale-105 active:scale-95"
             onClick={() => {
               const newPage = query.page - 1;
               const newSearchParams = new URLSearchParams(searchParams);
@@ -173,11 +176,11 @@ const Index = () => {
               setSearchParams(newSearchParams);
             }}
           >
-            Previous
+            Prev
           </button>
         ) : (
-          <button className="bg-transparent border border-secondary text-secondary font-bold px-10 py-3 rounded-xl">
-            Previous
+          <button className="bg-transparent border border-secondary text-secondary font-bold px-5 py-3 rounded-xl">
+            Prev
           </button>
         )}
 
@@ -187,7 +190,7 @@ const Index = () => {
 
         {query.page < totalPage ? (
           <button
-            className="bg-transparent border border-primary text-primary font-bold px-10 py-3 rounded-xl hover:scale-105 active:scale-95"
+            className="bg-transparent border border-primary text-primary font-bold px-5 py-3 rounded-xl hover:scale-105 active:scale-95"
             onClick={() => {
               const newPage = query.page + 1;
               const newSearchParams = new URLSearchParams(searchParams);
@@ -198,7 +201,7 @@ const Index = () => {
             Next
           </button>
         ) : (
-          <button className="bg-transparent border border-secondary text-secondary font-bold px-10 py-3 rounded-xl">
+          <button className="bg-transparent border border-secondary text-secondary font-bold px-5 py-3 rounded-xl">
             Next
           </button>
         )}
