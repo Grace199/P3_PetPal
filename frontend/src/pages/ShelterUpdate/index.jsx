@@ -27,10 +27,13 @@ const ShelterUpdate = () => {
                     setIsSeeker(JSON.parse(localStorage.getItem("isSeeker")));
                     setId(parseInt(localStorage.getItem("userID")));
 
-                    // setDescription(data.results.description);
-                    // setCity(data.results.city);
-                    // setProvince(data.results.province);
-                    // setPhoneNumber(data.results.phone_number);
+                    setDescription(data.description);
+                    setAddress(data.address);
+                    setCity(data.city);
+                    setProvince(data.province);
+                    setPhoneNumber(data.phone_number);
+
+
                 } else {
                     console.error("Error during fetch: ", res);
                 }
@@ -38,9 +41,28 @@ const ShelterUpdate = () => {
                 console.error("Error during fetch: ", error);
             }
         };
-
         fetchData();
     }, [shelterID, navigate]);
+
+    const handleAddressChange = (event) => {
+        const newAddress = event.target.value;
+        setAddress(newAddress);
+    }
+
+    const handleDescriptionChange = (event) => {
+        const newDescription = event.target.value;
+        setDescription(newDescription);
+    }
+
+    const handleCityChange = (event) => {
+        const newCity = event.target.value;
+        setCity(newCity);
+    }
+
+    const handleProvinceChange = (event) => {
+        const newProvince = event.target.value;
+        setProvince(newProvince);
+    }
 
     return (
         <>
@@ -56,9 +78,19 @@ const ShelterUpdate = () => {
                         <div className="flex flex-col px-6 sm:px-12 md:px-20 gap-6 pb-8">
                             <div className="flex flex-col gap-2">
                                 <p className="max-sm:text-sm">Mission Statement:</p>
-                                <textarea rows="5" className="w-full p-3 border border-secondary rounded-[7px] font-light resize-none max-sm:text-sm">
-                                    {shelter?.description}
-                                </textarea>
+                                <textarea rows="5" className="w-full p-3 border border-secondary rounded-[7px] font-light resize-none max-sm:text-sm" value={description} onChange={handleDescriptionChange} />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <p class="max-sm:text-sm">Address:</p>
+                                <textarea rows="1" className="w-full p-3 border border-secondary rounded-[7px] font-light resize-none max-sm:text-sm" value={address} onChange={handleAddressChange} />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <p class="max-sm:text-sm">City:</p>
+                                <textarea rows="1" className="w-full p-3 border border-secondary rounded-[7px] font-light resize-none max-sm:text-sm" value={city} onChange={handleCityChange} />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <p class="max-sm:text-sm">Province:</p>
+                                <textarea rows="1" className="w-full p-3 border border-secondary rounded-[7px] font-light resize-none max-sm:text-sm" value={province} onChange={handleProvinceChange} />
                             </div>
                         </div>
                     </div>
