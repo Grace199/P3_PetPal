@@ -28,4 +28,5 @@ urlpatterns = [
     path("petlisting/", include("petlisting.urls", namespace="petlisting")),
     path("notification/", include("notification.urls", namespace="notification")),
     path("currentuser/", include("currentuser.urls", namespace="currentuser")),
+    path("blogs/", include("blogs.urls", namespace="blogs")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

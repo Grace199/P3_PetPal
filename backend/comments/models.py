@@ -25,7 +25,7 @@ class Review(models.Model):
 class Reply(models.Model):
     owner = models.ForeignKey(Account, on_delete=models.CASCADE)
     review = models.ForeignKey(Review, on_delete=models.CASCADE)
-    content = models.CharField(max_length=500, blank=True)
+    content = models.CharField(max_length=500, blank=False, null=False)
     timestamp = models.DateTimeField(auto_now_add=True)
     isSelf = models.BooleanField(default=False)
 
@@ -34,5 +34,5 @@ class Reply(models.Model):
 class Message(models.Model):
     application = models.ForeignKey(Application, on_delete=models.SET_NULL, null=True)
     owner = models.ForeignKey(Account, on_delete=models.CASCADE)
-    content = models.CharField(max_length=500, blank=True)
+    content = models.CharField(max_length=500, blank=False, null=False)
     timestamp = models.DateTimeField(auto_now_add=True)
