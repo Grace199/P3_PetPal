@@ -30,7 +30,8 @@ const ApplicationListSeeker = () => {
                 const res = await ajax_or_login(urlWithParams, { method: "GET" }, navigate);
                 if (res.ok) {
                     const data = await res.json();
-                    setTotalPages(Math.ceil(data.count / 20));
+                    const tot = Math.ceil(data.count / 20);
+                    setTotalPages(Math.max(tot, 1));
                     setApplications(data.results);
                     console.log(data.results);
                 } else {
@@ -66,8 +67,8 @@ const ApplicationListSeeker = () => {
                         >Filter by Status:
                         </label>
                         <form id="filter_by_status">
-                            <select name="status" value={query.status} onChange={handleQueryChange} 
-                            className='hover:cursor-pointer px-1 py-1 flex flex-col place-items-center rounded-3xl bg-primary w-full text-xs md:text-sm lg:text-base xl:text-lg'>
+                            <select name="status" value={query.status} onChange={handleQueryChange}
+                                className='hover:cursor-pointer px-1 py-1 flex flex-col place-items-center rounded-3xl bg-primary w-full text-xs md:text-sm lg:text-base xl:text-lg'>
                                 <option value=""></option>
                                 <option value="pending">pending</option>
                                 <option value="denied">denied</option>

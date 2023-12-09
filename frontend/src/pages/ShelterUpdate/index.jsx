@@ -77,21 +77,43 @@ const ShelterUpdate = () => {
         setProfilePic(file);
     };
 
+    const handleDelete = async (event) => {
+        event.preventDefault();
+        try {
+            const res = await ajax_or_login(`/accounts/shelter/${shelterID}/`, { method: "DELETE" }, navigate);
+            if (res.ok) {
+                console.log("deleted");
+            } else {
+                console.error("Error during fetch: ", res);
+            }
+        } catch (error) {
+            console.error("Error during fetch: ", error);
+        }
+    }
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const shelterData = {
-                // account: {
-                //     avatar: profilePic
-                // },
-                description: description,
-                address: address,
-                city: city,
-                province: province,
-                phone_number: phoneNumber
+            // const shelterData = {
+            //     account: {
+            //         avatar: profilePic
+            //     },
+            //     description: description,
+            //     address: address,
+            //     city: city,
+            //     province: province,
+            //     phone_number: phoneNumber
+            // }
+            let formData = new FormData();
+            if (profilePic) {
+                formData.append("account.avatar", profilePic);
             }
+            formData.append("address", address);
+            formData.append("city", city);
+            formData.append("province", province);
+            formData.append("phone_number", phoneNumber);
 
-            const res = await ajax_or_login(`/accounts/shelter/${shelterID}/`, { method: "PATCH", body: JSON.stringify(shelterData), headers: { 'Content-Type': 'application/json' } }, navigate);
+            const res = await ajax_or_login(`/accounts/shelter/${shelterID}/`, { method: "PATCH", body: formData }, navigate);
 
             if (!res.ok) {
                 if (res.status === 400) {
@@ -130,7 +152,7 @@ const ShelterUpdate = () => {
                                 <i className="uil uil-times text-text text-3xl"></i>
                             </Link>
                         </div>
-                        <form className="flex flex-col px-6 sm:px-12 md:px-20 gap-6 pb-8" onSubmit={handleSubmit}>
+                        <div className="flex flex-col px-6 sm:px-12 md:px-20 gap-6 pb-8">
                             <div className="flex flex-col gap-2">
                                 <p className="max-sm:text-sm">Mission Statement:</p>
                                 <textarea rows="5" className="w-full p-3 border border-secondary rounded-[7px] font-light resize-none max-sm:text-sm" value={description} onChange={handleDescriptionChange} />
@@ -158,10 +180,11 @@ const ShelterUpdate = () => {
                             <div className="flex justify-center">
                                 <p className="font-semibold text-xs sm:text-sm text-red-500">{error}</p>
                             </div>
-                            <div className="flex justify-center md:justify-end">
-                                <button type="submit" className="bg-accent-100 rounded-full px-10 py-4 text-[#F2F5FD] font-bold text-lg">Update</button>
+                            <div className="flex justify-between">
+                                <button onClick={handleDelete} type="submit" className="bg-red-500 rounded-full px-10 py-4 text-[#F2F5FD] font-bold text-lg">Delete</button>
+                                <button onClick={handleSubmit} type="submit" className="bg-accent-100 rounded-full px-10 py-4 text-[#F2F5FD] font-bold text-lg">Update</button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </main>

@@ -74,7 +74,7 @@ class MessageListCreate(ListCreateAPIView):
             serializer.save(owner=user, application=application)
             application.save()
 
-            message_url = f"/comments/{serializer.instance.id}"
+            message_url = f"/chatroom/"
 
             if application.seeker.account == user:
                 notification = Notification(
@@ -126,10 +126,11 @@ class ReplyListCreate(ListCreateAPIView):
     def perform_create(self, serializer):
         review = get_object_or_404(Review, id=self.kwargs["review_id"])
         review.hasReplies = True
+        shelter = review.shelter
         review.save()
         serializer.save(owner=self.request.user, review=review)
 
-        message_url = f'/comments/{serializer.instance.id}'
+        message_url = f"/shelterDetail/{shelter.id}/"
         notification = Notification(
             user=review.shelter.account,
             url=message_url,
