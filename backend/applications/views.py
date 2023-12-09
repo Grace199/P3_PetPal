@@ -4,7 +4,7 @@ from django.urls import reverse
 from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView, ListAPIView
 
 from notification.models import Notification
-from .serializers import ApplicationRetrieveSerializer, ApplicationSeekerCreateSerializer, ApplicationSeekerUpdateSerializer
+from .serializers import ApplicationRetrieveSerializer, ApplicationSeekerCreateSerializer, ApplicationUpdateSerializer
 from .models import Application
 from accounts.models import Shelter, Seeker
 from .permissions import IsSeeker, IsShelter
@@ -50,7 +50,7 @@ class SeekerApplicationUpdate(RetrieveUpdateAPIView):
 
     def get_serializer_class(self):
         if self.request.method in ["PUT", "PATCH"]:
-            return ApplicationSeekerUpdateSerializer
+            return ApplicationUpdateSerializer
         return self.serializer_class
     
     def get_object(self):
@@ -95,7 +95,7 @@ class ShelterApplicationUpdate(RetrieveUpdateAPIView):
 
     def get_serializer_class(self):
         if self.request.method in ["PUT", "PATCH"]:
-            return ApplicationSeekerUpdateSerializer
+            return ApplicationUpdateSerializer
         return self.serializer_class
     
     def get_object(self):
@@ -111,7 +111,6 @@ class ShelterApplicationUpdate(RetrieveUpdateAPIView):
 
     def perform_update(self, serializer):
         application = self.get_object()
-
         if application.status in ["pending"]:
             validated_data = serializer.validated_data
             if "status" in validated_data:
