@@ -1,12 +1,39 @@
 import React from 'react';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ajax_or_login } from '../../../util/ajax';
 import { useNavigate } from 'react-router-dom';
+import FieldError from "../../../components/FieldError";
 
 function Index() {
-    const [error, setError] = useState("");
     const navigate = useNavigate();
+
+    const [errors, setErrors] = useState({
+        residence_type: null,
+        fenced_yard: null,
+        pool: null,
+        current_pets: null,
+        address: null,
+        city: null,
+        postal_code: null,
+        phone_number: null,
+        other: null,
+        children: null,
+        children_under_13: null,
+        good_fit: null,
+        schedule: null,
+        insurance: null,
+        references: null,
+        vet: null,
+        questions: null,
+
+        detail: null
+    });
+
+    useEffect(() => {
+        setErrors({});
+    }, [navigate]);
+
 
     const [formData, setFormData] = useState({
         residence_type: null,
@@ -48,16 +75,20 @@ function Index() {
         
         const res = await ajax_or_login(`/applications/seeker/application/${petlistingID}/`, requestOptions, navigate);
 
+        const data = await res.json();
         if (!res.ok) {
-            const data = await res.json();
             if ('detail' in data) {
                 if (data.detail === "Not found.") {
-                    setError("Invalid PetListing for Application");
+                    setErrors("Invalid PetListing for Application");
                 }
                 else {
-                    setError(data.detail);
+                    setErrors({...errors, detail: data.detail});
                 }
             }
+            setErrors(data);
+        }
+        else {
+            navigate(`/applications/update/seeker/${data.id}`)
         }
 
     };
@@ -109,7 +140,7 @@ function Index() {
                         <div className="flex items-center rounded-md bg-background">
                             {/* grid for fields  */}
                             <div
-                            className="w-full grid grid-rows-6 grid-cols-1 gap-4 px-4 md:px-12 py-8 md:py-12"
+                            className="w-full grid gap-2 grid-cols-1 px-4 md:px-12 py-8 md:py-12"
                             >
                             {/* wrapper for address input label and input field  */}
                             <div className="w-full">
@@ -127,6 +158,8 @@ function Index() {
                                 required
                                 />
                             </div>
+                            <FieldError fielderror={errors?.address} />
+                            
                             {/* wrapper for city input label and input field  */}
                             <div className="w-full">
                                 <label
@@ -143,6 +176,8 @@ function Index() {
                                 required
                                 />
                             </div>
+                            <FieldError fielderror={errors?.city} />
+
                             {/* wrapper for postal code input label and input field  */}
                             <div className="w-full">
                                 <label
@@ -158,6 +193,8 @@ function Index() {
                                 required
                                 />
                             </div>
+                            <FieldError fielderror={errors?.postal_code} />
+
                             {/* wrapper for phone number input label and input field  */}
                             <div className="w-full">
                                 <label
@@ -174,6 +211,7 @@ function Index() {
                                 required
                                 />
                             </div>
+                            <FieldError fielderror={errors?.phone_number} />
                             </div>
                         </div>
                         </div>
@@ -207,7 +245,7 @@ function Index() {
                         <div className="flex items-center rounded-md bg-background">
                             {/* grid for fields  */}
                             <div
-                            className="w-full grid grid-flow-row grid-cols-1 gap-8 px-4 md:px-12 py-8 md:py-12"
+                            className="w-full grid gap-2 grid-cols-1 px-4 md:px-12 py-8 md:py-12"
                             >
                             {/* wrapper for resident radio group input label and radio buttons  */}
                             <div className="w-full">
@@ -320,6 +358,7 @@ function Index() {
                                     >Other (please specify)</label>
                                     
                                 </div>
+                                <FieldError fielderror={errors?.residence_type} />
                                 {/* text box for Other  */}
                                 <div
                                     className="flex flex-row items-start px-2 sm:px-5 ml-0 sm:ml-6"
@@ -389,6 +428,7 @@ function Index() {
                                    
                                 </div>
                                 </div>
+                                <FieldError fielderror={errors?.fenced_yard} />
                             </div>
 
                             {/* wrapper for pool radio group input label and radio buttons  */}
@@ -446,6 +486,7 @@ function Index() {
                                 </div>
                                 </div>
                             </div>
+                            <FieldError fielderror={errors?.pool} />
 
                             {/* wrapper for number of children input label and input field  */}
                             <div className="w-full">
@@ -465,6 +506,7 @@ function Index() {
                                 required
                                 />
                             </div>
+                            <FieldError fielderror={errors?.children} />
                             {/* wrapper for number of younger children input label and input field  */}
                             <div className="w-full">
                                 <div className="text-center sm:text-left">
@@ -483,6 +525,7 @@ function Index() {
                                 required
                                 />
                             </div>
+                            <FieldError fielderror={errors?.children_under_13} />
                             {/* wrapper for number and type of pets input label and input field  */}
                             <div className="w-full">
                                 <div className="text-center sm:text-left">
@@ -501,6 +544,7 @@ function Index() {
                                 required
                                 />
                             </div>
+                            <FieldError fielderror={errors?.current_pets} />
                             </div>
                         </div>
                         </div>
@@ -555,6 +599,7 @@ function Index() {
                                 required
                                 ></textarea>
                             </div>
+                            <FieldError fielderror={errors?.good_fit} />
                             {/* wrapper for schedule label and input field  */}
                             <div className="w-full">
                                 <div className="text-center sm:text-left">
@@ -573,6 +618,7 @@ function Index() {
                                 required
                                 ></textarea>
                             </div>
+                            <FieldError fielderror={errors?.schedule} />
                             {/* wrapper for insurance input label and input field  */}
                             <div className="w-full">
                                 <div className="text-center sm:text-left">
@@ -590,6 +636,7 @@ function Index() {
                                 required
                                 ></textarea>
                             </div>
+                            <FieldError fielderror={errors?.insurance} />
                             </div>
                         </div>
                         </div>
@@ -646,6 +693,7 @@ function Index() {
                                 required
                                 ></textarea>
                             </div>
+                            <FieldError fielderror={errors?.references} />
                             {/* wrapper for veterinarian label and input field  */}
                             <div className="w-full">
                                 <div className="text-center sm:text-left">
@@ -665,6 +713,7 @@ function Index() {
                                 required
                                 ></textarea>
                             </div>
+                            <FieldError fielderror={errors?.vet} />
                             {/* wrapper for questions input label and input field  */}
                             <div className="w-full">
                                 <div className="text-center sm:text-left">
@@ -683,6 +732,7 @@ function Index() {
                                 required
                                 ></textarea>
                             </div>
+                            <FieldError fielderror={errors?.questions} />
                             </div>
                         </div>
                         </div>
@@ -709,7 +759,7 @@ function Index() {
                     </div>
                     </div>
                     <div className="flex justify-center">
-                            <p className="font-semibold text-xs sm:text-sm text-red-500">{error}</p>
+                            <p className="font-semibold text-xs sm:text-sm text-red-500">{errors.detail}</p>
                     </div>
                 </form>
             </main>
