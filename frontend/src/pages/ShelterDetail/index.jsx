@@ -121,17 +121,17 @@ const ShelterDetail = () => {
                         </div>
                         <div className="flex justify-center">
                             {isSelf === true ?
-                                <div className="flex flex-row gap-4">
+                                <div className="flex flex-col sm:flex-row gap-4">
                                     <Link
                                         to={`/mylistings/`}
-                                        className="rounded-[30px] bg-accent-100 px-9 py-4 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center hover:scale-105 duration-200">View your pets</Link>
+                                        className="rounded-[30px] bg-accent-100 px-9 py-4 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center text-center hover:scale-105 duration-200">View your pets</Link>
                                     <Link to={`/applications/list/shelter/`}
-                                        className="rounded-[30px] bg-accent-100 px-9 py-4 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center hover:scale-105 duration-200">View your applications</Link>
+                                        className="rounded-[30px] bg-accent-100 px-9 py-4 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center text-center hover:scale-105 duration-200">View your applications</Link>
                                 </div>
                                 :
                                 <Link
                                     to={`/petlistings?shelter=${shelter?.account.name}`}
-                                    className="rounded-[30px] bg-accent-100 px-9 py-4 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center hover:scale-105 duration-200">View our pets</Link>
+                                    className="rounded-[30px] bg-accent-100 px-9 py-4 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center text-center hover:scale-105 duration-200">View our pets</Link>
                             }
                         </div>
                     </div>
@@ -152,7 +152,7 @@ const ShelterDetail = () => {
                             <div className="flex flex-col">
                                 <p className="text-text text-xl font-bold mb-1">All Reviews</p>
                                 <div className="border-t-2 mb-4"></div>
-                                <AllReviews key={shelterID} name="reviews" shelterID={shelterID}></AllReviews>
+                                <AllReviews key={shelterID} name="reviews" shelterID={shelterID} isSelf={isSelf}></AllReviews>
                             </div>
                         </div>
                     </div>
