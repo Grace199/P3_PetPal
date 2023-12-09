@@ -3,6 +3,7 @@ import ShelterListings from '../../components/ShelterListings'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ajax_or_login } from '../../util/ajax';
 import NewReview from '../../components/NewReview';
+import AllReviews from '../../components/AllReviews';
 
 const ShelterDetail = () => {
     const { shelterID } = useParams();
@@ -10,7 +11,6 @@ const ShelterDetail = () => {
     const [isSeeker, setIsSeeker] = useState(null);
     const [isSelf, setIsSelf] = useState(false);
     const [shelter, setShelter] = useState(null);
-    const [name, setName] = useState(null);
     const [avatar, setAvatar] = useState(null);
     const navigate = useNavigate();
 
@@ -39,7 +39,6 @@ const ShelterDetail = () => {
         setIsSelf(!isSeeker && id == shelterID);
         setAvatar(localStorage.getItem("avatar"));
     }, [isSeeker, id, shelterID, avatar]);
-
 
     const formattedPhoneNumber = (phoneNumber) => {
         const phoneNumberString = phoneNumber.toString();
@@ -118,13 +117,17 @@ const ShelterDetail = () => {
                             {shelter ? <p className="text-primary text-[32px] mx-8 mt-14 md:mx-12 xl:mx-28 font-medium">Pets from Dog Society</p> : <p></p>}
                         </div>
                         <div className="flex flex-col md:flex-row justify-center gap-14 md:gap-10 lg:gap-12 xl:gap-14 2xl:gap-[78px]">
-                            <ShelterListings shelterName={shelter?.account.name} />
+                            <ShelterListings key={id} shelterName={shelter?.account.name} />
                         </div>
                         <div className="flex justify-center">
                             {isSelf === true ?
-                                <Link
-                                    to={`/mylistings/`}
-                                    className="rounded-[30px] bg-accent-100 px-9 py-4 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center hover:scale-105 duration-200">View your pets</Link>
+                                <div className="flex flex-row gap-4">
+                                    <Link
+                                        to={`/myapplications/`}
+                                        className="rounded-[30px] bg-accent-100 px-9 py-4 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center hover:scale-105 duration-200">View your pets</Link>
+                                    <Link to={`/mylistings/`}
+                                        className="rounded-[30px] bg-accent-100 px-9 py-4 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center hover:scale-105 duration-200">View your applications</Link>
+                                </div>
                                 :
                                 <Link
                                     to={`/petlistings?shelter=${shelter?.account.name}`}
@@ -136,26 +139,25 @@ const ShelterDetail = () => {
                 <div className="w-full gap-14 flex flex-col px-mobile md:px-tablet xl:px-desktop pt-6 sm:pt-16">
                     <div className="w-full flex flex-col justify-center bg-[#FAFAFA] rounded-[30px] drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] px-8 md:px-24 py-16 gap-6">
                         <div className="flex flex-col gap-5 sm:gap-8">
-                            {/* add review */}
                             {isSelf ?
                                 <></>
                                 :
                                 <div className="flex flex-col">
                                     <p className="text-text text-xl font-bold mb-1">Leave a Review!</p>
                                     <div className="border-t-2 mb-4"></div>
-                                    <NewReview key={id} name={name} img={avatar}></NewReview>
+                                    <NewReview key={id} img={avatar}></NewReview>
                                 </div>
                             }
-                            {/* all reviews */}
+                            {/* TODO: all reviews */}
                             <div className="flex flex-col">
                                 <p className="text-text text-xl font-bold mb-1">All Reviews</p>
                                 <div className="border-t-2 mb-4"></div>
+                                <AllReviews key={shelterID} name="reviews" shelterID={shelterID}></AllReviews>
                             </div>
-                            {/* add stars here */}
                         </div>
                     </div>
                 </div>
-            </main>
+            </main >
         </>
     )
 }

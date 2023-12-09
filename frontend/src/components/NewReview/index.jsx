@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ajax_or_login } from '../../util/ajax';
 
-const NewReview = ({ name, img }) => {
+const NewReview = ({ img }) => {
     const { shelterID } = useParams();
     const navigate = useNavigate();
     const [rating, setRating] = useState(5);
