@@ -27,6 +27,7 @@ class Reply(models.Model):
     review = models.ForeignKey(Review, on_delete=models.CASCADE)
     content = models.CharField(max_length=500, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+    isSelf = models.BooleanField(default=False)
 
 
 # Message
