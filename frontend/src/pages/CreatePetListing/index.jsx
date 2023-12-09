@@ -68,7 +68,7 @@ const Index = () => {
     async function handle_submit(event) {
       event.preventDefault();
       const requestOptions = {
-          method: 'Post',
+          method: 'POST',
           headers: {
               'Content-Type': 'application/json'
           },
@@ -85,7 +85,7 @@ const Index = () => {
           setErrors(json);
         }
         else {
-          navigate("../../Login/");
+          navigate("/mylistings/");
         }
       } catch (error) {
         console.error("Error during fetch: ", error);
@@ -118,7 +118,7 @@ const Index = () => {
         <>
         <main className="px-mobile md:px-tablet xl:px-desktop py-10">
       {/* Form Start */}
-      <form className="flex flex-col justify-center gap-20">
+      <form className="flex flex-col justify-center gap-20" onSubmit={handle_submit}>
         {/* Page Heading */}
         <div className="flex flex-col items-center">
           <div
@@ -838,7 +838,6 @@ const Index = () => {
           </div>
           <div className="flex">
             <button
-              onClick={handle_submit}
               name="button_create"
               className="rounded-xl bg-accent-100 px-2 sm:px-12 py-2 sm:py-3 text-white text-base font-semibold text-center hover:scale-105 duration-200"
               >Create</button>

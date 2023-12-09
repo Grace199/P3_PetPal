@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 const index = ({ id, img, name, properties }) => {
     return (
         <Link
-            to={`/mylistings/${id}/`}
+            to={`/petlisting/update/${id}/`}
             className="relative group flex flex-col text-accent-100 hover:bg-black bg-white text-center rounded-3xl max-sm:w-full w-[48%] md:w-[40%] lg:w-[23%] shadow-lg duration-200"
         >
             <img
