@@ -8,6 +8,7 @@ from rest_framework.serializers import (
 )
 from .models import Review, Reply, Message
 from accounts.models import Account, Shelter
+from accounts.serializers import AccountSerializer
 
 
 class ReviewSerializer(ModelSerializer):
@@ -29,6 +30,20 @@ class ReviewSerializer(ModelSerializer):
 
 
 class MessageSerializer(ModelSerializer):
+    owner = AccountSerializer()
+    timestamp = DateTimeField(read_only=True)
+
+    class Meta:
+        model = Message
+        fields = [
+            "application",
+            "owner",
+            "content",
+            "timestamp",
+        ]
+
+
+class MessageCreateSerializer(ModelSerializer):
     owner = StringRelatedField(many=False)
     timestamp = DateTimeField(read_only=True)
 

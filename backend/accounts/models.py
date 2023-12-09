@@ -104,3 +104,6 @@ class Shelter(models.Model):
     class Meta:
         verbose_name = "Shelter"
         verbose_name_plural = "Shelters"
+
+    def __str__(self):
+        return self.account.name
