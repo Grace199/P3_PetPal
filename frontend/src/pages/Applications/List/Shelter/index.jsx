@@ -47,8 +47,8 @@ const ApplicationListSeeker = () => {
             <main className="h-full">
                 <div className="w-full flex justify-center items-center h-[300px] bg-black relative flex-col">
                     <div className="z-30 text-center text-background">
-                        <p className="z-30 text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-bold">
-                            Your Applications
+                        <p className="z-30 text-4xl sm:text-6xl md:text-8xl px-4 font-bold">
+                            Applications
                         </p>
                     </div>
                     <img
@@ -57,8 +57,8 @@ const ApplicationListSeeker = () => {
                         alt="backdrop"
                     />
                 </div>
-                <div className="flex gap-3 max-xs:gap-1">
-                        <div className="flex justify-center items-center gap-1 py-3 px-4 sm:px-2 md:px-8 rounded-full group">   
+                <div className="flex gap-3 max-xs:gap-1 px-mobile md:px-tablet xl:px-desktop max-sm:flex-col">
+                        <div className="flex max-sm:justify-start justify-center items-center gap-1 py-3 px-4 sm:px-2 md:px-8 rounded-full group">   
                          <label
                                 htmlFor="filter_by_status"
                                 className="text-xs font-thin sm:text-sm text-black"
@@ -75,7 +75,7 @@ const ApplicationListSeeker = () => {
                         </form>
                         </div>
 
-                        <div className="flex justify-center items-center gap-1 py-3 px-4 max-sm:px-2 md:px-8 rounded-full group">
+                        <div className="flex justify-center max-sm:justify-start items-center gap-1 py-3 px-4 max-sm:px-2 md:px-8 rounded-full group">
                         <label
                                 htmlFor="sort_by_time"
                                 className="text-xs font-thin sm:text-sm text-black"
