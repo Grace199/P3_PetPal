@@ -26,7 +26,7 @@ const Index = ({ shelterName }) => {
 
     return (
         <>
-            <div className="w-full flex justify-evenly mt-12 gap-3 text-background">
+            <div className="w-full max-sm:flex-col flex items-center justify-evenly mt-12 gap-3 text-background">
                 {petListings && (
                     <>
                         {petListings[0] && <AnimalCardBlue key={petListings[0].id} name={petListings[0].pet.name} id={petListings[0].id} img={petListings[0].pet.image1} />}

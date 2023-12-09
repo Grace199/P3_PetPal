@@ -26,7 +26,7 @@ const Index = () => {
         >
             <h1 className="text-5xl font-bold mb-3 text-center">New Pet Listings!</h1>
             <h2 className="text-3xl text-center">meet new friends</h2>
-            <div className="w-full flex justify-evenly mt-12 gap-3 text-background">
+            <div className="w-full max-sm:flex-col flex justify-evenly mt-12 gap-3 text-background">
                 {petListings && (<>
                     {petListings[0] && <AnimalCardBlue key={petListings[0].id} name={petListings[0].pet.name} id={petListings[0].id} img={petListings[0].pet.image1} />}
                     {petListings[1] && <AnimalCardBlue key={petListings[1].id} name={petListings[1].pet.name} id={petListings[1].id} img={petListings[1].pet.image1} />}

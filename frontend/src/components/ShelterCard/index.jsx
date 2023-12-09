@@ -5,7 +5,7 @@ const index = ({ id, img, name }) => {
     return (
         <Link
             to={`/shelterDetail/${id}`}
-            className="flex flex-col bg-secondary text-center rounded-3xl w-[340px] shadow-lg hover:scale-105 active:scale-95 duration-200"
+            className="flex flex-col bg-secondary text-center rounded-3xl max-w-[340px] shadow-lg hover:scale-105 active:scale-95 duration-200"
         >
             <img
                 src={img}

@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import ShelterListings from '../../components/ShelterListings'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ajax_or_login } from '../../util/ajax';
+import NewReview from '../../components/NewReview';
+import AllReviews from '../../components/AllReviews';
 
 const ShelterDetail = () => {
     const { shelterID } = useParams();
@@ -9,6 +11,7 @@ const ShelterDetail = () => {
     const [isSeeker, setIsSeeker] = useState(null);
     const [isSelf, setIsSelf] = useState(false);
     const [shelter, setShelter] = useState(null);
+    const [avatar, setAvatar] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -34,7 +37,8 @@ const ShelterDetail = () => {
 
     useEffect(() => {
         setIsSelf(!isSeeker && id == shelterID);
-    }, [isSeeker, id, shelterID]);
+        setAvatar(localStorage.getItem("avatar"));
+    }, [isSeeker, id, shelterID, avatar]);
 
     const formattedPhoneNumber = (phoneNumber) => {
         const phoneNumberString = phoneNumber.toString();
@@ -58,7 +62,7 @@ const ShelterDetail = () => {
                     <div className="w-full flex flex-col gap-11 justify-center mb-[90px]">
                         <div className="bg-[#FAFAFA] rounded-[30px] flex flex-col gap-8 pb-6 sm:pb-8 sm:mx-8 overflow-hidden md:mx-12 xl:mx-28 drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
                             <div className="bg-primary h-[80px] sm:h-[110px] text-center flex justify-center items-center">
-                                {shelter ? <p className="text-background text-2xl sm:text-4xl md:text-5xl font-bold">{shelter.account.name}</p> : <p className="text-background text-2xl sm:text-4xl md:text-5xl font-bold"></p>}
+                                {shelter ? <p className="text-background text-xl sm:text-4xl md:text-5xl font-bold">{shelter.account.name}</p> : <p className="text-background text-2xl sm:text-4xl md:text-5xl font-bold"></p>}
 
                             </div>
                             <div className="flex flex-col-reverse justify-center xl:items-center gap-4 px-4 sm:px-14 2xl:flex-row 2xl:gap-16 2xl:px-24">
@@ -66,8 +70,10 @@ const ShelterDetail = () => {
                                     <div className="flex flex-row gap-3 items-center">
                                         <p className="text-primary text-lg sm:text-3xl text-center sm:text-left">Our Mission</p>
                                         {isSelf === true ?
-                                            <Link to={`/shelter/${shelterID}/edit/`}>
-                                                <i className="uil uil-edit text-primary text-xl"></i>
+                                            <Link
+                                                to={`/shelter/${shelterID}/edit/`}
+                                                className="text-primary hover:scale-105 duration-200 active:scale-95">
+                                                <i className="uil uil-edit text-xl"></i>
                                             </Link>
                                             :
                                             <></>
@@ -105,24 +111,48 @@ const ShelterDetail = () => {
                         </div>
                     </div>
                 </div>
-                <div class="w-full gap-14 flex flex-col">
-                    <div class="w-full flex flex-col justify-center bg-background gap-14 pb-14 px-mobile md:px-tablet xl:px-desktop">
-                        <div class="flex justify-center md:justify-start">
-                            {shelter ? <p class="text-primary text-[32px] mx-8 mt-14 md:mx-12 xl:mx-28 font-medium">Pets from Dog Society</p> : <p></p>}
+                <div className="w-full gap-14 flex flex-col">
+                    <div className="w-full flex flex-col justify-center bg-background gap-14 pb-14 px-mobile md:px-tablet xl:px-desktop">
+                        <div className="flex justify-center md:justify-start">
+                            {shelter ? <p className="text-primary text-[32px] mx-8 mt-14 md:mx-12 xl:mx-28 font-medium text-center sm:text-left">Pets from Dog Society</p> : <p></p>}
                         </div>
-                        <div class="flex flex-col md:flex-row justify-center gap-14 md:gap-10 lg:gap-12 xl:gap-14 2xl:gap-[78px]">
-                            <ShelterListings shelterName={shelter?.account.name} />
+                        <div className="flex flex-col md:flex-row justify-center gap-14 md:gap-10 lg:gap-12 xl:gap-14 2xl:gap-[78px]">
+                            <ShelterListings key={id} shelterName={shelter?.account.name} />
                         </div>
-                        <div class="flex justify-center">
+                        <div className="flex justify-center">
                             {isSelf === true ?
-                                <Link
-                                    to={`/mylistings/`}
-                                    className="rounded-[30px] bg-accent-100 px-9 py-4 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center hover:scale-105 duration-200">View your pets</Link>
+                                <div className="flex flex-col sm:flex-row gap-4">
+                                    <Link
+                                        to={`/mylistings/`}
+                                        className="rounded-[30px] bg-accent-100 px-9 py-4 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center text-center hover:scale-105 duration-200">View your pets</Link>
+                                    <Link to={`/applications/list/shelter/`}
+                                        className="rounded-[30px] bg-accent-100 px-9 py-4 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center text-center hover:scale-105 duration-200">View your applications</Link>
+                                </div>
                                 :
                                 <Link
                                     to={`/petlistings?shelter=${shelter?.account.name}`}
-                                    className="rounded-[30px] bg-accent-100 px-9 py-4 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center hover:scale-105 duration-200">View our pets</Link>
+                                    className="rounded-[30px] bg-accent-100 px-9 py-4 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center text-center hover:scale-105 duration-200">View our pets</Link>
                             }
+                        </div>
+                    </div>
+                </div>
+                <div className="w-full gap-14 flex flex-col px-mobile md:px-tablet xl:px-desktop pt-6 sm:pt-16">
+                    <div className="w-full flex flex-col justify-center bg-[#FAFAFA] rounded-[30px] drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] px-8 md:px-24 py-16 gap-6">
+                        <div className="flex flex-col gap-5 sm:gap-8">
+                            {isSelf ?
+                                <></>
+                                :
+                                <div className="flex flex-col">
+                                    <p className="text-text text-xl font-bold mb-1">Leave a Review!</p>
+                                    <div className="border-t-2 mb-4"></div>
+                                    <NewReview key={id} img={avatar}></NewReview>
+                                </div>
+                            }
+                            <div className="flex flex-col">
+                                <p className="text-text text-xl font-bold mb-1">All Reviews</p>
+                                <div className="border-t-2 mb-4"></div>
+                                <AllReviews key={shelterID} name="reviews" shelterID={shelterID} isSelf={isSelf}></AllReviews>
+                            </div>
                         </div>
                     </div>
                 </div>

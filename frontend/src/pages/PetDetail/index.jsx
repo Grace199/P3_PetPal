@@ -58,7 +58,6 @@ const Index = () => {
         <main className="px-mobile md:px-tablet xl:px-desktop py-10">
             <div className="bg-black rounded-3xl w-full max-h-[500px] mb-5 md:hidden" onClick={() => {
                 setCurrentImageIndex(prev => (prev + 1) % 3)
-                console.log(petListing?.pet[`image${currentImageIndex + 1}`]);
             }}>
                 <img
                     src={petListing?.pet[`image${currentImageIndex + 1}`]}
@@ -134,7 +133,6 @@ const Index = () => {
                 <div className="md:col-span-5 flex flex-col gap-5">
                     <div className="w-full max-h-[500px] rounded-3xl max-md:hidden bg-black" onClick={() => {
                         setCurrentImageIndex(prev => (prev + 1) % 3)
-                        console.log(petListing?.pet[`image${currentImageIndex + 1}`]);
                     }}>
                         <img
                             src={petListing?.pet[`image${currentImageIndex + 1}`]}

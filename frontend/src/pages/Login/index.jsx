@@ -72,7 +72,7 @@ const Login = () => {
                             <button className="rounded-lg bg-primary px-8 py-3 text-lg text-white font-semibold justify-center hover:scale-105 duration-200 sm:px-16 sm:text-xl">Login</button>
                         </div>
                         <div className="flex justify-center w-full">
-                            <p className="text-center max-sm:text-sm">Don't have an account yet?<Link to="../signUp/signupUser.html" className="text-accent-100 font-semibold"> Sign Up</Link></p>
+                            <p className="text-center max-sm:text-sm">Don't have an account yet?<Link to="/signup/seeker/" className="text-accent-100 font-semibold"> Sign Up</Link></p>
                         </div>
                         <div className="flex justify-center">
                             <p className="font-semibold text-xs sm:text-sm text-red-500">{error}</p>
