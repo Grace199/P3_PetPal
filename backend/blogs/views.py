@@ -23,8 +23,19 @@ class BlogListCreate(ListCreateAPIView):
     def get_queryset(self):
         queryset = Blog.objects.all()
         type = self.request.query_params.get("type", None)
+        search_query = self.request.query_params.get("search", None)
+        search_fields = [
+            "shelter__account__name",
+            "title",
+        ]
+
         if type:
             queryset = queryset.filter(blog_type=type)
+        if search_query:
+            if queryset is not None:
+                queryset = queryset.filter(
+                    shelter__account__name__icontains=search_query
+                ) | queryset.filter(title__icontains=search_query)
 
         return queryset
 

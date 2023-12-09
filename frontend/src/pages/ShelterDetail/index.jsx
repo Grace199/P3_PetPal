@@ -124,9 +124,14 @@ const ShelterDetail = () => {
                                 <div className="flex flex-col sm:flex-row gap-4">
                                     <Link
                                         to={`/mylistings/`}
-                                        className="rounded-[30px] bg-accent-100 px-9 py-4 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center text-center hover:scale-105 duration-200">View your pets</Link>
-                                    <Link to={`/applications/list/shelter/`}
-                                        className="rounded-[30px] bg-accent-100 px-9 py-4 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center text-center hover:scale-105 duration-200">View your applications</Link>
+                                        className="rounded-[30px] bg-accent-100 px-5 py-3 text-sm sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center text-center hover:scale-105 duration-200">View your pets</Link>
+                                    <Link
+                                        to={`/applications/list/shelter/`}
+                                        className="rounded-[30px] bg-accent-100 px-5 py-3 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center text-center hover:scale-105 duration-200">View your applications</Link>
+                                    <Link
+                                        to={`/blogs/create/`}
+                                        className="rounded-[30px] bg-accent-100 px-5 py-3 text-base sm:px-16 sm:py-6 text-white sm:text-lg md:text-2xl font-semibold justify-center text-center hover:scale-105 duration-200">Make a blog post
+                                    </Link>
                                 </div>
                                 :
                                 <Link

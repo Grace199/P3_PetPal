@@ -90,7 +90,6 @@ const ShelterUpdate = () => {
                 province: province,
                 phone_number: phoneNumber
             }
-            console.log(shelterData);
 
             const res = await ajax_or_login(`/accounts/shelter/${shelterID}/`, { method: "PATCH", body: JSON.stringify(shelterData), headers: { 'Content-Type': 'application/json' } }, navigate);
 

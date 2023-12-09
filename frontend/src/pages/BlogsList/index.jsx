@@ -1,34 +1,40 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import backdrop from '../../assets/images/Home/heroBanner.jpg'
-import ShelterListCard from '../../components/ShelterListCard'
-import { useState, useEffect } from 'react'
-import { ajax_or_login } from '../../util/ajax'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import { ajax_or_login } from '../../util/ajax';
+import BlogListCard from '../../components/BlogListCard';
 
-const Shelters = () => {
+const Blogs = () => {
     const [query, setQuery] = useState({ search: "", page: 1 });
     const [totalPages, setTotalPages] = useState(1);
-    const [shelters, setShelters] = useState([]);
+    const [blogs, setBlogs] = useState([]);
+    const [type, setType] = useState("other");
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const { search, page } = query;
-                const res = await ajax_or_login(`/accounts/shelter?search=${search}&page=${page}`, { method: "GET" }, navigate);
+                const res = await ajax_or_login(`/blogs?search=${search}&page=${page}&type=${type}`, { method: "GET" }, navigate);
                 if (res.ok) {
                     const data = await res.json();
-                    setTotalPages(Math.ceil(data.count / 20));
-                    setShelters(data.results);
+                    const tot = Math.ceil(data.count / 20);
+                    setTotalPages(Math.max(tot, 1));
+                    setBlogs(data.results);
                 } else {
                     console.error("Error during fetch: ", res);
                 }
             } catch (error) {
                 console.error("Error during fetch: ", error);
             }
-        };
+        }
         fetchData();
-    }, [query, navigate]);
+    }, [query, navigate, type]);
+
+    const handleTypeChange = ((event) => {
+        const newType = event.target.value;
+        setType(newType);
+    })
 
     return (
         <>
@@ -36,7 +42,7 @@ const Shelters = () => {
                 <div className="w-full flex justify-center items-center h-[300px] bg-black relative flex-col">
                     <div className="z-30">
                         <p className="z-30 text-background text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-bold">
-                            SHELTERS
+                            BLOGS
                         </p>
                     </div>
                     <img
@@ -46,18 +52,31 @@ const Shelters = () => {
                     />
                 </div>
                 <div className="w-full h-[100px] sm:h-44 gap-8 flex flex-col justify-center items-center px-mobile md:px-tablet xl:px-desktop bg-secondary">
-                    <input
-                        className="bg-[#F2F5FD] w-full text-sm sm:text-base p-3 sm:p-6 rounded-xl border border-primary placeholder-accent-200 cursor-pointer hover:bg-[#F2F5FD87] focus:outline-none text-accent-100 font-semibold"
-                        name="search-bar"
-                        placeholder="Search for a shelter..."
-                        type="text"
-                        value={query.search}
-                        onChange={event => setQuery({ search: event.target.value, page: 1 })}
-                    />
+                    <div className="flex w-full flex-row gap-2">
+                        <input
+                            className="bg-[#F2F5FD] w-full text-sm sm:text-base p-3 sm:p-6 rounded-xl border border-primary placeholder-accent-200 cursor-pointer hover:bg-[#F2F5FD87] focus:outline-none text-accent-100 font-semibold"
+                            name="search-bar"
+                            placeholder="Search for a blog..."
+                            type="text"
+                            value={query.search}
+                            onChange={event => setQuery({ search: event.target.value, page: 1 })}
+                        />
+                        <select
+                            name="type"
+                            value={type}
+                            onChange={handleTypeChange}
+                            className="hover:cursor-pointer bg-[#F2F5FD] text-sm sm:text-base p-3 sm:p-6 rounded-xl border border-primary"
+                        >
+                            <option value="other" className="text-sm sm:text-base">Other</option>
+                            <option value="pet_training" className="text-sm sm:text-base">Pet Training</option>
+                            <option value="pet_care" className="text-sm sm:text-base">Pet Care</option>
+                            <option value="adoption_tips" className="text-sm sm:text-base">Adoption Tips</option>
+                        </select>
+                    </div>
                 </div>
                 <div className="w-full gap-8 flex flex-col px-mobile md:px-tablet xl:px-desktop pt-6 sm:pt-16">
-                    {shelters && shelters.map(shelter => (
-                        <ShelterListCard key={shelter.id} id={shelter.id} name={shelter.account.name} img={shelter.account.avatar} address={shelter.address} city={shelter.city} province={shelter.province}></ShelterListCard>
+                    {blogs && blogs.map(blog => (
+                        <BlogListCard key={blog.id} id={blog.id} img={blog.shelter.account.avatar} title={blog.title} shelter={blog.shelter.account.name} timestamp={blog.timestamp} articleType={blog.blog_type}></BlogListCard>
                     ))}
                 </div>
                 <div className="w-full flex justify-center align-middle pt-8 gap-4">
@@ -88,4 +107,4 @@ const Shelters = () => {
     )
 }
 
-export default Shelters
+export default Blogs
