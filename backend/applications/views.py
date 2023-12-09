@@ -176,3 +176,33 @@ class ShelterApplicationList(ListAPIView):
 
         return query_set.order_by('-create_time', '-update_time')
         """
+
+class SeekerApplicationList(ListAPIView):
+    serializer_class = ApplicationRetrieveSerializer
+    permission_classes = [IsSeeker]
+    query_separator = ","
+
+    def get_queryset(self):
+        qs = Application.objects.filter(seeker=self.request.user.seeker.id)
+
+        status_filters = self.request.query_params.get("status", None)
+        sorts = self.request.query_params.get("sort", None)
+        
+        print(status_filters)
+
+        if status_filters:
+            status_list = status_filters.split(self.query_separator)
+            for sl in status_list:
+                if sl not in ['pending', 'accepted', 'denied', 'withdrawn']:
+                    raise ValidationError(detail='Invalid status parameter', code=401)
+            qs = qs.filter(status__in=status_filters.split(self.query_separator))
+        
+
+        if sorts:
+            sort_list = sorts.split(self.query_separator)
+            for sl in sort_list:
+                if sl not in ['create_time', '-create_time', 'update_time', '-update_time']:
+                    raise ValidationError(detail='Invalid sort parameter', code=401)
+            qs = qs.order_by(*sort_list)
+
+        return qs
