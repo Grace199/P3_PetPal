@@ -45,7 +45,7 @@ function App() {
             <Route path="shelterDetail/:shelterID" element={<ShelterDetail />} />
             <Route path="notifications/" element={<Notifications />} />
             <Route path="seekerdetail/" element={<SeekerDetail />} />
-            <Route path="seekerview/" element={<SeekerView />} />
+            <Route path="seekerview/:seekerID" element={<SeekerView />} />
             <Route path="applications/list/seeker/" element={<ApplicationListSeeker />} />
             <Route path="applications/list/shelter/" element={<ApplicationListShelter />} />
             <Route path="petlisting/create/" element={<CreatePetListing />} />

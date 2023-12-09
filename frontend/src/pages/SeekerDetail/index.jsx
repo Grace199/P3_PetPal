@@ -48,8 +48,7 @@ const Index = () => {
     if (!toDelete) {
       try {
         const rest = await ajax_or_login(
-          `/accounts/seeker/${
-            parseInt(localStorage.getItem("userID"), 10) || ""
+          `/accounts/seeker/${parseInt(localStorage.getItem("userID"), 10) || ""
           }/`,
           {
             method: "PATCH",
@@ -70,14 +69,27 @@ const Index = () => {
       } catch (error) {
         console.log(error);
       }
+    } else {
+      try {
+        const res = await ajax_or_login(`/accounts/seeker/${parseInt(localStorage.getItem("userID"), 10) || ""
+          }/`,
+          {
+            method: "DELETE"
+          }, navigate)
+
+          if (res.ok) {
+            navigate("/login/")
+          }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
   const fetchUserData = async () => {
     try {
       const rest = await ajax_or_login(
-        `/accounts/seeker/${
-          parseInt(localStorage.getItem("userID"), 10) || ""
+        `/accounts/seeker/${parseInt(localStorage.getItem("userID"), 10) || ""
         }/`,
         { method: "GET" },
         navigate
