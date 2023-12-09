@@ -20,6 +20,8 @@ const Index = () => {
     breed_preference: "",
   });
   const [toDelete, setDelete] = useState(false);
+  const [prevUserName, setPrevUserName] = useState('');
+  const [avatar, setAvatar] = useState(null);
 
   const navigate = useNavigate();
 
@@ -47,25 +49,48 @@ const Index = () => {
 
     if (!toDelete) {
       try {
-        const rest = await ajax_or_login(
-          `/accounts/seeker/${
-            parseInt(localStorage.getItem("userID"), 10) || ""
-          }/`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-          },
-          navigate
-        );
+        const userID = parseInt(localStorage.getItem("userID"), 10) || "";
+
+        var filteredFormData = new FormData();
+        if (avatar) {
+          filteredFormData.append('account.avatar', avatar);
+        }
+        if (prevUserName !== formData.account.name) {
+          filteredFormData.append('account.name', formData.account.name);
+        }
+
+        for (const fieldName in formData) {
+          if (fieldName !== 'account') {
+            const fieldValue = formData[fieldName];
+            if (fieldValue !== "") {
+              filteredFormData.append(fieldName, fieldValue);
+            }
+          }
+        }
+
+        const rest = await ajax_or_login(`/accounts/seeker/${userID}/`, {
+          method: "PATCH",
+          body: filteredFormData,
+        }, navigate);
+
         if (!rest.ok) {
           const json = await rest.json();
           console.log(json);
         }
-        if (rest.ok) {
-          const data = await rest.json();
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        const userID = parseInt(localStorage.getItem("userID"), 10) || "";
+        const url = `/accounts/seeker/${userID}/`;
+
+        const res = await ajax_or_login(url, {
+          method: "DELETE",
+        }, navigate);
+
+        if (res.ok) {
+          navigate("/login/");
         }
       } catch (error) {
         console.log(error);
@@ -76,15 +101,14 @@ const Index = () => {
   const fetchUserData = async () => {
     try {
       const rest = await ajax_or_login(
-        `/accounts/seeker/${
-          parseInt(localStorage.getItem("userID"), 10) || ""
+        `/accounts/seeker/${parseInt(localStorage.getItem("userID"), 10) || ""
         }/`,
         { method: "GET" },
         navigate
       );
       if (rest.ok) {
         const data = await rest.json();
-
+        setPrevUserName(data.account.name);
         setFormData({
           account: {
             avatar: data.account.avatar || null,
@@ -102,6 +126,8 @@ const Index = () => {
             data.open_to_special_needs_animals || "",
           breed_preference: data.breed_preference || "",
         });
+
+        console.log(data);
       }
     } catch (error) {
       console.log(error);
@@ -112,17 +138,30 @@ const Index = () => {
     fetchUserData();
   }, []);
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+
+    if (file) {
+      setAvatar(file);
+    }
+  };
+
+
   return (
     <main>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
         <div className="mt-9 mx-mobile md:mx-tablet xl:mx-desktop flex flex-col gap-6 justify-center items-center drop-shadow-xl">
-          <div className="rounded-full w-1/2 flex justify-center self-center aspect-square bg-black group relative cursor-pointer md:hidden">
-            <img
-              src={localStorage.getItem("avatar")}
-              className="w-full group-hover:opacity-50 rounded-full border border-primary"
-            />
-            <i className="uil uil-edit-alt absolute left-[35%] top-[30%] hidden group-hover:block text-white text-2xl"></i>
-          </div>
+          <label htmlFor="avatarInput" className="rounded-full min-h-[200px] aspect-square bg-black md:hidden">
+            <div className="rounded-full min-h-[200px] aspect-square bg-black group relative cursor-pointer md:hidden">
+              <img
+                src={localStorage.getItem("avatar")}
+                className="w-full group-hover:opacity-50 rounded-full border border-primary object-cover h-full"
+                alt="Avatar"
+              />
+              <i className="uil uil-edit-alt absolute left-[46%] top-[46%] hidden group-hover:block text-white text-4xl"></i>
+
+            </div>
+          </label>
           <div className="w-full drop-shadow-xl">
             <div className="bg-primary flex justify-center items-center h-28 rounded-t-3xl max-md:justify-evenly">
               <div className="flex justify-center items-center px-8">
@@ -174,13 +213,10 @@ const Index = () => {
                     <label htmlFor="Email" className="text-base text-text ">
                       Email Address:
                     </label>
-                    <input
-                      name="account.email"
-                      value={formData.account.email}
-                      type="text"
-                      onChange={handleInputChange}
-                      className="border-primary rounded-md h-11 w-full border border-opacity-50 bg-white px-5"
-                    />
+                    <div className="border-secondary rounded-md h-11 w-full border border-opacity-50 bg-white px-5 justify-left items-center flex">
+                      {formData.account.email}
+                    </div>
+
                   </div>
                   <div className="flex flex-col w-full">
                     <label
@@ -199,12 +235,23 @@ const Index = () => {
                   </div>
                 </div>
               </div>
+              <input
+                type="file"
+                id="avatarInput"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+
               <div className="rounded-full min-h-[200px] aspect-square bg-black group relative cursor-pointer max-md:hidden basis-1/3">
-                <img
-                  src={localStorage.getItem("avatar")}
-                  className="w-full group-hover:opacity-50 rounded-full border border-primary"
-                />
-                <i className="uil uil-edit-alt absolute left-[46%] top-[46%] hidden group-hover:block text-white text-4xl"></i>
+                <label htmlFor="avatarInput" className="w-full rounded-full">
+                  <img
+                    src={localStorage.getItem("avatar")}
+                    className="w-full group-hover:opacity-50 rounded-full border border-primary object-cover h-full"
+                    alt="Avatar"
+                  />
+                  <i className="uil uil-edit-alt absolute left-[46%] top-[46%] hidden group-hover:block text-white text-4xl"></i>
+                </label>
               </div>
             </div>
           </div>
@@ -285,6 +332,8 @@ const Index = () => {
             <input
               name="breed_preference"
               type="text"
+              value={formData.breed_preference}
+              onChange={handleInputChange}
               className="border-primary rounded-md h-11 border border-opacity-50 bg-white px-5"
             />
           </div>

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { ajax_or_login } from "../../util/ajax";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Index = () => {
+  const { seekerID } = useParams();
   const [formData, setFormData] = useState({
     account: {
       avatar: "",
@@ -26,47 +27,47 @@ const Index = () => {
   const [spn, setSPN] = useState("");
 
   const handleInformation = () => {
-    if (formData.animal_preference == "dog"){
-        setAnimal("Dog");
+    if (formData.animal_preference === "dog") {
+      setAnimal("Dog");
     }
-    if (formData.animal_preference == "cat"){
-        setAnimal("Cat");
+    if (formData.animal_preference === "cat") {
+      setAnimal("Cat");
     }
-    if (formData.animal_preference == "other"){
-        setAnimal("Other");
+    if (formData.animal_preference === "other") {
+      setAnimal("Other");
     }
-    if (formData.age_preference == 1){
-        setAge("Infant");
+    if (formData.age_preference === 1) {
+      setAge("Infant");
     }
-    if (formData.age_preference == 2){
-        setAge("Young");
+    if (formData.age_preference === 2) {
+      setAge("Young");
     }
-    if (formData.age_preference == 3){
-        setAge("Adult");
+    if (formData.age_preference === 3) {
+      setAge("Adult");
     }
-    if (formData.age_preference == 4){
-        setAge("Senior");
+    if (formData.age_preference === 4) {
+      setAge("Senior");
     }
-    if (formData.size_preference == 1){
-        setSize("Small")
+    if (formData.size_preference === 1) {
+      setSize("Small")
     }
-    if (formData.size_preference == 2){
-        setSize("Medium")
+    if (formData.size_preference === 2) {
+      setSize("Medium")
     }
-    if (formData.size_preference == 3){
-        setSize("Large")
+    if (formData.size_preference === 3) {
+      setSize("Large")
     }
-    if (formData.sex_preference == "male"){
-        setGender("Male");
+    if (formData.sex_preference === "male") {
+      setGender("Male");
     }
-    if (formData.sex_preference == "female"){
-        setGender("Female");
+    if (formData.sex_preference === "female") {
+      setGender("Female");
     }
-    if (formData.open_to_special_needs_animals){
-        setSPN("Yes");
+    if (formData.open_to_special_needs_animals) {
+      setSPN("Yes");
     }
-    if (!formData.open_to_special_needs_animals){
-        setSPN("No");
+    if (!formData.open_to_special_needs_animals) {
+      setSPN("No");
     }
   }
 
@@ -75,9 +76,7 @@ const Index = () => {
   const fetchUserData = async () => {
     try {
       const rest = await ajax_or_login(
-        `/accounts/seeker/${
-          parseInt(localStorage.getItem("userID"), 10) || ""
-        }/`,
+        `/accounts/seeker/${seekerID}/`,
         { method: "GET" },
         navigate
       );

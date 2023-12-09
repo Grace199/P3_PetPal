@@ -70,7 +70,7 @@ const Index = () => {
                                 <i className="uil uil-chat text-2xl"></i>
                             </Link>
 
-                            <Link className="relative group" id="notification__pulse">
+                            <Link to="/notifications/" className="relative group" id="notification__pulse">
                                 <div className="group-hover:scale-105 group-hover:rotate-6 duration-100">
                                     <i className="uil uil-bell text-3xl"></i>
                                 </div>
@@ -110,7 +110,7 @@ const Index = () => {
                                         className="rounded-full hover:scale-105 active:scale-95 duration-200 w-[35px] aspect-square object-cover" />
                                 </button>
                                 <div id="profile-dropdown-menu" className={`absolute flex-col mt-2 w-[200px] right-0 ${openProfileMenu ? 'flex' : 'hidden'}`}>
-                                    <Link to={isSeeker ? "/manageaccount" : `/shelterDetail/${id}/`}
+                                    <Link to={isSeeker ? "/seekerDetail" : `/shelterDetail/${id}/`}
                                         className="bg-white px-5 py-3 hover:bg-[#949494] rounded-t-lg">Manage Account</Link>
                                     <button className="bg-white px-5 py-3 hover:bg-[#949494] rounded-b-lg" onClick={handleLogout}>Sign Out</button>
                                 </div>
