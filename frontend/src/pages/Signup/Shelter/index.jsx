@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import FieldError from "../../../components/FieldError";
-import { ajax_or_login } from '../../../util/ajax';
+import { ajax } from '../../../util/ajax';
 
 const Index = () => {
     const navigate = useNavigate();
@@ -63,14 +63,14 @@ const Index = () => {
       };
 
       try {
-        const res = await ajax_or_login(`/accounts/shelter/signup/`, requestOptions, navigate);
+        const res = await ajax(`/accounts/shelter/signup/`, requestOptions);
 
         if (!res.ok) {
           const json = await res.json();
           setErrors(json);
         }
         else {
-          navigate("../../Login/");
+          navigate("/login/");
         }
       } catch (error) {
         console.error("Error during fetch: ", error);
@@ -250,7 +250,7 @@ const Index = () => {
               <div>
                 <p className="text-center text-sm">
                   Already have an account?
-                  <Link to="../../Login/" className="text-accent-100 font-semibold"> Login</Link>
+                  <Link to="/login/" className="text-accent-100 font-semibold"> Login</Link>
                   |Signing up as a seeker?
                   <Link to="/signup/seeker/" className="text-accent-100 font-semibold"> Sign Up</Link>
                 </p>
