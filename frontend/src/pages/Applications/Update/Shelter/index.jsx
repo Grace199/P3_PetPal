@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { ajax_or_login } from '../../../../util/ajax';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Index() {
     const [error, setError] = useState("");
@@ -541,11 +541,11 @@ function Index() {
                     {/* wrapper for status changing buttons */}
                     <div className="w-full flex flex-row justify-center items-center gap-3">
                     <div className="flex">
-                        <a
-                        href="../UserDetail/userApplicationsOverview.html"
+                        <Link
+                        to="/applications/list/shelter/"
                         name="button_submit"
                         className="rounded-xl bg-accent-100 px-4 sm:px-12 py-2 sm:py-3 text-white text-lg font-semibold login_button justify-center text-center hover:scale-105 duration-200"
-                        >Return</a>
+                        >Return</Link>
                     </div>
                     <>
                         {formData?.status === "pending" ? (

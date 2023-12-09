@@ -1,20 +1,26 @@
 import React from 'react';
+import { useEffect } from 'react';
 import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import FieldError from "../../../components/FieldError";
-import { ajax } from '../../../util/ajax';
+import { ajax_or_login } from '../../../util/ajax';
 
 const Index = () => {
+    const navigate = useNavigate();
+
     const [errors, setErrors] = useState({
-        email: null,
-        password1: null,
-        password2: null,
+        name: null,
+        account: null,
         address: null,
         city: null,
         province: null,
         phone_number: null,
         description: null
-    });
+    },);
+
+    useEffect(() => {
+      setErrors({});
+    }, [navigate]);
 
 
     const [formData, setFormData] = useState({
@@ -31,8 +37,6 @@ const Index = () => {
         description: null
     });
 
-    const navigate = useNavigate();
-
     const handleInputChangeForm = (e) => {
         const { name, value} = e.target;
         setFormData({ ...formData, [name]: value });
@@ -48,68 +52,31 @@ const Index = () => {
     };
     
 
-    function handle_submit(event) {
+    async function handle_submit(event) {
+      event.preventDefault();
+      const requestOptions = {
+          method: 'Post',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+      };
 
-        const requestOptions = {
-            method: 'Post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        };
+      try {
+        const res = await ajax_or_login(`/accounts/shelter/signup/`, requestOptions, navigate);
 
-        fetch(`http://localhost:8000/accounts/shelter/signup/`, requestOptions)
-        .then(response => {
-            if (response.ok) {
-                navigate("../../Login/");
-                return Promise.reject("redirecting to login");
-            }
-            return response.json();
-        })
-        .then(json => {
-            setErrors(prevErrors => ({
-              ...prevErrors,
-              email: null,
-              password1: null,
-              password2: null,
-              phone_number: null,
-            }));
-            if ('account' in json) {
-              if ('password1' in json.account) {
-                setErrors(prevErrors => ({ ...prevErrors, password1: json.account.password1 }));
-              }
-              if ('password2' in json.account) {
-                setErrors(prevErrors => ({ ...prevErrors, password2: json.account.password2 }));
-              }
-              if ('email' in json.account) {
-                setErrors(prevErrors => ({ ...prevErrors, email: json.account.email }));
-              }
-            }
-            if ('phone_number' in json) {
-              setErrors(prevErrors => ({ ...prevErrors, phone_number: json.phone_number }));
-            }
+        if (!res.ok) {
+          const json = await res.json();
+          setErrors(json);
+        }
+        else {
+          navigate("../../Login/");
+        }
+      } catch (error) {
+        console.error("Error during fetch: ", error);
+      }
 
-            if ('address' in json) {
-                setErrors(prevErrors => ({ ...prevErrors, address: json.address }));
-            }
-
-            if ('city' in json) {
-                setErrors(prevErrors => ({ ...prevErrors, city: json.city }));
-            }
-
-            if ('province' in json) {
-                setErrors(prevErrors => ({ ...prevErrors, province: json.province }));
-            }
-
-            if ('description' in json) {
-                setErrors(prevErrors => ({ ...prevErrors, description: json.description }));
-            }
-
-          })
-          .catch(error => console.log(error));
         
-
-        event.preventDefault();
     }
 
     return (
@@ -124,7 +91,7 @@ const Index = () => {
         {/* Make the form */}
         <form className="max-md:gap-6 gap-7 w-full flex justify-center">
           {/* Make the grid */}
-          <div className="grid grid-cols-1 grid-rows-2 gap-5 w-full mx-8">
+          <div className="grid gap-5 w-full mx-8">
 
             {/* Name row */}
             <div className="w-full relative h-16" onChange={handleInputChangeFormAccount}>
@@ -141,6 +108,7 @@ const Index = () => {
                 >Shelter Name</label>
               
             </div>
+            <FieldError fielderror={errors?.account?.name} />
             
             {/* Email row */}
             <div className="w-full relative h-16">
@@ -157,7 +125,7 @@ const Index = () => {
                 >Email</label>
             
             </div>
-            <FieldError fielderror={errors.email} />
+            <FieldError fielderror={errors?.account?.email} />
 
             {/* Password row */}
             <div className="w-full relative h-16">
@@ -173,7 +141,7 @@ const Index = () => {
                 className="absolute text-gray-800 pointer-events-none top-0 left-0 px-2 py-1 text-sm"
                 >Password</label>
             </div>
-            <FieldError fielderror={errors.password1} />
+            <FieldError fielderror={errors?.account?.password1} />
 
             {/* Password confirmation row */}
             <div className="w-full relative h-16">
@@ -189,7 +157,7 @@ const Index = () => {
                 className="absolute text-gray-800 pointer-events-none top-0 left-0 px-2 py-1 text-sm"
                 >Confirm Password</label>
             </div>
-            <FieldError fielderror={errors.password2} />
+            <FieldError fielderror={errors?.account?.password2} />
 
             {/* Address row */}
             <div className="w-full relative h-16">
@@ -205,7 +173,7 @@ const Index = () => {
                 className="absolute text-gray-800 pointer-events-none top-0 left-0 px-2 py-1 text-sm"
                 >Address</label>
             </div>
-            <FieldError fielderror={errors.address} />
+            <FieldError fielderror={errors?.address} />
 
             {/* City row */}
             <div className="w-full relative h-16">
@@ -221,7 +189,7 @@ const Index = () => {
                 className="absolute text-gray-800 pointer-events-none top-0 left-0 px-2 py-1 text-sm"
                 >City</label>
             </div>
-            <FieldError fielderror={errors.city} />
+            <FieldError fielderror={errors?.city} />
 
             {/* Province row */}
             <div className="w-full relative h-16">
@@ -237,7 +205,7 @@ const Index = () => {
                 className="absolute text-gray-800 pointer-events-none top-0 left-0 px-2 py-1 text-sm"
                 >Province</label>
             </div>
-            <FieldError fielderror={errors.province} />
+            <FieldError fielderror={errors?.province} />
 
             {/* Phone number row */}
             <div className="w-full relative h-16">
@@ -253,7 +221,7 @@ const Index = () => {
                 className="absolute text-gray-800 pointer-events-none top-0 left-0 px-2 py-1 text-sm"
                 >Phone Number</label>
             </div>
-            <FieldError fielderror={errors.phone_number} />
+            <FieldError fielderror={errors?.phone_number} />
 
             {/* Description row */}
             <div className="w-full relative h-16">
@@ -269,7 +237,7 @@ const Index = () => {
                 className="absolute text-gray-800 pointer-events-none top-0 left-0 px-2 py-1 text-sm"
                 >Description</label>
             </div>
-            <FieldError fielderror={errors.description} />
+            <FieldError fielderror={errors?.description} />
 
 
             {/* Sign up button row */}
