@@ -53,7 +53,7 @@ const Shelters = () => {
                         type="text"
                         value={query.search}
                         onChange={event => setQuery({ search: event.target.value, page: 1 })}
-                    ></input>
+                    />
                 </div>
                 <div className="w-full gap-8 flex flex-col px-mobile md:px-tablet xl:px-desktop pt-6 sm:pt-16">
                     {shelters && shelters.map(shelter => (
@@ -62,18 +62,24 @@ const Shelters = () => {
                 </div>
                 <div className="w-full flex justify-center align-middle pt-8 gap-4">
                     {query.page > 1 ?
-                        <div className="bg-accent-100" onClick={() => setQuery({ ...query, page: query.page - 1 })}> Previous </div>
+                        <button className="flex w-[72px] sm:w-24 py-2 rounded-lg justify-center items-center bg-accent-100 hover:scale-105 active:scale-95 duration-200" onClick={() => setQuery({ ...query, page: query.page - 1 })}>
+                            <p className="text-background block sm:hidden font-semibold text-xs sm:text-base">Prev</p>
+                            <p className="text-background hidden sm:block font-semibold text-xs sm:text-base">Previous</p>
+                        </button>
                         :
-                        <div className="flex bg-secondary w-[72px] sm:w-24 py-2 rounded-lg justify-center items-center">
-                            <p className="text-background font-semibold text-xs sm:text-base">Previous</p>
+                        <div className="flex w-[72px] sm:w-24 py-2 rounded-lg justify-center items-center bg-secondary hover:cursor-default">
+                            <p className="text-background block sm:hidden font-semibold text-xs sm:text-base">Prev</p>
+                            <p className="text-background hidden sm:block font-semibold text-xs sm:text-base">Previous</p>
                         </div>}
                     <div className="flex items-center">
                         <p className="font-semibold text-xs sm:text-base">Page {query.page} of {totalPages}</p>
                     </div>
                     {query.page < totalPages ?
-                        <button onClick={() => setQuery({ ...query, page: query.page + 1 })}> Next </button>
+                        <button className="flex w-[72px] sm:w-24 py-2 rounded-lg justify-center items-center bg-accent-100 hover:scale-105 active:scale-95 duration-200" onClick={() => setQuery({ ...query, page: query.page + 1 })}>
+                            <p className="text-background font-semibold text-xs sm:text-base">Next</p>
+                        </button>
                         :
-                        <div className="flex bg-secondary w-[72px] sm:w-24 py-2 rounded-lg justify-center items-center">
+                        <div className="flex w-[72px] sm:w-24 py-2 rounded-lg justify-center items-center bg-secondary hover:cursor-default">
                             <p className="text-background font-semibold text-xs sm:text-base">Next</p>
                         </div>}
                 </div>

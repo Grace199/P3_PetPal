@@ -156,7 +156,5 @@ class ShelterList(ListAPIView):
                     | queryset.filter(city__icontains=search_query)
                     | queryset.filter(province__icontains=search_query)
                 )
-            # else:
-            #     queryset = Shelter.objects.none()
 
         return queryset
