@@ -18,11 +18,13 @@ class ReviewSerializer(ModelSerializer):
     class Meta:
         model = Review
         fields = [
+            "id",
             "owner",
             "shelter",
             "rating",
             "content",
             "timestamp",
+            "hasReplies",
         ]
 
 
@@ -46,7 +48,9 @@ class ReplySerializer(ModelSerializer):
     class Meta:
         model = Reply
         fields = [
+            "id",
             "owner",
             "content",
             "timestamp",
+            "isSelf",
         ]

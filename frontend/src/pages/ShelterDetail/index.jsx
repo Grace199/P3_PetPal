@@ -62,7 +62,7 @@ const ShelterDetail = () => {
                     <div className="w-full flex flex-col gap-11 justify-center mb-[90px]">
                         <div className="bg-[#FAFAFA] rounded-[30px] flex flex-col gap-8 pb-6 sm:pb-8 sm:mx-8 overflow-hidden md:mx-12 xl:mx-28 drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
                             <div className="bg-primary h-[80px] sm:h-[110px] text-center flex justify-center items-center">
-                                {shelter ? <p className="text-background text-2xl sm:text-4xl md:text-5xl font-bold">{shelter.account.name}</p> : <p className="text-background text-2xl sm:text-4xl md:text-5xl font-bold"></p>}
+                                {shelter ? <p className="text-background text-xl sm:text-4xl md:text-5xl font-bold">{shelter.account.name}</p> : <p className="text-background text-2xl sm:text-4xl md:text-5xl font-bold"></p>}
 
                             </div>
                             <div className="flex flex-col-reverse justify-center xl:items-center gap-4 px-4 sm:px-14 2xl:flex-row 2xl:gap-16 2xl:px-24">
@@ -114,7 +114,7 @@ const ShelterDetail = () => {
                 <div className="w-full gap-14 flex flex-col">
                     <div className="w-full flex flex-col justify-center bg-background gap-14 pb-14 px-mobile md:px-tablet xl:px-desktop">
                         <div className="flex justify-center md:justify-start">
-                            {shelter ? <p className="text-primary text-[32px] mx-8 mt-14 md:mx-12 xl:mx-28 font-medium">Pets from Dog Society</p> : <p></p>}
+                            {shelter ? <p className="text-primary text-[32px] mx-8 mt-14 md:mx-12 xl:mx-28 font-medium text-center sm:text-left">Pets from Dog Society</p> : <p></p>}
                         </div>
                         <div className="flex flex-col md:flex-row justify-center gap-14 md:gap-10 lg:gap-12 xl:gap-14 2xl:gap-[78px]">
                             <ShelterListings key={id} shelterName={shelter?.account.name} />
@@ -148,7 +148,6 @@ const ShelterDetail = () => {
                                     <NewReview key={id} img={avatar}></NewReview>
                                 </div>
                             }
-                            {/* TODO: all reviews */}
                             <div className="flex flex-col">
                                 <p className="text-text text-xl font-bold mb-1">All Reviews</p>
                                 <div className="border-t-2 mb-4"></div>

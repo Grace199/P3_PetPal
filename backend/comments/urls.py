@@ -30,7 +30,11 @@ urlpatterns = [
         MessageRetrieve.as_view(),
         name="message",
     ),
-    path("review/<int:review_id>/reply/", ReplyListCreate.as_view(), name="reply_list"),
+    path(
+        "review/<int:review_id>/reply/",
+        ReplyListCreate.as_view(),
+        name="reply_list",
+    ),
     path(
         "review/reply/<int:reply_id>/",
         ReplyRetrieve.as_view(),

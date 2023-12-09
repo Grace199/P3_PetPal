@@ -3,7 +3,7 @@ import { ajax_or_login } from '../../../util/ajax';
 import { useNavigate } from 'react-router-dom';
 import Reply from './Reply'
 
-const Review = ({ isSelf, reviewID, name, rating, content, timestamp, hasReplies }) => {
+const Review = ({ isSelfReview, reviewID, name, rating, content, timestamp, hasReplies }) => {
     const [avatar, setAvatar] = useState(null);
     const [openReply, setOpenReply] = useState(false);
     const [openReplies, setOpenReplies] = useState(false);
@@ -40,7 +40,8 @@ const Review = ({ isSelf, reviewID, name, rating, content, timestamp, hasReplies
         try {
             if (replyContent !== "") {
                 const replyData = {
-                    content: replyContent
+                    content: replyContent,
+                    isSelf: isSelfReview
                 }
                 const res = await ajax_or_login(`/comments/review/${reviewID}/reply/`, { method: "POST", body: JSON.stringify(replyData), headers: { 'Content-Type': 'application/json' } }, navigate);
                 if (res.ok) {
@@ -68,11 +69,11 @@ const Review = ({ isSelf, reviewID, name, rating, content, timestamp, hasReplies
             return (
                 <>
                     <div className="flex flex-row">
-                        <i className="uis uis-star text-2xl"></i>
-                        <i className="uis uis-star text-2xl"></i>
-                        <i className="uis uis-star text-2xl"></i>
-                        <i className="uis uis-star text-2xl"></i>
-                        <i className="uis uis-star text-2xl"></i>
+                        <i className="uis uis-star text-lg text-lg sm:text-2xl"></i>
+                        <i className="uis uis-star text-lg sm:text-2xl"></i>
+                        <i className="uis uis-star text-lg sm:text-2xl"></i>
+                        <i className="uis uis-star text-lg sm:text-2xl"></i>
+                        <i className="uis uis-star text-lg sm:text-2xl"></i>
                     </div>
                 </>
             );
@@ -80,11 +81,11 @@ const Review = ({ isSelf, reviewID, name, rating, content, timestamp, hasReplies
             return (
                 <>
                     <div className="flex flex-row">
-                        <i className="uis uis-star text-2xl"></i>
-                        <i className="uis uis-star text-2xl"></i>
-                        <i className="uis uis-star text-2xl"></i>
-                        <i className="uis uis-star text-2xl"></i>
-                        <i className="uil uil-star text-2xl"></i>
+                        <i className="uis uis-star text-lg sm:text-2xl"></i>
+                        <i className="uis uis-star text-lg sm:text-2xl"></i>
+                        <i className="uis uis-star text-lg sm:text-2xl"></i>
+                        <i className="uis uis-star text-lg sm:text-2xl"></i>
+                        <i className="uil uil-star text-lg sm:text-2xl"></i>
                     </div>
                 </>
             );
@@ -92,11 +93,11 @@ const Review = ({ isSelf, reviewID, name, rating, content, timestamp, hasReplies
             return (
                 <>
                     <div className="flex flex-row">
-                        <i className="uis uis-star text-2xl"></i>
-                        <i className="uis uis-star text-2xl"></i>
-                        <i className="uis uis-star text-2xl"></i>
-                        <i className="uil uil-star text-2xl"></i>
-                        <i className="uil uil-star text-2xl"></i>
+                        <i className="uis uis-star text-lg sm:text-2xl"></i>
+                        <i className="uis uis-star text-lg sm:text-2xl"></i>
+                        <i className="uis uis-star text-lg sm:text-2xl"></i>
+                        <i className="uil uil-star text-lg sm:text-2xl"></i>
+                        <i className="uil uil-star text-lg sm:text-2xl"></i>
                     </div>
                 </>
             );
@@ -104,11 +105,11 @@ const Review = ({ isSelf, reviewID, name, rating, content, timestamp, hasReplies
             return (
                 <>
                     <div className="flex flex-row">
-                        <i className="uis uis-star text-2xl"></i>
-                        <i className="uis uis-star text-2xl"></i>
-                        <i className="uil uil-star text-2xl"></i>
-                        <i className="uil uil-star text-2xl"></i>
-                        <i className="uil uil-star text-2xl"></i>
+                        <i className="uis uis-star text-lg sm:text-2xl"></i>
+                        <i className="uis uis-star text-lg sm:text-2xl"></i>
+                        <i className="uil uil-star text-lg sm:text-2xl"></i>
+                        <i className="uil uil-star text-lg sm:text-2xl"></i>
+                        <i className="uil uil-star text-lg sm:text-2xl"></i>
                     </div>
                 </>
             );
@@ -116,11 +117,11 @@ const Review = ({ isSelf, reviewID, name, rating, content, timestamp, hasReplies
             return (
                 <>
                     <div className="flex flex-row">
-                        <i className="uis uis-star text-2xl"></i>
-                        <i className="uil uil-star text-2xl"></i>
-                        <i className="uil uil-star text-2xl"></i>
-                        <i className="uil uil-star text-2xl"></i>
-                        <i className="uil uil-star text-2xl"></i>
+                        <i className="uis uis-star text-lg sm:text-2xl"></i>
+                        <i className="uil uil-star text-lg sm:text-2xl"></i>
+                        <i className="uil uil-star text-lg sm:text-2xl"></i>
+                        <i className="uil uil-star text-lg sm:text-2xl"></i>
+                        <i className="uil uil-star text-lg sm:text-2xl"></i>
                     </div>
                 </>
             );
@@ -128,11 +129,11 @@ const Review = ({ isSelf, reviewID, name, rating, content, timestamp, hasReplies
             return (
                 <>
                     <div className="flex flex-row">
-                        <i className="uil uil-star text-2xl"></i>
-                        <i className="uil uil-star text-2xl"></i>
-                        <i className="uil uil-star text-2xl"></i>
-                        <i className="uil uil-star text-2xl"></i>
-                        <i className="uil uil-star text-2xl"></i>
+                        <i className="uil uil-star text-lg sm:text-2xl"></i>
+                        <i className="uil uil-star text-lg sm:text-2xl"></i>
+                        <i className="uil uil-star text-lg sm:text-2xl"></i>
+                        <i className="uil uil-star text-lg sm:text-2xl"></i>
+                        <i className="uil uil-star text-lg sm:text-2xl"></i>
                     </div>
                 </>
             );
@@ -187,8 +188,8 @@ const Review = ({ isSelf, reviewID, name, rating, content, timestamp, hasReplies
                                     className="rounded-full hover:scale-105 active:scale-95 duration-200 w-[56px] aspect-square object-cover"
                                 />
                             </div>
-                            <div className="w-full h-12">
-                                <div className="w-full h-full bg-background border-background-secondary border-[0.5px] rounded-[15px] flex items-center px-5">
+                            <div className="w-full flex">
+                                <div className="w-full h-full bg-background border-background-secondary border-[0.5px] rounded-[15px] flex items-center p-3">
                                     <p className="text-text text-base font-light">{content}</p>
                                 </div>
                             </div>
@@ -197,8 +198,7 @@ const Review = ({ isSelf, reviewID, name, rating, content, timestamp, hasReplies
                             <div className="w-[56px]"></div>
                             <div className="flex flex-row gap-4">
                                 <button className="text-text text-sm font-semibold" onClick={() => { setOpenReply(prev => !prev); }}>Reply</button>
-                                {hasReplies === true ? <button className="text-text text-sm font-semibold" onClick={() => { setOpenReplies(prev => !prev); }}>View Replies</button> : <></>}
-
+                                {hasReplies && <button className="text-text text-sm font-semibold" onClick={() => { setOpenReplies(prev => !prev); }}>View Replies</button>}
                             </div>
                         </div>
                         {openReply &&
@@ -211,9 +211,64 @@ const Review = ({ isSelf, reviewID, name, rating, content, timestamp, hasReplies
                             </form>
                         }
                         {openReplies && replies.map(reply => (
-                            <div><Reply key={reply.id}></Reply></div>
+                            <div className="w-full flex flex-row gap-2 pt-4" key={reply.id}>
+                                <div className="w-[56px]"></div>
+                                <div>
+                                    <Reply name={reply.owner} isReplyingToSelf={reply.isSelf} timestamp={reply.timestamp} content={reply.content}></Reply>
+                                </div>
+                            </div>
                         ))}
                     </>
+                }
+            </div>
+            <div className="flex flex-col gap-2 sm:hidden">
+                <div className="flex flex-row gap-3">
+                    <div className="flex">
+                        <div className="relative w-[40px] h-[40px]">
+                            <img
+                                src={avatar}
+                                className="rounded-full hover:scale-105 active:scale-95 duration-200 absolute inset-0 w-full h-full aspect-square object-cover"
+                            />
+                        </div>
+                    </div>
+                    <div className="flex flex-col">
+                        <div className="flex flex-row gap-3">
+                            <p className="text-text text-xs font-semibold">{name}</p>
+                            <p className="text-text text-xs">{formattedDate}</p>
+                        </div>
+                        {renderStars()}
+                    </div>
+                </div>
+                {content === "" ? <></> :
+                    <div className="flex flex-col gap-1">
+                        <div className="w-full flex">
+                            <div className="w-full h-full bg-background border-background-secondary border-[0.5px] rounded-[15px] flex items-center p-3">
+                                <p className="text-text font-light text-sm">{content}</p>
+                            </div>
+                        </div>
+                        <div className="flex flex-row justify-between">
+                            <button className="text-text text-xs font-semibold" onClick={() => { setOpenReply(prev => !prev); }}>Reply</button>
+                            {hasReplies &&
+                                <button className="text-text text-xs font-semibold" onClick={() => { setOpenReplies(prev => !prev); }}>View Replies</button>
+                            }
+                        </div>
+                        {openReply &&
+                            <form className="w-full flex flex-row pt-1" onSubmit={handleReplySubmit}>
+                                <div className="w-full h-20 relative flex-grow">
+                                    <textarea value={replyContent} onChange={handleReplyContentChange} className="absolute w-full h-full bg-background border-primary border-[0.5px] rounded-[15px] p-2 focus:outline-[#030711] resize-none text-xs"></textarea>
+                                    <button className="absolute text-accent-100 right-2 bottom-2 text-xs hover:scale-105 duration-200">REPLY</button>
+                                </div>
+                            </form>
+                        }
+                        {openReplies && replies.map(reply => (
+                            <div className="w-full flex flex-row gap-2 pt-3" key={reply.id}>
+                                <div className="w-1"></div>
+                                <div>
+                                    <Reply name={reply.owner} isReplyingToSelf={reply.isSelf} timestamp={reply.timestamp} content={reply.content}></Reply>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 }
             </div>
         </>
