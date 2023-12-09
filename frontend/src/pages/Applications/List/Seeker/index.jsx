@@ -23,7 +23,7 @@ const ApplicationListSeeker = () => {
             params.append('status', query.status);
             params.append('sort', query.sort);
             params.append('page', query.page);
-            
+
             const url = '/applications/seeker/list';
             const urlWithParams = `${url}?${params.toString()}`;
             try {
@@ -48,8 +48,8 @@ const ApplicationListSeeker = () => {
             <main className="h-full">
                 <div className="w-full flex justify-center items-center h-[300px] bg-black relative flex-col">
                     <div className="z-30 text-center text-background">
-                        <p className="z-30 text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-bold">
-                            Your Applications
+                        <p className="z-30 text-4xl sm:text-6xl md:text-8xl px-6 font-bold">
+                            My Applications
                         </p>
                     </div>
                     <img
@@ -58,15 +58,16 @@ const ApplicationListSeeker = () => {
                         alt="backdrop"
                     />
                 </div>
-                <div className="flex gap-3 max-xs:gap-1">
-                        <div className="flex justify-center items-center gap-1 py-3 px-4 sm:px-2 md:px-8 rounded-full group">   
-                         <label
-                                htmlFor="filter_by_status"
-                                className="text-xs font-thin sm:text-sm text-black"
-                                >Filter by Status:
+                <div className="flex gap-5 max-sm:flex-col px-mobile md:px-tablet xl:px-desktop">
+                    <div className="flex max-sm:justify-start justify-center items-center gap-1 py-3 rounded-full group">
+                        <label
+                            htmlFor="filter_by_status"
+                            className="text-xs font-thin sm:text-sm text-black"
+                        >Filter by Status:
                         </label>
                         <form id="filter_by_status">
-                            <select name="status" value={query.status} onChange={handleQueryChange} className='hover:cursor-pointer px-1 py-1 flex flex-col place-items-center rounded-3xl bg-primary w-full text-xs md:text-sm lg:text-base xl:text-lg'>
+                            <select name="status" value={query.status} onChange={handleQueryChange} 
+                            className='hover:cursor-pointer px-1 py-1 flex flex-col place-items-center rounded-3xl bg-primary w-full text-xs md:text-sm lg:text-base xl:text-lg'>
                                 <option value=""></option>
                                 <option value="pending">pending</option>
                                 <option value="denied">denied</option>
@@ -74,13 +75,13 @@ const ApplicationListSeeker = () => {
                                 <option value="withdrawn">withdrawn</option>
                             </select>
                         </form>
-                        </div>
+                    </div>
 
-                        <div className="flex justify-center items-center gap-1 py-3 px-4 max-sm:px-2 md:px-8 rounded-full group">
+                    <div className="flex justify-center items-center gap-1 py-3 rounded-full group max-sm:justify-start">
                         <label
-                                htmlFor="sort_by_time"
-                                className="text-xs font-thin sm:text-sm text-black"
-                                >Sort by Create or Update Time:
+                            htmlFor="sort_by_time"
+                            className="text-xs font-thin sm:text-sm text-black"
+                        >Sort by Create or Update Time:
                         </label>
                         <form id="sort_by_time">
                             <select name="sort" value={query.sort} onChange={handleQueryChange} className='hover:cursor-pointer px-1 py-1 flex flex-col place-items-center rounded-3xl bg-primary w-full text-xs md:text-sm lg:text-base xl:text-lg'>
@@ -89,12 +90,14 @@ const ApplicationListSeeker = () => {
                                 <option value="update_time">update</option>
                             </select>
                         </form>
-                        </div>
+                    </div>
                 </div>
                 <div className="w-full gap-8 flex flex-col px-mobile md:px-tablet xl:px-desktop pt-6 sm:pt-16">
                     {applications && applications.map(application => (
                         <ApplicationListCard key={application.id} id={application.id} pet_name={application.petlisting.pet.name} shelter_name={application.shelter.account.name} pet_img={application.petlisting.pet.image1} shelter_address={application.shelter.address} shelter_city={application.shelter.city} shelter_province={application.shelter.province}></ApplicationListCard>
                     ))}
+
+                    {(!applications || applications.length === 0) && <p>No applications</p>}
                 </div>
                 <div className="w-full flex justify-center align-middle pt-8 gap-4">
                     {query.page > 1 ?
