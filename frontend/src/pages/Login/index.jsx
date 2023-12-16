@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useContext } from 'react';
-import { ajax } from '../../util/ajax';
+import { ajax, ajax_or_login } from '../../util/ajax';
 import { UserContext } from '../../contexts/UserContext';
 
 const Login = () => {
@@ -20,13 +20,9 @@ const Login = () => {
             .then(json => {
                 if ('access' in json) {
                     localStorage.setItem('access', json.access);
-                    fetch('http://localhost:8000/currentuser/', {
+                    ajax_or_login('/currentuser/', {
                         method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${json.access}`,
-                            'Content-Type': 'application/json',
-                        },
-                    })
+                    }, navigate)
                         .then(response => response.json())
                         .then(userJson => {
                             localStorage.setItem('userID', userJson.id);
