@@ -5,74 +5,75 @@ import FieldError from "../../../components/FieldError";
 import { ajax } from '../../../util/ajax';
 
 const Index = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const [errors, setErrors] = useState({
-        account: null,
-        phone_number: null
-    });
+  const [errors, setErrors] = useState({
+    account: null,
+    phone_number: null
+  });
 
-    useEffect(() => {
-      setErrors({});
-    }, [navigate]);
+  useEffect(() => {
+    setErrors({});
+  }, [navigate]);
 
 
-    const [formData, setFormData] = useState({
-        account: {
-            email: null,
-            name: null,
-            password1: null,
-            password2: null
-        },
-        city: null,
-        province: null,
-        phone_number: null
-    });
+  const [formData, setFormData] = useState({
+    account: {
+      email: null,
+      name: null,
+      password1: null,
+      password2: null
+    },
+    city: null,
+    province: null,
+    phone_number: null
+  });
 
-    const handleInputChangeForm = (e) => {
-        const { name, value} = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
+  const handleInputChangeForm = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
-    const handleInputChangeFormAccount = (e) => {
-        const { name, value} = e.target;
-        setFormData({ ...formData, 
-            account: {
-            ...formData.account, [name]: value
-            }
-        });
-    };
-    
-
-    async function handle_submit(event) {
-      event.preventDefault();
-      const requestOptions = {
-          method: 'Post',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(formData)
-      };
-
-      try {
-        const res = await ajax(`/accounts/seeker/signup/`, requestOptions);
-
-        if (!res.ok) {
-          const json = await res.json();
-          setErrors(json);
-        }
-        else {
-          navigate("/login/");
-        }
-      } catch (error) {
-        console.error("Error during fetch: ", error);
+  const handleInputChangeFormAccount = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      account: {
+        ...formData.account, [name]: value
       }
+    });
+  };
 
-        
+
+  async function handle_submit(event) {
+    event.preventDefault();
+    const requestOptions = {
+      method: 'Post',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    };
+
+    try {
+      const res = await ajax(`/accounts/seeker/signup/`, requestOptions);
+
+      if (!res.ok) {
+        const json = await res.json();
+        setErrors(json);
+      }
+      else {
+        navigate("/login/");
+      }
+    } catch (error) {
+      console.error("Error during fetch: ", error);
     }
 
-    return (
-        <main className="px-mobile md:px-tablet xl:px-desktop pt-6 sm:pt-16">
+
+  }
+
+  return (
+    <main className="px-mobile md:px-tablet xl:px-desktop pt-6 sm:pt-16">
       <div
         className="login-container bg-background rounded-2xl flex flex-col items-center pt-8 pb-6 md:items-start sm:pt-16 md:px-16"
       >
@@ -97,11 +98,11 @@ const Index = () => {
               <label
                 htmlFor="name"
                 className="absolute text-gray-800 pointer-events-none top-0 left-0 px-2 py-1 text-sm"
-                >Name</label>
-              
+              >Name</label>
+
             </div>
             <FieldError fielderror={errors?.account?.name} />
-            
+
             {/* Email row */}
             <div className="w-full relative h-16">
               <input onChange={handleInputChangeFormAccount}
@@ -114,8 +115,8 @@ const Index = () => {
               <label
                 htmlFor="email"
                 className="absolute text-gray-800 pointer-events-none top-0 left-0 px-2 py-1 text-sm"
-                >Email</label>
-            
+              >Email</label>
+
             </div>
             <FieldError fielderror={errors?.account?.email} />
 
@@ -131,7 +132,7 @@ const Index = () => {
               <label
                 htmlFor="password1"
                 className="absolute text-gray-800 pointer-events-none top-0 left-0 px-2 py-1 text-sm"
-                >Password</label>
+              >Password</label>
             </div>
             <FieldError fielderror={errors?.account?.password1} />
 
@@ -147,7 +148,7 @@ const Index = () => {
               <label
                 htmlFor="password2"
                 className="absolute text-gray-800 pointer-events-none top-0 left-0 px-2 py-1 text-sm"
-                >Confirm Password</label>
+              >Confirm Password</label>
             </div>
             <FieldError fielderror={errors?.account?.password2} />
 
@@ -162,7 +163,7 @@ const Index = () => {
               <label
                 htmlFor="city"
                 className="absolute text-gray-800 pointer-events-none top-0 left-0 px-2 py-1 text-sm"
-                >City</label>
+              >City</label>
             </div>
 
             {/* Province row */}
@@ -176,7 +177,7 @@ const Index = () => {
               <label
                 htmlFor="province"
                 className="absolute text-gray-800 pointer-events-none top-0 left-0 px-2 py-1 text-sm"
-                >Province</label>
+              >Province</label>
             </div>
 
             {/* Phone number row */}
@@ -190,23 +191,23 @@ const Index = () => {
               <label
                 htmlFor="phone_number"
                 className="absolute text-gray-800 pointer-events-none top-0 left-0 px-2 py-1 text-sm"
-                >Phone Number</label>
+              >Phone Number</label>
             </div>
             <FieldError fielderror={errors?.phone_number} />
 
 
             {/* Sign up button row */}
             <div className="flex flex-row justify-center items-center">
-                <button onClick={handle_submit} className="rounded-lg bg-primary px-8 py-3 text-lg text-white font-semibold justify-center hover:scale-105 duration-200 sm:px-16 sm:text-xl">
-                    Create your free account</button>
+              <button onClick={handle_submit} className="rounded-lg bg-primary px-8 py-3 text-lg text-white font-semibold justify-center hover:scale-105 duration-200 sm:px-16 sm:text-xl">
+                Create your free account</button>
             </div>
             {/* Redirect to login/shelter sign up row */}
             <div className="flex flex-row justify-center">
               <div>
                 <p className="text-center text-sm">
                   Already have an account?
-                  <Link to="/login/" className="text-accent-100 font-semibold"> Login</Link>
-                  |Signing up as a shelter?
+                  <Link to="/login/" className="text-accent-100 font-semibold"> Login </Link>
+                  | Signing up as a shelter?
                   <Link to="/signup/shelter/" className="text-accent-100 font-semibold"> Sign Up</Link>
                 </p>
               </div>
@@ -220,7 +221,7 @@ const Index = () => {
         </form>
       </div>
     </main>
-    )
+  )
 }
 
 export default Index
