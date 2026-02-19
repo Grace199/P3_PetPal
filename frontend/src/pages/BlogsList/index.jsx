@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import backdrop from '../../assets/images/Home/heroBanner.jpg'
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { ajax_or_login } from '../../util/ajax';
+import { ajax, ajax_or_login } from '../../util/ajax';
 import BlogListCard from '../../components/BlogListCard';
 
 const Blogs = () => {
@@ -15,7 +15,7 @@ const Blogs = () => {
         const fetchData = async () => {
             try {
                 const { search, page } = query;
-                const res = await ajax_or_login(`/blogs?search=${search}&page=${page}&type=${type}`, { method: "GET" }, navigate);
+                const res = await ajax(`/blogs?search=${search}&page=${page}&type=${type}`, { method: "GET" }, navigate);
                 if (res.ok) {
                     const data = await res.json();
                     const tot = Math.ceil(data.count / 20);

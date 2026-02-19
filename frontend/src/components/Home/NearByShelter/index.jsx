@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import ShelterCard from '../../ShelterCard'
 import { Link, useNavigate } from 'react-router-dom';
-import { ajax_or_login } from '../../../util/ajax'
+import { ajax } from '../../../util/ajax'
 
 const Index = () => {
     const [shelters, setShelters] = useState(null)
     const navigate = useNavigate();
     const getShelters = async () => {
-        const res = await ajax_or_login('/accounts/shelter', { method: "GET" }, navigate);
+        const res = await ajax('/accounts/shelter', { method: "GET" }, navigate);
         if (res.ok) {
             const data = await res.json();
             setShelters([data.results[0], data.results[1], data.results[2]]);
@@ -29,7 +29,7 @@ const Index = () => {
                     {shelters[1] && <ShelterCard key={shelters[1].id} name={shelters[1].account.name} id={shelters[1].id} img={shelters[1].account.avatar} />}
                     {shelters[2] && <ShelterCard key={shelters[2].id} name={shelters[2].account.name} id={shelters[2].id} img={shelters[2].account.avatar} />}
                 </>
-            )}
+                )}
             </div>
 
             <Link

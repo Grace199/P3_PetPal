@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import AnimalCardBlue from '../../AnimalCardBlue'
 import { Link, useNavigate } from 'react-router-dom';
-import { ajax_or_login } from '../../../util/ajax'
+import { ajax } from '../../../util/ajax'
 
 
 const Index = () => {
     const [petListings, setPetlistings] = useState(null)
     const navigate = useNavigate();
     const getListings = async () => {
-        const res = await ajax_or_login('/petlisting', { method: "GET" }, navigate);
+        const res = await ajax('/petlisting', { method: "GET" });
         if (res.ok) {
             const data = await res.json();
 
@@ -39,7 +39,7 @@ const Index = () => {
 
             <Link
                 className="bg-accent-100 text-background p-5 mt-14 rounded-2xl shadow-sm hover:scale-105 duration-300 active:scale-95"
-                to="/petlistings"
+                to="/petlisting"
             >
                 See more friends
             </Link>

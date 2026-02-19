@@ -10,10 +10,13 @@ from .models import Blog, Comment
 from django.shortcuts import get_object_or_404
 from accounts.models import Account, Shelter
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.permissions import BasePermission, IsAuthenticated, AllowAny
 
 
 # Create your views here.
 class BlogListCreate(ListCreateAPIView):
+    permission_classes = [AllowAny]
+
     def get_serializer_class(self):
         if self.request.method == "POST":
             return BlogCreateSerializer

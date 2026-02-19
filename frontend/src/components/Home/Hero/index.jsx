@@ -21,7 +21,7 @@ const Index = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const { animal, breed, size, age } = formData;
-        navigate(`/petlistings?animal=${animal}${breed ? `&breed=${breed}` : ''}${size ? `&size=${size}` : ''}${age ? `&age=${age}` : ''}`)
+        navigate(`/petlisting?animal=${animal}${breed ? `&breed=${breed}` : ''}${size ? `&size=${size}` : ''}${age ? `&age=${age}` : ''}`)
     }
 
     return (

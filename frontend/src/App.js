@@ -30,14 +30,16 @@ import { UserContext, useUserContext } from './contexts/UserContext';
 import ShelterUpdate from './pages/ShelterUpdate';
 
 function App() {
+  const user = useUserContext(); // ✅ call hook here (top-level), once per render
+
   return (
-    <UserContext.Provider value={useUserContext()}>
+    <UserContext.Provider value={user}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="petdetail/:petListingID" element={<PetDetail />} />
-            <Route path="petlistings/" element={<PetListings />} />
+            <Route path="petlisting/" element={<PetListings />} />
             <Route path="mylistings/" element={<MyListings />} />
             <Route path="applications/create/:petlistingID" element={<ApplicationCreate />} />
             <Route path="applications/update/seeker/:applicationID" element={<ApplicationUpdateSeeker />} />
@@ -51,11 +53,12 @@ function App() {
             <Route path="applications/list/shelter/" element={<ApplicationListShelter />} />
             <Route path="petlisting/create/" element={<CreatePetListing />} />
             <Route path="petlisting/update/:petlistingID" element={<UpdatePetListing />} />
-            <Route path="blogs/" element={<BlogsList />}></Route>
+            <Route path="blogs/" element={<BlogsList />} />
             <Route path="shelter/:shelterID/edit/" element={<ShelterUpdate />} />
-            <Route path="blogs/create/" element={<BlogsCreate />}></Route>
-            <Route path="blogs/:blogID/" element={<BlogsDetail />}></Route>
+            <Route path="blogs/create/" element={<BlogsCreate />} />
+            <Route path="blogs/:blogID/" element={<BlogsDetail />} />
           </Route>
+
           <Route path="signup/seeker/" element={<SignupSeeker />} />
           <Route path="signup/shelter/" element={<SignupShelter />} />
           <Route path="login/" element={<Login />} />

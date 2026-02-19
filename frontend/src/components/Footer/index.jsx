@@ -21,18 +21,18 @@ const index = () => {
 
                 <div className="flex-col flex gap-4 md:gap-5 max-md:items-center">
                     <h2 className="text-gray text-lg">ARTICLES</h2>
-                    <Link to="/blogs" className="hover:underline">Pet Care</Link>
-                    <Link to="/blogs" className="hover:underline">Pet Training</Link>
-                    <Link to="/blogs" className="hover:underline">Adoption Tips</Link>
-                    <Link to="/blogs" className="hover:underline">Others</Link>
+                    <Link to="/blogs?type=pet_care" className="hover:underline">Pet Care</Link>
+                    <Link to="/blogs?type=pet_training" className="hover:underline">Pet Training</Link>
+                    <Link to="/blogs?type=adoption_tips" className="hover:underline">Adoption Tips</Link>
+                    <Link to="/blogs?type=other" className="hover:underline">Others</Link>
                 </div>
 
                 <div className="flex-col flex gap-4 md:gap-5 max-md:items-center">
                     <h2 className="text-gray text-lg">PETS</h2>
-                    <Link to="/blogs" className="hover:underline">Pets Near By</Link>
-                    <Link to="/blogs" className="hover:underline">Dogs</Link>
-                    <Link to="/blogs" className="hover:underline">Cats</Link>
-                    <Link to="/blogs" className="hover:underline">Others</Link>
+                    <Link to="/petlisting" className="hover:underline">Pets Near By</Link>
+                    <Link to="/petlisting?animal=Dog" className="hover:underline">Dogs</Link>
+                    <Link to="/petlisting?animal=Cat" className="hover:underline">Cats</Link>
+                    <Link to="/petlisting?animal=Other" className="hover:underline">Others</Link>
                 </div>
             </div>
             <hr className="md:hidden w-full text-gray" />

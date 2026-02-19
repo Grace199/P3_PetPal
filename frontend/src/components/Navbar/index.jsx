@@ -5,7 +5,8 @@ import hamburger from '../../assets/images/hamburger.svg'
 import cross from '../../assets/images/cross.svg'
 import { useState, useEffect, useContext } from 'react'
 import { UserContext } from '../../contexts/UserContext';
-import { ajax_or_login } from '../../util/ajax';
+import { ajax, ajax_or_login } from '../../util/ajax';
+import { use } from 'react'
 
 const Index = () => {
     const [openNav, setOpenNav] = useState(false);
@@ -15,38 +16,52 @@ const Index = () => {
     )
     const [isSeeker, setIsSeeker] = useState(null);
     const [openProfileMenu, setOpenProfileMenu] = useState(false);
+    const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
         async function fetchData() {
-            if (id !== -1) {
-                const isSeeker = JSON.parse(localStorage.getItem("isSeeker"));
-                const apiUrl = `/accounts/${isSeeker ? 'seeker' : 'shelter'}/${id}/`;
-                const res = await ajax_or_login(apiUrl, {
-                    method: "GET",
-                }, navigate);
+            if (!Number.isFinite(id) || id === -1) return;
 
-                if (res.ok) {
-                    const data = await res.json();
-                    setAvatar(data.account.avatar);
-                    localStorage.setItem('avatar', data.account.avatar);
-                    setIsSeeker(isSeeker);
-                }
+            const isSeeker = JSON.parse(localStorage.getItem("isSeeker") || "false");
+            const apiUrl = `/accounts/${isSeeker ? "seeker" : "shelter"}/${id}/`;
+
+            const res = await ajax_or_login(apiUrl, { method: "GET" }, navigate);
+            if (res.ok) {
+                const data = await res.json();
+                setAvatar(data.account.avatar);
+                localStorage.setItem("avatar", data.account.avatar);
+                setIsSeeker(isSeeker);
             }
-            setId(parseInt(localStorage.getItem("userID")));
         }
 
         fetchData();
     }, [id, navigate]);
 
+    useEffect(() => {
+        async function checkNotifications() {
+            if (!Number.isFinite(id) || id === -1) return;
+
+            const res = await ajax_or_login(`/notification/unread/`, { method: "GET" }, navigate);
+            if (res.ok) {
+                const data = await res.json();
+                setHasUnreadNotifications(data.unread_count > 0);
+            }
+        }
+
+        checkNotifications();
+    }, [id, navigate]);
+
     function handleLogout() {
-        localStorage.removeItem('avatar');
-        localStorage.removeItem('access');
-        localStorage.removeItem('isSeeker');
+        localStorage.removeItem("avatar");
+        localStorage.removeItem("access");
+        localStorage.removeItem("isSeeker");
+        localStorage.removeItem("userID");   // <-- add this
+
         setId(-1);
         setIsSeeker(null);
         setAvatar(null);
-        navigate("/login/");
+        navigate("/");
     }
 
     return (
@@ -74,12 +89,14 @@ const Index = () => {
                                 <div className="group-hover:scale-105 group-hover:rotate-6 duration-100">
                                     <i className="uil uil-bell text-3xl"></i>
                                 </div>
-                                <div className="absolute top-0 -right-1" id="notification__pulse">
-                                    <span className="relative flex h-3 w-3">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                                        <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-                                    </span>
-                                </div>
+                                {hasUnreadNotifications && (
+                                    <div className="absolute top-0 -right-1" id="notification__pulse">
+                                        <span className="relative flex h-3 w-3">
+                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                            <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                                        </span>
+                                    </div>
+                                )}
                             </Link>
 
 
@@ -121,7 +138,7 @@ const Index = () => {
                                 className="py-3 px-6 border-text border rounded-3xl hover:bg-secondary hover:scale-105 duration-150"
                             >Login</Link>
                             <Link
-                                to="/signup"
+                                to="/signup/seeker"
                                 className="py-3 px-6 border-text border rounded-3xl bg-accent-100 hover:scale-105 text-background hover:bg-secondary hover:text-text duration-150"
                             >Sign up</Link>
                         </>)

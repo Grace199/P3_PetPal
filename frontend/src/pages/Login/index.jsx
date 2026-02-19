@@ -25,9 +25,10 @@ const Login = () => {
                     }, navigate)
                         .then(response => response.json())
                         .then(userJson => {
-                            localStorage.setItem('userID', userJson.id);
-                            localStorage.setItem('isSeeker', userJson.is_seeker);
-                            setId(userJson.id);
+                            const userId = Number(userJson.id);
+                            localStorage.setItem("userID", String(userId));
+                            localStorage.setItem("isSeeker", JSON.stringify(!!userJson.is_seeker));
+                            setId(userId);
                             navigate('/');
                         })
                         .catch(error => {

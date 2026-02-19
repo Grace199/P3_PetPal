@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import backdrop from '../../assets/images/Home/heroBanner.jpg'
 import AnimalCardWhite from '../../components/AnimalCardWhite'
 import FilterForm from '../../components/FilterForm'
-import { ajax_or_login } from '../../util/ajax'
+import { ajax, ajax_or_login } from '../../util/ajax'
 
 const Index = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -51,7 +51,7 @@ const Index = () => {
     }
 
     const query = useMemo(() => ({
-        animal: searchParams.get("animal") ?? 'Dog',
+        animal: searchParams.get("animal") ?? '',
         shelter: searchParams.get("shelter") ?? '',
         status: searchParams.get("status") ?? '',
         breed: searchParams.get("breed") ?? '',
@@ -67,7 +67,7 @@ const Index = () => {
             try {
                 const queryString = constructQueryString(query);
 
-                const res = await ajax_or_login(`/petlisting${queryString ? `?${queryString}` : ''}`, {
+                const res = await ajax(`/petlisting${queryString ? `?${queryString}` : ''}`, {
                     method: "GET"
                 }, navigate);
 
@@ -80,7 +80,7 @@ const Index = () => {
                 }
             } catch (error) {
                 handleFetchError(error);
-            } 
+            }
         };
 
         fetchData();
@@ -107,7 +107,7 @@ const Index = () => {
                         <p
                             className="z-30 text-background text-8xl font-bold"
                         >
-                            {query.animal.toUpperCase() || "DOG"}
+                            {query.animal.toUpperCase() || "ALL PETS"}
                         </p>
                     </div>
                     <img

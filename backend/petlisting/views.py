@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import BasePermission, IsAuthenticated, AllowAny
 
 from notification.models import Notification
 from .serializers import *
@@ -35,6 +36,7 @@ class PetListingDetail(RetrieveUpdateDestroyAPIView):
 class PetListingListCreate(ListCreateAPIView):
     parser_classes = (MultiPartParser, FormParser)
     serializer_class = PetListingSerializer
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         # Get all of the petlistings

@@ -21,7 +21,7 @@ from django.shortcuts import get_object_or_404
 from .models import Seeker, Shelter, Account
 from django.http import HttpResponse
 from rest_framework.exceptions import PermissionDenied
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from applications.models import Application
 from rest_framework import filters
 
@@ -148,6 +148,7 @@ class ShelterList(ListAPIView):
         "city",
         "province",
     ]
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         queryset = super().get_queryset()

@@ -2,7 +2,7 @@ import React from 'react'
 import backdrop from '../../assets/images/Home/heroBanner.jpg'
 import ShelterListCard from '../../components/ShelterListCard'
 import { useState, useEffect } from 'react'
-import { ajax_or_login } from '../../util/ajax'
+import { ajax, ajax_or_login } from '../../util/ajax'
 import { useNavigate } from 'react-router-dom'
 
 const Shelters = () => {
@@ -15,7 +15,7 @@ const Shelters = () => {
         const fetchData = async () => {
             try {
                 const { search, page } = query;
-                const res = await ajax_or_login(`/accounts/shelter?search=${search}&page=${page}`, { method: "GET" }, navigate);
+                const res = await ajax(`/accounts/shelter?search=${search}&page=${page}`, { method: "GET" }, navigate);
                 if (res.ok) {
                     const data = await res.json();
                     setTotalPages(Math.ceil(data.count / 20));
