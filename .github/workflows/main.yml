@@ -39,6 +39,11 @@ jobs:
         run: |
           python manage.py check
 
+      - name: Check for missing migrations
+        working-directory: backend
+        run: |
+          python makemigrations --check --dry-run
+
       - name: Migrate (SQLite)
         working-directory: backend
         run: |
