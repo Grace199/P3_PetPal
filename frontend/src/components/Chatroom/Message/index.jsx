@@ -17,7 +17,11 @@ const Message = ({ name, time, content, image }) => {
     return (
         <div className="w-full flex flex-row items-start md:items-center gap-3 py-5">
             <div className="w-[32px] md:w-[56px]">
-                <img src={image} className="rounded-full hover:scale-105 active:scale-95 duration-200 w-[32px] md:w-[56px] aspect-square object-cover" />
+                <img
+                    src={image}
+                    alt='profile-pic'
+                    className="rounded-full hover:scale-105 active:scale-95 duration-200 w-[32px] md:w-[56px] aspect-square object-cover"
+                />
             </div>
             <div className="w-full flex flex-col">
                 <div className="flex flex-row items-baseline gap-2">

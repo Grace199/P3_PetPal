@@ -2,7 +2,7 @@ import React from 'react'
 import backdrop from '../../assets/images/Home/heroBanner.jpg'
 import ShelterListCard from '../../components/ShelterListCard'
 import { useState, useEffect } from 'react'
-import { ajax, ajax_or_login } from '../../util/ajax'
+import { ajax } from '../../util/ajax'
 import { useNavigate } from 'react-router-dom'
 
 const Shelters = () => {

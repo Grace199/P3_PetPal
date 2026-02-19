@@ -28,7 +28,7 @@ const AllReviews = ({ shelterID, isSelf }) => {
             }
         };
         fetchData();
-    }, [page, navigate]);
+    }, [shelterID, page, navigate]);
 
     return (
         <>

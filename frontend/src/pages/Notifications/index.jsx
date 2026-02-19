@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import NotificationRow from "../../components/NotificationRow";
 import { ajax_or_login } from "../../util/ajax";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -6,96 +6,89 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 const Index = () => {
   const [notifications, setNotifications] = useState([]);
   const [totalPage, setTotalPage] = useState(1);
-  const [unreadFilter, setUnread] = useState(false);
-  const [notifDelete, setDelete] = useState(false);
-  const [allFilter, setAll] = useState(true);
-  const [readFilter, setRead] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
 
+  // Instead of notifDelete boolean, use a refresh key you bump after deletes
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const fetchNotifications = async () => {
-    try {
-      const queryString = constructQueryString(query);
-      const rest = await ajax_or_login(
-        `/notification/${queryString ? `?${queryString}` : ""}`,
-        { method: "GET" },
-        navigate
-      );
-      if (rest.ok) {
-        const data = await rest.json();
-        setTotalPage(Math.max(1, Math.ceil(data.count / 20)));
-        setNotifications(data.results);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const query = useMemo(() => {
+    const pageRaw = searchParams.get("page");
+    const page = Number(pageRaw ?? 1);
 
-  const constructQueryString = (params) => {
-    return new URLSearchParams(params).toString();
-  };
-
-  const query = useMemo(
-    () => ({
+    return {
+      // "", "true", or "false"
       is_read: searchParams.get("is_read") ?? "",
       sort: searchParams.get("sort") ?? "newest",
-      page: parseInt(searchParams.get("page") ?? 1),
-    }),
-    [searchParams]
-  );
+      page: Number.isFinite(page) && page > 0 ? page : 1,
+    };
+  }, [searchParams]);
 
-  const handleUnreadChange = () => {
-    if (!unreadFilter) {
-      setUnread(true);
-      setAll(false);
-      setRead(false);
-      const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.set("is_read", false);
-      setSearchParams(newSearchParams);
-    }
+  const isAll = query.is_read === "";
+  const isUnread = query.is_read === "false";
+  const isRead = query.is_read === "true";
+
+  const constructQueryString = (params) => {
+    const sp = new URLSearchParams();
+    Object.entries(params).forEach(([k, v]) => {
+      if (v !== "" && v !== null && v !== undefined) sp.set(k, String(v));
+    });
+    return sp.toString();
   };
-  const handleAllChange = () => {
-    if (!allFilter) {
-      setUnread(false);
-      setAll(true);
-      setRead(false);
-      const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.set("is_read", "");
-      setSearchParams(newSearchParams);
-    }
+
+  const setIsReadFilter = (value) => {
+    const next = new URLSearchParams(searchParams);
+
+    if (value === "") next.delete("is_read");
+    else next.set("is_read", value); // "true" or "false"
+
+    next.set("page", "1");
+    setSearchParams(next);
   };
-  const handleReadChange = () => {
-    if (!readFilter) {
-      setUnread(false);
-      setAll(false);
-      setRead(true);
-      const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.set("is_read", true);
-      setSearchParams(newSearchParams);
-    }
-  };
+
+  const handleUnreadChange = () => setIsReadFilter("false");
+  const handleAllChange = () => setIsReadFilter("");
+  const handleReadChange = () => setIsReadFilter("true");
+
   const handleSortChange = (event) => {
-    const newSortValue = event.target.value;
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set("sort", newSortValue);
-    setSearchParams(newSearchParams);
+    const next = new URLSearchParams(searchParams);
+    next.set("sort", event.target.value);
+    next.set("page", "1");
+    setSearchParams(next);
   };
 
-  function formatDate(timestamp) {
+  const formatDate = (timestamp) => {
     const date = new Date(timestamp);
-
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
-  }
+  };
 
   useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const qs = constructQueryString(query);
+
+        const res = await ajax_or_login(
+          `/notification/${qs ? `?${qs}` : ""}`,
+          { method: "GET" },
+          navigate
+        );
+
+        if (!res.ok) return;
+
+        const data = await res.json();
+        setTotalPage(Math.max(1, Math.ceil((data.count ?? 0) / 20)));
+        setNotifications(Array.isArray(data.results) ? data.results : []);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     fetchNotifications();
-    setDelete(false);
-  }, [query, notifDelete]);
+  }, [query, refreshKey, navigate]);
 
   return (
     <main>
@@ -104,44 +97,42 @@ const Index = () => {
           Notifications
         </h1>
       </div>
-      <table className=" bg-secondary h-14 flex justify-center items-center xl:mx-desktop md:mx-tablet mx-mobile text-base max-sm:text-xs">
+
+      <table className="bg-secondary h-14 flex justify-center items-center xl:mx-desktop md:mx-tablet mx-mobile text-base max-sm:text-xs">
         <tbody className="w-full">
           <tr className="flex justify-around items-center">
-            <td className="basis-1/4 flex justify-center items-center text-center ">
+            <td className="basis-1/4 flex justify-center items-center text-center">
               <button
-                className={`${
-                  allFilter ? "bg-background-secondary" : null
-                } hover:bg-background-secondary md:w-20 w-12 h-8 rounded-lg transition ease-in-out`}
+                className={`${isAll ? "bg-background-secondary" : ""} hover:bg-background-secondary md:w-20 w-12 h-8 rounded-lg transition ease-in-out`}
                 onClick={handleAllChange}
               >
                 All
               </button>
             </td>
+
             <td className="basis-1/4 flex justify-center items-center text-center">
               <button
-                className={`${
-                  unreadFilter ? "bg-background-secondary" : null
-                } hover:bg-background-secondary md:w-20 w-12 h-8 rounded-lg transition ease-in-out`}
+                className={`${isUnread ? "bg-background-secondary" : ""} hover:bg-background-secondary md:w-20 w-12 h-8 rounded-lg transition ease-in-out`}
                 onClick={handleUnreadChange}
               >
                 Unread
               </button>
             </td>
+
             <td className="basis-1/4 flex justify-center items-center text-center">
               <button
-                className={`${
-                  readFilter ? "bg-background-secondary" : null
-                } hover:bg-background-secondary md:w-20 w-12 h-8 rounded-lg transition ease-in-out`}
+                className={`${isRead ? "bg-background-secondary" : ""} hover:bg-background-secondary md:w-20 w-12 h-8 rounded-lg transition ease-in-out`}
                 onClick={handleReadChange}
               >
                 Read
               </button>
             </td>
+
             <td className="basis-1/4 flex justify-center items-center text-center">
               <select
                 name="sort"
                 value={query.sort}
-                className="text-center flex justify-center items-center col-span-2 rounded-lg md:w-20 w-12 h-8 placeholder-[#ffffffce] cursor-pointer bg-background-secondary focus:outline-none"
+                className="text-center flex justify-center items-center col-span-2 rounded-lg md:w-20 w-12 h-8 cursor-pointer bg-background-secondary focus:outline-none"
                 onChange={handleSortChange}
               >
                 <option value="newest">Newest</option>
@@ -151,29 +142,30 @@ const Index = () => {
           </tr>
         </tbody>
       </table>
+
       <div className="w-full">
-        {notifications &&
-          notifications.map((notification) => (
-            <NotificationRow
-              msg={notification?.msg}
-              creation_date={formatDate(notification?.creation_time)}
-              is_read={notification?.is_read}
-              url={notification?.url}
-              ID={notification?.id}
-              key={notification?.id}
-              setDelete={setDelete}
-            />
-          ))}
+        {notifications.map((notification) => (
+          <NotificationRow
+            key={notification?.id}
+            msg={notification?.msg}
+            creation_date={formatDate(notification?.creation_time)}
+            is_read={notification?.is_read}
+            url={notification?.url}
+            ID={notification?.id}
+            // child calls this after successful delete:
+            setDelete={() => setRefreshKey((k) => k + 1)}
+          />
+        ))}
       </div>
+
       <div className="w-full flex justify-center items-center gap-5 pt-16">
         {query.page > 1 ? (
           <button
             className="bg-transparent border border-primary text-primary font-bold px-5 py-3 rounded-xl hover:scale-105 active:scale-95"
             onClick={() => {
-              const newPage = query.page - 1;
-              const newSearchParams = new URLSearchParams(searchParams);
-              newSearchParams.set("page", newPage);
-              setSearchParams(newSearchParams);
+              const next = new URLSearchParams(searchParams);
+              next.set("page", String(query.page - 1));
+              setSearchParams(next);
             }}
           >
             Prev
@@ -192,10 +184,9 @@ const Index = () => {
           <button
             className="bg-transparent border border-primary text-primary font-bold px-5 py-3 rounded-xl hover:scale-105 active:scale-95"
             onClick={() => {
-              const newPage = query.page + 1;
-              const newSearchParams = new URLSearchParams(searchParams);
-              newSearchParams.set("page", newPage);
-              setSearchParams(newSearchParams);
+              const next = new URLSearchParams(searchParams);
+              next.set("page", String(query.page + 1));
+              setSearchParams(next);
             }}
           >
             Next

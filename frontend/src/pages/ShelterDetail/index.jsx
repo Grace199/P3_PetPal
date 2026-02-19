@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import ShelterListings from '../../components/ShelterListings'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ajax_or_login } from '../../util/ajax';
@@ -36,7 +36,7 @@ const ShelterDetail = () => {
     }, [shelterID, navigate]);
 
     useEffect(() => {
-        setIsSelf(!isSeeker && id == shelterID);
+        setIsSelf(!isSeeker && id === shelterID);
         setAvatar(localStorage.getItem("avatar"));
     }, [isSeeker, id, shelterID, avatar]);
 
@@ -101,7 +101,8 @@ const ShelterDetail = () => {
                                     <div className="rounded-3xl border-0 overflow-hidden h-auto w-auto max-h-60 max-w-60 drop-shadow-[0_4px_4px_rgb(181,199,242)] aspect-square 2xl:h-60 2xl:w-60 hover:scale-105 duration-200">
                                         {shelter ? <img
                                             src={shelter.account.avatar}
-                                            className="rounded-3xl object-center object-cover w-full h-full" /> : <></>}
+                                            className="rounded-3xl object-center object-cover w-full h-full"
+                                            alt="Shelter Avatar" /> : <></>}
                                         {/* <a href="#">
                                             <i class="uil uil-plus-circle absolute text-primary text-2xl top-3 left-3"></i>
                                         </a> */}

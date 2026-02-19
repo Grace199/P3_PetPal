@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import AnimalCardBlue from '../AnimalCardBlue';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ajax_or_login } from '../../util/ajax';
 
 const Index = ({ shelterName }) => {

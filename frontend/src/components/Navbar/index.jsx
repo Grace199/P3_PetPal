@@ -1,12 +1,10 @@
-import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import logo from '../../assets/images/logo.svg'
 import hamburger from '../../assets/images/hamburger.svg'
 import cross from '../../assets/images/cross.svg'
 import { useState, useEffect, useContext } from 'react'
 import { UserContext } from '../../contexts/UserContext';
-import { ajax, ajax_or_login } from '../../util/ajax';
-import { use } from 'react'
+import { ajax_or_login } from '../../util/ajax';
 
 const Index = () => {
     const [openNav, setOpenNav] = useState(false);

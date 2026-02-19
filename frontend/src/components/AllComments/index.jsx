@@ -26,7 +26,7 @@ const AllComments = ({ blogID }) => {
             }
         };
         fetchData();
-    }, [page, navigate]);
+    }, [blogID, page, navigate]);
 
     return (
         <>

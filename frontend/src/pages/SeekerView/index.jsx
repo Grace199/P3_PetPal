@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ajax_or_login } from "../../util/ajax";
 import { useNavigate, useParams } from "react-router-dom";
 
 const Index = () => {
   const { seekerID } = useParams();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
-    account: {
-      avatar: "",
-      email: "",
-      name: "",
-    },
+    account: { avatar: "", email: "", name: "" },
     province: "",
     city: "",
     phone_number: "",
@@ -20,96 +18,53 @@ const Index = () => {
     open_to_special_needs_animals: "",
     breed_preference: "",
   });
-  const [animal, setAnimal] = useState("");
-  const [age, setAge] = useState("");
-  const [gender, setGender] = useState("");
-  const [size, setSize] = useState("");
-  const [spn, setSPN] = useState("");
 
-  const handleInformation = () => {
-    if (formData.animal_preference === "dog") {
-      setAnimal("Dog");
-    }
-    if (formData.animal_preference === "cat") {
-      setAnimal("Cat");
-    }
-    if (formData.animal_preference === "other") {
-      setAnimal("Other");
-    }
-    if (formData.age_preference === 1) {
-      setAge("Infant");
-    }
-    if (formData.age_preference === 2) {
-      setAge("Young");
-    }
-    if (formData.age_preference === 3) {
-      setAge("Adult");
-    }
-    if (formData.age_preference === 4) {
-      setAge("Senior");
-    }
-    if (formData.size_preference === 1) {
-      setSize("Small")
-    }
-    if (formData.size_preference === 2) {
-      setSize("Medium")
-    }
-    if (formData.size_preference === 3) {
-      setSize("Large")
-    }
-    if (formData.sex_preference === "male") {
-      setGender("Male");
-    }
-    if (formData.sex_preference === "female") {
-      setGender("Female");
-    }
-    if (formData.open_to_special_needs_animals) {
-      setSPN("Yes");
-    }
-    if (!formData.open_to_special_needs_animals) {
-      setSPN("No");
-    }
-  }
+  const animalMap = { dog: "Dog", cat: "Cat", other: "Other" };
+  const ageMap = { 1: "Infant", 2: "Young", 3: "Adult", 4: "Senior" };
+  const sizeMap = { 1: "Small", 2: "Medium", 3: "Large" };
+  const genderMap = { male: "Male", female: "Female" };
 
-  const navigate = useNavigate();
-
-  const fetchUserData = async () => {
-    try {
-      const rest = await ajax_or_login(
-        `/accounts/seeker/${seekerID}/`,
-        { method: "GET" },
-        navigate
-      );
-      if (rest.ok) {
-        const data = await rest.json();
-
-        setFormData({
-          account: {
-            avatar: data.account.avatar || null,
-            email: data.account.email || "",
-            name: data.account.name || "",
-          },
-          province: data.province || "",
-          city: data.city || "",
-          phone_number: data.phone_number || "",
-          animal_preference: data.animal_preference || "",
-          age_preference: data.age_preference || "",
-          sex_preference: data.sex_preference || "",
-          size_preference: data.size_preference || "",
-          open_to_special_needs_animals:
-            data.open_to_special_needs_animals || "",
-          breed_preference: data.breed_preference || "",
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const animal = animalMap[formData.animal_preference] || "";
+  const age = ageMap[formData.age_preference] || "";
+  const gender = genderMap[formData.sex_preference] || "";
+  const size = sizeMap[formData.size_preference] || "";
+  const spn = formData.open_to_special_needs_animals ? "Yes" : "No";
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await ajax_or_login(
+          `/accounts/seeker/${seekerID}/`,
+          { method: "GET" },
+          navigate
+        );
+
+        if (res.ok) {
+          const data = await res.json();
+          setFormData({
+            account: {
+              avatar: data?.account?.avatar || null,
+              email: data?.account?.email || "",
+              name: data?.account?.name || "",
+            },
+            province: data?.province || "",
+            city: data?.city || "",
+            phone_number: data?.phone_number || "",
+            animal_preference: data?.animal_preference || "",
+            age_preference: data?.age_preference || "",
+            sex_preference: data?.sex_preference || "",
+            size_preference: data?.size_preference || "",
+            open_to_special_needs_animals: data?.open_to_special_needs_animals || "",
+            breed_preference: data?.breed_preference || "",
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     fetchUserData();
-    handleInformation();
-  }, []);
+  }, [seekerID, navigate]);
 
   return (
     <main>
@@ -119,6 +74,7 @@ const Index = () => {
             <img
               src={localStorage.getItem("avatar")}
               className="w-full rounded-full border border-primary"
+              alt="Profile Avatar"
             />
           </div>
           <div className="w-full drop-shadow-xl">
@@ -198,6 +154,7 @@ const Index = () => {
                 <img
                   src={localStorage.getItem("avatar")}
                   className="w-full  rounded-full border border-primary"
+                  alt="Profile Avatar"
                 />
               </div>
             </div>

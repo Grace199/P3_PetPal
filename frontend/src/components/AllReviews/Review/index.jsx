@@ -13,7 +13,7 @@ const Review = ({ isSelfReview, reviewID, name, rating, content, timestamp, hasR
 
     useEffect(() => {
         setAvatar(localStorage.getItem("avatar"));
-    }, [avatar]);
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -28,7 +28,7 @@ const Review = ({ isSelfReview, reviewID, name, rating, content, timestamp, hasR
             }
         };
         fetchData();
-    }, [navigate]);
+    }, [reviewID, navigate]);
 
     const handleReplyContentChange = (event) => {
         const newReplyContent = event.target.value;
@@ -77,7 +77,7 @@ const Review = ({ isSelfReview, reviewID, name, rating, content, timestamp, hasR
                     </div>
                 </>
             );
-        } else if (rating == 4) {
+        } else if (rating === 4) {
             return (
                 <>
                     <div className="flex flex-row">
@@ -89,7 +89,7 @@ const Review = ({ isSelfReview, reviewID, name, rating, content, timestamp, hasR
                     </div>
                 </>
             );
-        } else if (rating == 3) {
+        } else if (rating === 3) {
             return (
                 <>
                     <div className="flex flex-row">
@@ -101,7 +101,7 @@ const Review = ({ isSelfReview, reviewID, name, rating, content, timestamp, hasR
                     </div>
                 </>
             );
-        } else if (rating == 2) {
+        } else if (rating === 2) {
             return (
                 <>
                     <div className="flex flex-row">
@@ -113,7 +113,7 @@ const Review = ({ isSelfReview, reviewID, name, rating, content, timestamp, hasR
                     </div>
                 </>
             );
-        } else if (rating == 1) {
+        } else if (rating === 1) {
             return (
                 <>
                     <div className="flex flex-row">
@@ -150,6 +150,7 @@ const Review = ({ isSelfReview, reviewID, name, rating, content, timestamp, hasR
                                 <img
                                     src={avatar}
                                     className="rounded-full hover:scale-105 active:scale-95 duration-200 w-[56px] aspect-square object-cover"
+                                    alt='profile-pic'
                                 />
                             </div>
                             <div className="flex flex-col w-full gap-1">
@@ -186,6 +187,7 @@ const Review = ({ isSelfReview, reviewID, name, rating, content, timestamp, hasR
                                 <img
                                     src={avatar}
                                     className="rounded-full hover:scale-105 active:scale-95 duration-200 w-[56px] aspect-square object-cover"
+                                    alt='profile-pic'
                                 />
                             </div>
                             <div className="w-full flex">
@@ -228,6 +230,7 @@ const Review = ({ isSelfReview, reviewID, name, rating, content, timestamp, hasR
                             <img
                                 src={avatar}
                                 className="rounded-full hover:scale-105 active:scale-95 duration-200 absolute inset-0 w-full h-full aspect-square object-cover"
+                                alt='profile-pic'
                             />
                         </div>
                     </div>

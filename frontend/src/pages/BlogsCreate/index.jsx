@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { ajax, ajax_or_login } from '../../util/ajax';
+import { useEffect, useState } from 'react'
+import { ajax_or_login } from '../../util/ajax';
 import { Link, useNavigate } from 'react-router-dom';
 
 const BlogsCreate = () => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import backdrop from '../../../assets/images/Home/heroBanner.jpg';
 import './style.css';
 import { useNavigate } from "react-router-dom";

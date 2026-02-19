@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Message from '../Message'
 import { ajax_or_login } from '../../../util/ajax';
 import { useNavigate } from 'react-router-dom';

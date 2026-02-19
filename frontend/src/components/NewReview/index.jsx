@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ajax_or_login } from '../../util/ajax';
 
@@ -75,6 +75,7 @@ const NewReview = ({ img }) => {
                         <img
                             src={img}
                             className="rounded-full hover:scale-105 active:scale-95 duration-200 w-[56px] aspect-square object-cover"
+                            alt='profile-pic'
                         />
                     </div>
                     <div className="w-full h-44 relative flex-grow">
@@ -91,6 +92,7 @@ const NewReview = ({ img }) => {
                         <img
                             src={img}
                             className="rounded-full hover:scale-105 active:scale-95 duration-200 w-[40px] aspect-square object-cover"
+                            alt='profile-pic'
                         />
                     </div>
                     <div className="flex justify-left items-center gap-[1px] rounded-full group">

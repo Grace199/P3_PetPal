@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { ajax_or_login } from '../../util/ajax';
 import { useNavigate } from 'react-router-dom';
 
@@ -34,6 +34,7 @@ const NewComment = ({ blogID, img }) => {
                 <img
                     src={img}
                     className="rounded-full hover:scale-105 active:scale-95 duration-200 w-[56px] aspect-square object-cover"
+                    alt="profile"
                 />
             </div>
             <div className="w-full h-44 relative flex-grow">

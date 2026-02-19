@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useSearchParams } from "react-router-dom";
 import backdrop from '../../assets/images/MyListing.png'
 import EditAnimalCard from '../../components/EditAnimalCard'
@@ -65,61 +65,59 @@ const Index = () => {
         page: parseInt(searchParams.get("page") ?? 1),
     }), [searchParams]);
 
-    const fetchData = async () => {
-        try {
-            if (!JSON.parse(localStorage.getItem("isSeeker"))) {
-                const queryString = constructQueryString(query);
-                const res = await ajax_or_login(`/petlisting${queryString ? `?${queryString}&shelter=${shelter}` : `?shelter=${shelter}`}`, {
-                    method: "GET"
-                }, navigate);
-
-                if (res.ok) {
-                    const data = await res.json();
-                    setTotalPage(Math.max(1, Math.ceil(data.count / 20)));
-                    setPetlistings(data.results);
-                } else {
-                    handleFetchError(res);
-                }
-            } else {
-                navigate("/")
-            }
-        } catch (error) {
-            handleFetchError(error);
-        }
-    };
-
     useEffect(() => {
-        if (shelter !== null && shelter !== '') {
-            fetchData();
+        const handleFetchError = (error) => {
+            console.error("Error during fetch:", error.message);
+
+            const newSearchParams = new URLSearchParams(searchParams);
+            newSearchParams.set('page', 1);
+            setSearchParams(newSearchParams);
+        };
+
+        async function fetchData(params) {
+            try {
+                if (shelter !== null && shelter !== '') {
+                    const queryString = constructQueryString(params);
+                    const res = await ajax_or_login(
+                        `/petlisting${queryString ? `?${queryString}&shelter=${encodeURIComponent(shelter)}` : `?shelter=${encodeURIComponent(shelter)}`}`,
+                        { method: "GET" },
+                        navigate
+                    );
+
+                    if (res.ok) {
+                        const data = await res.json();
+                        setTotalPage(Math.max(1, Math.ceil(data.count / 20)));
+                        setPetlistings(data.results);
+                    } else {
+                        handleFetchError(res);
+                    }
+                }
+            } catch (error) {
+                handleFetchError(error);
+            }
         }
-    }, [query, shelter]);
+
+        fetchData(query);
+    }, [query, shelter, navigate, searchParams, setSearchParams]);
 
     const constructQueryString = (params) => {
+        if (!params) return '';
         return new URLSearchParams(params).toString();
     };
 
-    const handleFetchError = (error) => {
-        console.error("Error during fetch:", error.message);
-
-        // Reset page parameter in searchParams state to 1
-        const newSearchParams = new URLSearchParams(searchParams);
-        newSearchParams.set('page', 1);
-        setSearchParams(newSearchParams);
-    };
-
-    const getShelter = async () => {
-        const id = parseInt(localStorage.getItem("userID"), 10);
-        const res = await ajax_or_login(`/accounts/shelter/${id}`, { method: "GET" }, navigate);
-        if (res.ok) {
-            const data = await res.json();
-            console.log(data);
-            setShelter(data.account.name);
-        }
-    }
-
     useEffect(() => {
         getShelter();
-    }, [])
+        async function getShelter() {
+            const id = parseInt(localStorage.getItem("userID"), 10);
+            const res = await ajax_or_login(`/accounts/shelter/${id}`, { method: "GET" }, navigate);
+            if (res.ok) {
+                const data = await res.json();
+                console.log(data);
+                setShelter(data.account.name);
+            }
+        }
+        getShelter();
+    }, [navigate])
 
 
     return (
@@ -175,7 +173,7 @@ const Index = () => {
                     </div>
                 </div>
                 <div className="w-full flex justify-center items-center gap-5">
-                {query.page > 1 ?
+                    {query.page > 1 ?
                         <button
                             className="bg-transparent border border-primary text-primary font-bold px-5 py-3 rounded-xl hover:scale-105 active:scale-95"
                             onClick={() => {

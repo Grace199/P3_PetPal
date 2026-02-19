@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Navbar from '../../components/Navbar'
 import AllRooms from '../../components/Chatroom/AllRooms'
 import Chat from '../../components/Chatroom/Chat'
@@ -31,7 +31,7 @@ const Chatroom = () => {
 
         console.log(chatID);
         // Fetch messages base on chatID
-    }, [chatID])
+    }, [chatID, navigate])
 
     return (
         <>

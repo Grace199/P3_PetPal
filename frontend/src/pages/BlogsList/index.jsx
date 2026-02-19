@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import backdrop from '../../assets/images/Home/heroBanner.jpg'
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { ajax, ajax_or_login } from '../../util/ajax';
+import { useNavigate } from 'react-router-dom';
+import { ajax } from '../../util/ajax';
 import BlogListCard from '../../components/BlogListCard';
 
 const Blogs = () => {

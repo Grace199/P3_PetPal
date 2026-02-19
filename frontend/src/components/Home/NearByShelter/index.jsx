@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import ShelterCard from '../../ShelterCard'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ajax } from '../../../util/ajax'
 
 const Index = () => {
     const [shelters, setShelters] = useState(null)
-    const navigate = useNavigate();
     const getShelters = async () => {
-        const res = await ajax('/accounts/shelter', { method: "GET" }, navigate);
+        const res = await ajax('/accounts/shelter', { method: "GET" });
         if (res.ok) {
             const data = await res.json();
             setShelters([data.results[0], data.results[1], data.results[2]]);
@@ -17,6 +16,7 @@ const Index = () => {
     useEffect(() => {
         getShelters();
     }, [])
+
     return (
         <div
             className="px-mobile md:px-tablet xl:px-desktop flex flex-col justify-center items-center py-16 bg-[#FAFAFA]"

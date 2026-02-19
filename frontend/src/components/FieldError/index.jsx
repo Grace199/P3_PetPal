@@ -1,5 +1,3 @@
-import React from 'react';
-
 const FieldError = ({ fielderror }) => {
   return (
     <>
@@ -9,7 +7,7 @@ const FieldError = ({ fielderror }) => {
         </div>
       ) : null}
     </>
-  );
-};
+  )
+}
 
 export default FieldError;

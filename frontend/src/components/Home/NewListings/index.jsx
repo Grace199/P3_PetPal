@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import AnimalCardBlue from '../../AnimalCardBlue'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ajax } from '../../../util/ajax'
 
 
 const Index = () => {
     const [petListings, setPetlistings] = useState(null)
-    const navigate = useNavigate();
     const getListings = async () => {
         const res = await ajax('/petlisting', { method: "GET" });
         if (res.ok) {

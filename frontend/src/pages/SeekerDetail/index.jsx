@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ajax_or_login } from "../../util/ajax";
 import { useNavigate } from "react-router-dom";
 
@@ -24,7 +24,6 @@ const Index = () => {
 	const [avatar, setAvatar] = useState(null);
 	const [phoneNumErr, setPhoneNumErr] = useState("");
 	const [nameErr, setNameErr] = useState("");
-	const [picErr, setPicErr] = useState("");
 
 	const navigate = useNavigate();
 
@@ -95,18 +94,12 @@ const Index = () => {
 								} else {
 									setNameErr("");
 								}
-								if (responseBody.account.avatar) {
-									setPicErr("Invalid profile picture.");
-								} else {
-									setPicErr("");
-								}
 							}
 						}
 					}
 				} else {
 					setPhoneNumErr("");
 					setNameErr("");
-					setPicErr("");
 				}
 			} catch (error) {
 				console.log(error);
@@ -129,45 +122,48 @@ const Index = () => {
 		}
 	};
 
-	const fetchUserData = async () => {
-		try {
-			const rest = await ajax_or_login(
-				`/accounts/seeker/${parseInt(localStorage.getItem("userID"), 10) || ""
-				}/`,
-				{ method: "GET" },
-				navigate
-			);
-			if (rest.ok) {
-				const data = await rest.json();
-				setPrevUserName(data.account.name);
-				setFormData({
-					account: {
-						avatar: data.account.avatar || null,
-						email: data.account.email || "",
-						name: data.account.name || "",
-					},
-					province: data.province || "",
-					city: data.city || "",
-					phone_number: data.phone_number || "",
-					animal_preference: data.animal_preference || "",
-					age_preference: data.age_preference || "",
-					sex_preference: data.sex_preference || "",
-					size_preference: data.size_preference || "",
-					open_to_special_needs_animals:
-						data.open_to_special_needs_animals || "",
-					breed_preference: data.breed_preference || "",
-				});
-
-				console.log(data);
-			}
-		} catch (error) {
-			console.log(error);
-		}
-	};
-
 	useEffect(() => {
+		const fetchUserData = async () => {
+			try {
+				const userID =
+					parseInt(localStorage.getItem("userID"), 10) || "";
+
+				const rest = await ajax_or_login(
+					`/accounts/seeker/${userID}/`,
+					{ method: "GET" },
+					navigate
+				);
+
+				if (rest.ok) {
+					const data = await rest.json();
+
+					setPrevUserName(data.account.name);
+
+					setFormData({
+						account: {
+							avatar: data.account.avatar || null,
+							email: data.account.email || "",
+							name: data.account.name || "",
+						},
+						province: data.province || "",
+						city: data.city || "",
+						phone_number: data.phone_number || "",
+						animal_preference: data.animal_preference || "",
+						age_preference: data.age_preference || "",
+						sex_preference: data.sex_preference || "",
+						size_preference: data.size_preference || "",
+						open_to_special_needs_animals:
+							data.open_to_special_needs_animals || "",
+						breed_preference: data.breed_preference || "",
+					});
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
 		fetchUserData();
-	}, []);
+	}, [navigate]);
 
 	const handleFileChange = (event) => {
 		const file = event.target.files[0];

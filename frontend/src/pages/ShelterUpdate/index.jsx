@@ -4,9 +4,6 @@ import { ajax_or_login } from '../../util/ajax';
 
 const ShelterUpdate = () => {
     const { shelterID } = useParams();
-    const [id, setId] = useState(0);
-    const [isSeeker, setIsSeeker] = useState(null);
-    const [shelter, setShelter] = useState(null);
     const [oriName, setOriName] = useState("");
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -15,7 +12,6 @@ const ShelterUpdate = () => {
     const [province, setProvince] = useState("");
     const [phoneNumber, setPhoneNumber] = useState(0);
     const [profilePic, setProfilePic] = useState(null);
-    const [error, setError] = useState("");
     const [nameErr, setNameErr] = useState("");
     const [descriptionErr, setDescriptionErr] = useState("");
     const [addressErr, setAddressErr] = useState("");
@@ -34,11 +30,6 @@ const ShelterUpdate = () => {
 
                 if (res.ok) {
                     const data = await res.json();
-                    setShelter(data);
-
-                    setIsSeeker(JSON.parse(localStorage.getItem("isSeeker")));
-                    setId(parseInt(localStorage.getItem("userID")));
-
                     setOriName(data.account.name);
                     setName(data.account.name);
                     setDescription(data.description);
@@ -46,7 +37,6 @@ const ShelterUpdate = () => {
                     setCity(data.city);
                     setProvince(data.province);
                     setPhoneNumber(data.phone_number);
-
                 } else {
                     console.error("Error during fetch: ", res);
                 }

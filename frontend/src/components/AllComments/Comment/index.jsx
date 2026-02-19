@@ -28,6 +28,7 @@ const Comment = ({ id, name, img, timestamp, content }) => {
                         <img
                             src={img}
                             className="rounded-full hover:scale-105 active:scale-95 duration-200 w-[56px] aspect-square object-cover"
+                            alt='profile-pic'
                         />
                     </div>
                     <div className="w-full flex">
@@ -44,6 +45,7 @@ const Comment = ({ id, name, img, timestamp, content }) => {
                             <img
                                 src={img}
                                 className="rounded-full hover:scale-105 active:scale-95 duration-200 absolute inset-0 w-full h-full aspect-square object-cover"
+                                alt='profile-pic'
                             />
                         </div>
                     </div>

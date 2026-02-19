@@ -1,13 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Room from '../Room'
-import { UserContext } from '../../../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { ajax_or_login } from '../../../util/ajax';
 
 const Index = ({ setChatID }) => {
     const [allRooms, setAllRooms] = useState([]);
-    const [rooms, setRooms] = useState([]);
-    const [id, setId] = useState(0);
     const [isSeeker, setIsSeeker] = useState(null);
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
@@ -17,8 +14,6 @@ const Index = ({ setChatID }) => {
             const apiUrl = `/applications/list/`;
             try {
                 setIsSeeker(JSON.parse(localStorage.getItem("isSeeker")));
-                setId(parseInt(localStorage.getItem("userID")));
-
                 console.log(localStorage.getItem("access"));
                 const res = await ajax_or_login(apiUrl, { method: "GET" }, navigate);
                 if (res.ok) {
