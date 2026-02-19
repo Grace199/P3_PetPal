@@ -1,6 +1,12 @@
-__pycache__
-db.sqlite3
-*/migrations/0*.py
-*.pyc
-venv
-media
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.db
+.env
+venv/
+backend/venv/
+
+# Allow Django migrations
+!backend/*/migrations/
+!backend/*/migrations/*.py
