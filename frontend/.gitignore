@@ -30,3 +30,7 @@ __pycache__/
 .env
 venv/
 backend/venv/
+
+# Allow Django migrations
+!backend/*/migrations/
+!backend/*/migrations/*.py
