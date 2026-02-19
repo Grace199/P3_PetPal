@@ -30,7 +30,7 @@ import { UserContext, useUserContext } from './contexts/UserContext';
 import ShelterUpdate from './pages/ShelterUpdate';
 
 function App() {
-  const user = useUserContext(); // ✅ call hook here (top-level), once per render
+  const user = useUserContext();
 
   return (
     <UserContext.Provider value={user}>
