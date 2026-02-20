@@ -1,4 +1,4 @@
-django
+Django==4.2.7
 pillow
 djangorestframework
 djangorestframework-simplejwt

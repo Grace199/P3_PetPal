@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 
+from dotenv import load_dotenv
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,9 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-ov^c!zv(@h(ri+daa43#@6p1j#tvm-fm!c!6tjm#^6qiupl1&)"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["18.225.92.77", "127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["18.225.92.77", "127.0.0.1", "localhost", ".vercel.app"]
 
 
 # Application definition
