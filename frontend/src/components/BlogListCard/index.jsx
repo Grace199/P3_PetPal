@@ -1,51 +1,40 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 
-const BlogListCard = ({ id, img, title, shelter, timestamp, articleType }) => {
-    const displayTextForArticleType = (type) => {
-        switch (type) {
-            case 'other':
-                return 'Other';
-            case 'pet_training':
-                return 'Pet Training';
-            case 'pet_care':
-                return 'Pet Care';
-            case 'adoption_tips':
-                return 'Adoption Tips';
-            default:
-                return '';
-        }
-    };
+const ARTICLE_TYPES = {
+    other: 'Other',
+    pet_training: 'Pet Training',
+    pet_care: 'Pet Care',
+    adoption_tips: 'Adoption Tips',
+};
 
-    const formattedArticleType = displayTextForArticleType(articleType);
+const BlogListCard = ({ id, img, title, shelter, timestamp, articleType }) => {
+    const formattedArticleType = ARTICLE_TYPES[articleType] || 'Other';
+    const formattedDate = timestamp
+        ? new Date(timestamp).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
+        : "";
 
     return (
         <Link
-            className="w-full flex flex-col sm:flex-row rounded-3xl gap-3 sm:gap-9 bg-background hover:bg-background-secondary hover:scale-105 duration-200 active:scale-95 drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+            className="group w-full flex flex-row rounded-2xl overflow-hidden bg-white border border-black/5 hover:-translate-y-1 active:translate-y-0 transition duration-200"
             to={`/blogs/${id}/`}
         >
             <img
                 src={img}
                 alt={shelter}
-                className="object-cover aspect-square h-49 sm:h-48 rounded-l-3xl"
+                className="object-cover aspect-square w-28 sm:w-44 shrink-0"
             />
-            <div className="w-full flex flex-col gap-[2px] sm:gap-1 justify-center pl-3 pb-3 sm:pl-0 sm:pb-3">
-                <div className="flex items-baseline gap-2 sm:gap-5">
-                    <div className="flex">
-                        <p className="text-accent-100 text-xl sm:text-4xl lg:text-5xl font-bold">
-                            {title}
-                        </p>
-                    </div>
-                    <div className="flex h-full">
-                        <p className="text-gray text-xs sm:text-base font-semibold text-end">
-                            {formattedArticleType}
-                        </p>
-                    </div>
-                </div>
-                <div className="flex">
-                    <p className="text-accent-200 text-sm sm:text-xl lg:text-2xl font-semibold">
-                        {shelter}
-                    </p>
+            <div className="w-full flex flex-col justify-center gap-1.5 p-4 sm:p-6 min-w-0">
+                <span className="w-max text-[10px] sm:text-xs font-semibold uppercase tracking-wide text-accent-100 bg-accent-100/10 rounded-full px-2.5 py-1">
+                    {formattedArticleType}
+                </span>
+                <p className="text-text text-lg sm:text-2xl lg:text-3xl font-bold leading-snug line-clamp-2 group-hover:text-accent-100 duration-200">
+                    {title}
+                </p>
+                <div className="flex flex-wrap items-center gap-x-2 text-text/60 text-xs sm:text-sm">
+                    <span className="font-semibold text-accent-200">{shelter}</span>
+                    {formattedDate && <span aria-hidden>·</span>}
+                    <span>{formattedDate}</span>
                 </div>
             </div>
         </Link>

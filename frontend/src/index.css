@@ -11,3 +11,7 @@
 html {
     scroll-behavior: smooth;
 }
+
+body {
+    background-color: #F2F5FD; /* matches the app `background` token */
+}

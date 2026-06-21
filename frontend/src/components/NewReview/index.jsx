@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ajax_or_login } from '../../util/ajax';
 
+const DEFAULT_AVATAR = (process.env.REACT_APP_API_URL || "http://localhost:8000") + "/media/avatars/default-avatar.jpg";
+
 const NewReview = ({ img }) => {
     const { shelterID } = useParams();
     const navigate = useNavigate();
@@ -37,98 +39,46 @@ const NewReview = ({ img }) => {
         }
     }
 
+    const avatarSrc = img && img !== "null" ? img : DEFAULT_AVATAR;
+
     return (
-        <>
-            <form className="hidden sm:flex flex-col gap-2" onSubmit={handlePostSubmit}>
-                <div className="flex flex-row gap-2">
-                    <div className="w-[56px]"></div>
-                    <div>
-                        <div className="flex justify-left items-center gap-1 rounded-full group">
-                            <p className="text-sm">Rate your experience:</p>
-                            <select
-                                name="rating"
-                                value={rating}
-                                onChange={handleRatingChange}
-                                className="hover:cursor-pointer text-[13px] bg-[#fafafa]"
-                            >
-                                <option value={1} className="text-sm">
-                                    1
-                                </option>
-                                <option value={2} className="text-sm">
-                                    2
-                                </option>
-                                <option value={3} className="text-sm">
-                                    3
-                                </option>
-                                <option value={4} className="text-sm">
-                                    4
-                                </option>
-                                <option value={5} className="text-sm">
-                                    5
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex flex-row gap-2">
-                    <div>
-                        <img
-                            src={img}
-                            className="rounded-full hover:scale-105 active:scale-95 duration-200 w-[56px] aspect-square object-cover"
-                            alt='profile-pic'
-                        />
-                    </div>
-                    <div className="w-full h-44 relative flex-grow">
-                        <textarea value={content} onChange={handleContentChange} className="absolute top-0 left-0 w-full h-full bg-background border-primary border-[0.5px] rounded-[15px] p-4 focus:outline-[#030711] resize-none text-sm"></textarea>
-                        <button className="absolute text-accent-100 right-5 bottom-[14px] text-base hover:scale-105 duration-200">
-                            POST
-                        </button>
-                    </div>
-                </div>
-            </form>
-            <form className="flex sm:hidden flex-col gap-3" onSubmit={handlePostSubmit}>
-                <div className="flex flex-row gap-3">
-                    <div className="flex">
-                        <img
-                            src={img}
-                            className="rounded-full hover:scale-105 active:scale-95 duration-200 w-[40px] aspect-square object-cover"
-                            alt='profile-pic'
-                        />
-                    </div>
-                    <div className="flex justify-left items-center gap-[1px] rounded-full group">
-                        <p className="text-xs">Rating:</p>
-                        <select
-                            name="rating"
-                            value={rating}
-                            onChange={handleRatingChange}
-                            className="hover:cursor-pointer text-xs bg-[#fafafa]"
-                        >
-                            <option value={1} className="text-xs">
-                                1
-                            </option>
-                            <option value={2} className="text-xs">
-                                2
-                            </option>
-                            <option value={3} className="text-xs">
-                                3
-                            </option>
-                            <option value={4} className="text-xs">
-                                4
-                            </option>
-                            <option value={5} className="text-xs">
-                                5
-                            </option>
-                        </select>
-                    </div>
-                </div>
-                <div className="w-full h-44 relative flex-grow">
-                    <textarea value={content} onChange={handleContentChange} className="absolute top-0 left-0 w-full h-full bg-background border-primary border-[0.5px] rounded-[15px] p-4 focus:outline-[#030711] resize-none text-xs"></textarea>
-                    <button className="absolute text-accent-100 right-5 bottom-[14px] text-sm hover:scale-105 duration-200">
-                        POST
-                    </button>
-                </div>
-            </form>
-        </>
+        <form className="flex flex-col gap-4" onSubmit={handlePostSubmit}>
+            <div className="flex flex-row items-center gap-3">
+                <img
+                    src={avatarSrc}
+                    className="rounded-full w-10 h-10 sm:w-12 sm:h-12 aspect-square object-cover ring-1 ring-black/5 shrink-0"
+                    alt="profile"
+                />
+                <label className="flex items-center gap-2 text-sm sm:text-base text-text">
+                    Rate your experience:
+                    <select
+                        name="rating"
+                        value={rating}
+                        onChange={handleRatingChange}
+                        className="hover:cursor-pointer text-sm font-semibold bg-white border border-primary/40 rounded-lg px-2 py-1 focus:outline-primary"
+                    >
+                        {[1, 2, 3, 4, 5].map((n) => (
+                            <option key={n} value={n}>{n}</option>
+                        ))}
+                    </select>
+                </label>
+            </div>
+            <textarea
+                value={content}
+                onChange={handleContentChange}
+                placeholder="Share your experience with this shelter..."
+                className="w-full h-36 sm:h-40 bg-background border border-primary/40 rounded-2xl p-4 focus:outline-primary resize-none text-sm sm:text-base placeholder:text-text/50"
+            />
+            <div className="flex justify-end">
+                <button
+                    type="submit"
+                    disabled={!content.trim()}
+                    className="rounded-full bg-accent-100 text-white font-semibold px-8 py-2.5 text-sm sm:text-base hover:opacity-90 active:scale-95 duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                    Post Review
+                </button>
+            </div>
+        </form>
     );
 }
 

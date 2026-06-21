@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { ajax_or_login } from '../../util/ajax';
 import Comment from './Comment';
+import Pagination from '../Pagination';
 
 const AllComments = ({ blogID }) => {
     const [page, setPage] = useState(1);
@@ -36,31 +37,7 @@ const AllComments = ({ blogID }) => {
                         <Comment key={comment.id} id={comment.id} name={comment.owner.name} img={comment.owner.avatar} timestamp={comment.timestamp} content={comment.content}></Comment>
                     ))}
                 </div>
-                <div className="w-full flex justify-center align-middle pt-8 gap-4">
-                    {comments && page > 1 ?
-                        <button className="flex w-[72px] sm:w-24 py-2 rounded-lg justify-center items-center bg-accent-100 hover:scale-105 active:scale-95 duration-200" onClick={() => setPage(page - 1)}>
-                            <p className="text-background block sm:hidden font-semibold text-xs sm:text-base">Prev</p>
-                            <p className="text-background hidden sm:block font-semibold text-xs sm:text-base">Previous</p>
-                        </button>
-                        :
-                        <button className="flex w-[72px] sm:w-24 py-2 rounded-lg justify-center items-center bg-secondary hover:cursor-default">
-                            <p className="text-background block sm:hidden font-semibold text-xs sm:text-base">Prev</p>
-                            <p className="text-background hidden sm:block font-semibold text-xs sm:text-base">Previous</p>
-                        </button>
-                    }
-                    <div className="flex items-center">
-                        <p className="font-semibold text-xs sm:text-base text-center">Page {page} of {totalPages}</p>
-                    </div>
-                    {comments && page < totalPages ?
-                        <button className="flex w-[72px] sm:w-24 py-2 rounded-lg justify-center items-center bg-accent-100 hover:scale-105 active:scale-95 duration-200" onClick={() => setPage(page + 1)}>
-                            <p className="text-background font-semibold text-xs sm:text-base">Next</p>
-                        </button>
-                        :
-                        <button className="flex w-[72px] sm:w-24 py-2 rounded-lg justify-center items-center bg-secondary hover:cursor-default">
-                            <p className="text-background font-semibold text-xs sm:text-base">Next</p>
-                        </button>
-                    }
-                </div>
+                <Pagination page={page} totalPages={totalPages} onChange={setPage} />
             </div>
         </>
     )
