@@ -42,8 +42,10 @@ Three pieces deploy from this repo via the [`render.yaml`](render.yaml) blueprin
   nothing here affects `npm start` / `uvicorn` locally.
 - `DATABASE_URL` is injected by Render from the Postgres add-on; the code rewrites
   the `postgres://` scheme to `postgresql://` for SQLAlchemy.
-- Uploaded images are stored on a 1 GB persistent disk mounted at `/var/data`
-  (`MEDIA_ROOT`), so they survive redeploys.
+- Uploaded images: on the **free tier** there's no persistent disk, so uploads
+  reset on each redeploy (the default paw placeholder always works). To persist
+  them, upgrade `petpal-api` to a paid plan and add a `disk:` block
+  (mountPath `/var/data`) plus `MEDIA_ROOT=/var/data/media` in `render.yaml`.
 - The static site has an SPA rewrite (`/* → /index.html`) so client routes work
   on refresh.
 

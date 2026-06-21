@@ -31,15 +31,9 @@ services:
       # (used to build absolute media URLs; set after first deploy).
       - key: PUBLIC_BACKEND_URL
         sync: false
-      # Persist uploaded media across deploys.
-      - key: MEDIA_ROOT
-        value: /var/data/media
-
-    # Persistent disk so uploaded images survive redeploys.
-    disk:
-      name: petpal-media
-      mountPath: /var/data
-      sizeGB: 1
+      # NOTE: free tier has no persistent disk, so uploaded images reset on
+      # redeploy. Upgrade this service to a paid plan and add a `disk:` block
+      # (mountPath /var/data) + MEDIA_ROOT=/var/data/media to persist them.
 
   # ---- React frontend (static site) ----
   - type: web
