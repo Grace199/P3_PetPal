@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import NotificationRow from "../../components/NotificationRow";
 import { ajax_or_login } from "../../util/ajax";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import Pagination from "../../components/Pagination";
 
 const Index = () => {
   const [notifications, setNotifications] = useState([]);
@@ -93,58 +94,47 @@ const Index = () => {
   return (
     <main>
       <div className="rounded-t-3xl bg-primary h-24 flex justify-center items-center xl:mx-desktop md:mx-tablet mx-mobile mt-12">
-        <h1 className="text-4xl font-bold text-background max-sm:text-3xl">
+        <h1 className="text-4xl font-bold text-white max-sm:text-3xl">
           Notifications
         </h1>
       </div>
 
-      <table className="bg-secondary h-14 flex justify-center items-center xl:mx-desktop md:mx-tablet mx-mobile text-base max-sm:text-xs">
-        <tbody className="w-full">
-          <tr className="flex justify-around items-center">
-            <td className="basis-1/4 flex justify-center items-center text-center">
-              <button
-                className={`${isAll ? "bg-background-secondary" : ""} hover:bg-background-secondary md:w-20 w-12 h-8 rounded-lg transition ease-in-out`}
-                onClick={handleAllChange}
-              >
-                All
-              </button>
-            </td>
+      {/* Filter + sort bar */}
+      <div className="bg-background-secondary xl:mx-desktop md:mx-tablet mx-mobile px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex gap-1 p-1 bg-white rounded-full">
+          {[
+            { label: "All", active: isAll, onClick: handleAllChange },
+            { label: "Unread", active: isUnread, onClick: handleUnreadChange },
+            { label: "Read", active: isRead, onClick: handleReadChange },
+          ].map((tab) => (
+            <button
+              key={tab.label}
+              onClick={tab.onClick}
+              className={`text-sm font-semibold px-4 sm:px-5 py-1.5 rounded-full transition duration-200 ${
+                tab.active ? "bg-primary text-white" : "text-text/70 hover:text-text"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
-            <td className="basis-1/4 flex justify-center items-center text-center">
-              <button
-                className={`${isUnread ? "bg-background-secondary" : ""} hover:bg-background-secondary md:w-20 w-12 h-8 rounded-lg transition ease-in-out`}
-                onClick={handleUnreadChange}
-              >
-                Unread
-              </button>
-            </td>
+        <div className="relative">
+          <select
+            name="sort"
+            value={query.sort}
+            className="appearance-none cursor-pointer bg-white text-text font-medium text-sm py-2 pl-4 pr-9 rounded-full border border-black/10 focus:border-primary focus:outline-none"
+            onChange={handleSortChange}
+          >
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+          </select>
+          <i className="uil uil-angle-down absolute right-2.5 top-1/2 -translate-y-1/2 text-text/50 pointer-events-none text-lg"></i>
+        </div>
+      </div>
 
-            <td className="basis-1/4 flex justify-center items-center text-center">
-              <button
-                className={`${isRead ? "bg-background-secondary" : ""} hover:bg-background-secondary md:w-20 w-12 h-8 rounded-lg transition ease-in-out`}
-                onClick={handleReadChange}
-              >
-                Read
-              </button>
-            </td>
-
-            <td className="basis-1/4 flex justify-center items-center text-center">
-              <select
-                name="sort"
-                value={query.sort}
-                className="text-center flex justify-center items-center col-span-2 rounded-lg md:w-20 w-12 h-8 cursor-pointer bg-background-secondary focus:outline-none"
-                onChange={handleSortChange}
-              >
-                <option value="newest">Newest</option>
-                <option value="oldest">Oldest</option>
-              </select>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div className="w-full">
-        {notifications.map((notification) => (
+      <div className="xl:mx-desktop md:mx-tablet mx-mobile">
+        {notifications.length > 0 ? notifications.map((notification) => (
           <NotificationRow
             key={notification?.id}
             msg={notification?.msg}
@@ -155,47 +145,23 @@ const Index = () => {
             // child calls this after successful delete:
             setDelete={() => setRefreshKey((k) => k + 1)}
           />
-        ))}
+        )) : (
+          <p className="text-center text-text/60 py-16">
+            {isUnread ? "No unread notifications." : isRead ? "No read notifications." : "You have no notifications."}
+          </p>
+        )}
       </div>
 
-      <div className="w-full flex justify-center items-center gap-5 pt-16">
-        {query.page > 1 ? (
-          <button
-            className="bg-transparent border border-primary text-primary font-bold px-5 py-3 rounded-xl hover:scale-105 active:scale-95"
-            onClick={() => {
-              const next = new URLSearchParams(searchParams);
-              next.set("page", String(query.page - 1));
-              setSearchParams(next);
-            }}
-          >
-            Prev
-          </button>
-        ) : (
-          <button className="bg-transparent border border-secondary text-secondary font-bold px-5 py-3 rounded-xl">
-            Prev
-          </button>
-        )}
-
-        <p>
-          Page {query.page} of {totalPage}
-        </p>
-
-        {query.page < totalPage ? (
-          <button
-            className="bg-transparent border border-primary text-primary font-bold px-5 py-3 rounded-xl hover:scale-105 active:scale-95"
-            onClick={() => {
-              const next = new URLSearchParams(searchParams);
-              next.set("page", String(query.page + 1));
-              setSearchParams(next);
-            }}
-          >
-            Next
-          </button>
-        ) : (
-          <button className="bg-transparent border border-secondary text-secondary font-bold px-5 py-3 rounded-xl">
-            Next
-          </button>
-        )}
+      <div className="pb-16">
+        <Pagination
+          page={query.page}
+          totalPages={totalPage}
+          onChange={(p) => {
+            const next = new URLSearchParams(searchParams);
+            next.set("page", String(p));
+            setSearchParams(next);
+          }}
+        />
       </div>
     </main>
   );

@@ -4,6 +4,7 @@ import ApplicationListCard from '../../../../components/ApplicationSeekerCard'
 import { useState, useEffect } from 'react'
 import { ajax_or_login } from '../../../../util/ajax'
 import { useNavigate } from 'react-router-dom'
+import Pagination from '../../../../components/Pagination'
 
 const ApplicationListSeeker = () => {
     const [query, setQuery] = useState({ status: "", sort: "", page: 1 });
@@ -47,77 +48,52 @@ const ApplicationListSeeker = () => {
     return (
         <>
             <main className="h-full">
-                <div className="w-full flex justify-center items-center h-[300px] bg-black relative flex-col">
-                    <div className="z-30 text-center text-background">
-                        <p className="z-30 text-4xl sm:text-6xl md:text-8xl px-6 font-bold">
-                            My Applications
-                        </p>
-                    </div>
+                <div className="relative w-full h-[260px] sm:h-[300px] flex justify-center items-center overflow-hidden">
                     <img
                         src={backdrop}
-                        className="h-full w-full object-cover object-center absolute opacity-60"
-                        alt="backdrop"
+                        className="absolute inset-0 h-full w-full object-cover object-center"
+                        alt=""
                     />
+                    <div className="absolute inset-0 bg-primary/65" />
+                    <p className="relative text-white text-4xl sm:text-6xl md:text-7xl px-6 font-bold text-center [text-shadow:0_2px_12px_rgba(0,0,0,0.45)]">
+                        My Applications
+                    </p>
                 </div>
-                <div className="flex gap-5 max-sm:flex-col px-mobile md:px-tablet xl:px-desktop">
-                    <div className="flex max-sm:justify-start justify-center items-center gap-1 py-3 rounded-full group">
-                        <label
-                            htmlFor="filter_by_status"
-                            className="text-xs font-thin sm:text-sm text-black"
-                        >Filter by Status:
-                        </label>
-                        <form id="filter_by_status">
-                            <select name="status" value={query.status} onChange={handleQueryChange}
-                                className='hover:cursor-pointer px-1 py-1 flex flex-col place-items-center rounded-3xl bg-primary w-full text-xs md:text-sm lg:text-base xl:text-lg'>
-                                <option value=""></option>
-                                <option value="pending">pending</option>
-                                <option value="denied">denied</option>
-                                <option value="accepted">accepted</option>
-                                <option value="withdrawn">withdrawn</option>
-                            </select>
-                        </form>
+
+                <div className="px-mobile md:px-tablet xl:px-desktop pt-8 flex flex-wrap items-center justify-center gap-3">
+                    <div className="relative">
+                        <select name="status" value={query.status} onChange={handleQueryChange}
+                            className="appearance-none hover:cursor-pointer bg-white text-text font-medium text-sm py-2.5 pl-5 pr-10 rounded-full border border-black/10 focus:border-primary focus:outline-none">
+                            <option value="">All statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="accepted">Accepted</option>
+                            <option value="denied">Denied</option>
+                            <option value="withdrawn">Withdrawn</option>
+                        </select>
+                        <i className="uil uil-angle-down absolute right-3 top-1/2 -translate-y-1/2 text-text/50 pointer-events-none text-lg"></i>
                     </div>
 
-                    <div className="flex justify-center items-center gap-1 py-3 rounded-full group max-sm:justify-start">
-                        <label
-                            htmlFor="sort_by_time"
-                            className="text-xs font-thin sm:text-sm text-black"
-                        >Sort by Create or Update Time:
-                        </label>
-                        <form id="sort_by_time">
-                            <select name="sort" value={query.sort} onChange={handleQueryChange} className='hover:cursor-pointer px-1 py-1 flex flex-col place-items-center rounded-3xl bg-primary w-full text-xs md:text-sm lg:text-base xl:text-lg'>
-                                <option value=""></option>
-                                <option value="create_time">creation</option>
-                                <option value="update_time">update</option>
-                            </select>
-                        </form>
+                    <div className="relative">
+                        <select name="sort" value={query.sort} onChange={handleQueryChange}
+                            className="appearance-none hover:cursor-pointer bg-white text-text font-medium text-sm py-2.5 pl-5 pr-10 rounded-full border border-black/10 focus:border-primary focus:outline-none">
+                            <option value="">Sort by: default</option>
+                            <option value="create_time">Sort by: created</option>
+                            <option value="update_time">Sort by: updated</option>
+                        </select>
+                        <i className="uil uil-angle-down absolute right-3 top-1/2 -translate-y-1/2 text-text/50 pointer-events-none text-lg"></i>
                     </div>
                 </div>
-                <div className="w-full gap-8 flex flex-col px-mobile md:px-tablet xl:px-desktop pt-6 sm:pt-16">
-                    {applications && applications.map(application => (
+
+                <div className="w-full gap-5 flex flex-col px-mobile md:px-tablet xl:px-desktop pt-8 pb-4">
+                    {applications && applications.length > 0 ? applications.map(application => (
                         <ApplicationListCard key={application.id} id={application.id} pet_name={application.petlisting.pet.name} shelter_name={application.shelter.account.name} pet_img={application.petlisting.pet.image1} shelter_address={application.shelter.address} shelter_city={application.shelter.city} shelter_province={application.shelter.province}></ApplicationListCard>
-                    ))}
-
-                    {(!applications || applications.length === 0) && <p>No applications</p>}
+                    )) : (
+                        <p className="text-center text-text/60 py-16">You haven't applied to any pets yet.</p>
+                    )}
                 </div>
-                <div className="w-full flex justify-center align-middle pt-8 gap-4">
-                    {query.page > 1 ?
-                        <button className="flex bg-accent-100 w-[72px] sm:w-24 py-2 rounded-lg justify-center items-center" onClick={() => setQuery({ ...query, page: query.page - 1 })}> Previous </button>
-                        :
-                        <div className="flex bg-secondary w-[72px] sm:w-24 py-2 rounded-lg justify-center items-center">
-                            <p className="text-background font-semibold text-xs sm:text-base">Previous</p>
-                        </div>
-                    }
-                    <div className="flex items-center">
-                        <p className="font-semibold text-xs sm:text-base">Page {query.page} of {totalPages}</p>
-                    </div>
-                    {query.page < totalPages ?
-                        <button className="flex bg-accent-100 w-[72px] sm:w-24 py-2 rounded-lg justify-center items-center" onClick={() => setQuery({ ...query, page: query.page + 1 })}> Next </button>
-                        :
-                        <div className="flex bg-secondary w-[72px] sm:w-24 py-2 rounded-lg justify-center items-center">
-                            <p className="text-background font-semibold text-xs sm:text-base">Next</p>
-                        </div>
-                    }
+
+                <div className="px-mobile md:px-tablet xl:px-desktop pb-16">
+                    <Pagination page={query.page} totalPages={totalPages} onChange={(p) => setQuery({ ...query, page: p })} />
                 </div>
             </main>
         </>

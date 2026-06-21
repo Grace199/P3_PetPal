@@ -60,43 +60,40 @@ const BlogsDetail = () => {
     return (
         <>
             <main className="h-full">
-                <div className="w-full flex flex-col gap-4 px-mobile md:px-tablet xl:px-desktop pt-6 sm:pt-16">
+                <div className="w-full max-w-3xl mx-auto flex flex-col gap-4 px-mobile md:px-6 pt-6 sm:pt-12">
                     <Link
                         to={`/blogs/`}
-                        className="text-primary flex items-center hover:text-accent-100 w-max hover:scale-105 duration-200 active:scale-95 pb-3">
+                        className="text-primary flex items-center hover:text-accent-100 w-max duration-200 pb-2">
                         <i className="uil uil-angle-left text-3xl"></i>All Blogs
                     </Link>
-                    <div className="flex">
-                        <p className="text-gray font-semibold text-sm sm:text-base">{formattedBlogType}</p>
-                    </div>
-                    <div className="flex">
-                        <p className="text-text font-semibold text-4xl sm:text-6xl">{blog?.title}</p>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                        <div className="flex">
-                            <p className="className= text-gray text-sm sm:text-base">By <span className="font-semibold">{blog?.shelter.account.name}</span></p>
+                    <span className="w-max text-[11px] sm:text-xs font-semibold uppercase tracking-wide text-accent-100 bg-accent-100/10 rounded-full px-3 py-1">
+                        {formattedBlogType}
+                    </span>
+                    <p className="text-text font-bold text-3xl sm:text-5xl leading-tight">{blog?.title}</p>
+                    <div className="flex items-center gap-3 pb-2 border-b border-black/10">
+                        <img
+                            src={blog?.shelter.account.avatar}
+                            alt=""
+                            className="w-10 h-10 rounded-full object-cover ring-1 ring-black/5"
+                        />
+                        <div className="flex flex-col">
+                            <p className="text-text text-sm font-semibold">{blog?.shelter.account.name}</p>
+                            <p className="text-text/60 text-xs">{formattedDate}</p>
                         </div>
-                        <div className="flex">
-                            <p className="className= text-gray text-sm sm:text-base">{formattedDate}</p>
-                        </div>
                     </div>
-                    <div className="flex p-3">
-                        <p className="whitespace-pre-line text-sm">{blog?.content}</p>
-                    </div>
+                    <p className="whitespace-pre-line text-base text-text/90 leading-relaxed py-2">{blog?.content}</p>
                 </div>
-                <div className="w-full gap-14 flex flex-col px-mobile md:px-tablet xl:px-desktop pt-6 sm:pt-16">
-                    <div className="w-full flex flex-col justify-center bg-[#FAFAFA] rounded-[30px] drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)] px-8 md:px-24 py-16 gap-6">
-                        <div className="flex flex-col gap-5 sm:gap-8">
-                            <div className="flex flex-col">
-                                <p className="text-text text-xl font-bold mb-1">Join the Conversation</p>
-                                <div className="border-t-2 mb-4"></div>
-                                <NewCommment key={blogID} blogID={blogID} img={avatar}></NewCommment>
-                            </div>
-                            <div className="flex flex-col">
-                                <p className="text-text text-xl font-bold mb-1">All Comments</p>
-                                <div className="border-t-2 mb-4"></div>
-                                <AllComments key={blogID} blogID={blogID}></AllComments>
-                            </div>
+                <div className="w-full max-w-3xl mx-auto px-mobile md:px-6 pt-10 sm:pt-16 pb-16">
+                    <div className="w-full flex flex-col bg-white rounded-3xl shadow-[0_6px_20px_rgba(0,0,0,0.08)] px-6 sm:px-10 py-10 gap-8">
+                        <div className="flex flex-col">
+                            <p className="text-text text-xl sm:text-2xl font-bold mb-3">Join the Conversation</p>
+                            <div className="border-t border-black/10 mb-5"></div>
+                            <NewCommment key={blogID} blogID={blogID} img={avatar}></NewCommment>
+                        </div>
+                        <div className="flex flex-col">
+                            <p className="text-text text-xl sm:text-2xl font-bold mb-3">All Comments</p>
+                            <div className="border-t border-black/10 mb-5"></div>
+                            <AllComments key={blogID} blogID={blogID}></AllComments>
                         </div>
                     </div>
                 </div>

@@ -24,98 +24,103 @@ const Index = () => {
         navigate(`/petlisting?animal=${animal}${breed ? `&breed=${breed}` : ''}${size ? `&size=${size}` : ''}${age ? `&age=${age}` : ''}`)
     }
 
+    const categories = [
+        { value: "dog", label: "Dogs" },
+        { value: "cat", label: "Cats" },
+        { value: "other", label: "Others" },
+    ];
+
     return (
-        <div className="w-full max-md:h-[80vh] h-[70vh] bg-black relative flex justify-center items-center flex-col">
+        <div className="w-full max-md:min-h-[80vh] min-h-[70vh] relative flex justify-center items-center flex-col overflow-hidden">
             <img
                 src={backdrop}
                 alt="Dog and Cat cuddling"
-                className="object-cover w-full h-full opacity-60 absolute"
+                className="object-cover w-full h-full absolute inset-0"
             />
-            <div className="flex justify-center items-center flex-col px-mobile md:px-tablet xl:px-desktop">
-                <h1 className="text-background font-bold text-8xl text-center max-sm:text-7xl z-0 mb-3">
+            <div className="absolute inset-0 bg-gradient-to-b from-text/55 via-primary/65 to-text/65" />
+
+            <div className="relative flex flex-col items-center w-full px-mobile md:px-tablet xl:px-desktop py-12">
+                <h1 className="text-white font-bold text-7xl sm:text-8xl text-center mb-2 [text-shadow:0_2px_12px_rgba(0,0,0,0.45)]">
                     PetPal
                 </h1>
-                <h2 className="text-background font-bold text-4xl text-center max-md:text-3xl max-sm:text-lg z-0">
+                <h2 className="text-white font-semibold text-2xl sm:text-4xl text-center mb-8 [text-shadow:0_2px_10px_rgba(0,0,0,0.45)]">
                     find your fur-ever friend.
                 </h2>
-            </div>
 
-            <form className="flex justify-center flex-col absolute bottom-2 md:bottom-12 w-full form-container gap-5 max-md:gap-2" onSubmit={handleSubmit}>
-                <div className="text-background flex gap-7 bg-primary p-2 px-5 rounded-xl max-md:gap-2 max-md:justify-center max-md:text-sm">
-                    <label className="max-md:hidden">Choose a category: </label>
-                    <div className="custom-radio-select flex gap-3 max-md:gap-1">
-                        <input
-                            type="radio"
-                            id="Dogs"
-                            name="animal"
-                            value="dog"
-                            defaultChecked
-                            onChange={handleInputChange}
-                        />
-                        <label htmlFor="Dogs" className="cursor-pointer hover:text-[#d2d2d2]">
-                            Dogs
-                        </label>
-
-                        <input
-                            type="radio"
-                            id="Cats"
-                            name="animal"
-                            value="cat"
-                            onChange={handleInputChange}
-                        />
-                        <label htmlFor="Cats" className="cursor-pointer hover:text-[#d2d2d2]">
-                            Cats
-                        </label>
-
-                        <input
-                            type="radio"
-                            id="Others"
-                            name="animal"
-                            value="other"
-                            onChange={handleInputChange}
-                        />
-                        <label htmlFor="Others" className="cursor-pointer hover:text-[#d2d2d2]">
-                            Others
-                        </label>
+                {/* Search panel */}
+                <form
+                    className="w-full max-w-3xl bg-white/10 backdrop-blur-md ring-1 ring-white/30 rounded-3xl shadow-[0_12px_40px_rgba(0,0,0,0.25)] p-4 sm:p-6 flex flex-col gap-4"
+                    onSubmit={handleSubmit}
+                >
+                    {/* Category segmented pills */}
+                    <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-white text-sm font-medium mr-1 max-sm:hidden">I'm looking for:</span>
+                        <div className="flex gap-1 p-1 bg-white/20 rounded-xl">
+                            {categories.map((c) => (
+                                <label
+                                    key={c.value}
+                                    className={`cursor-pointer text-sm font-semibold px-4 py-1.5 rounded-lg transition duration-200 ${
+                                        formData.animal === c.value
+                                            ? "bg-white text-primary"
+                                            : "text-white/80 hover:text-white"
+                                    }`}
+                                >
+                                    <input
+                                        type="radio"
+                                        name="animal"
+                                        value={c.value}
+                                        checked={formData.animal === c.value}
+                                        onChange={handleInputChange}
+                                        className="sr-only"
+                                    />
+                                    {c.label}
+                                </label>
+                            ))}
+                        </div>
                     </div>
-                </div>
-                <div className="grid grid-cols-6 gap-5 text-background max-md:grid-cols-4 max-md:gap-2 max-md:text-sm">
-                    <input
-                        name="breed"
-                        id="breed"
-                        className="bg-[#727272ab] text-center col-span-2 py-6 rounded-xl border border-background placeholder-[#ffffffce] cursor-pointer hover:bg-[#ffffff87] focus:outline-none"
-                        type='text'
-                        placeholder='Enter Breed'
-                        onChange={handleInputChange}
-                    />
 
-                    <select
-                        name="size"
-                        id="size"
-                        className="bg-[#727272ab] text-center col-span-2 py-6 rounded-xl border border-background placeholder-[#ffffffce] cursor-pointer hover:bg-[#ffffff87] focus:outline-none"
-                        onChange={handleInputChange}
-                    >
-                        <option value="">Select Size</option>
-                        <option value="1">Small</option>
-                        <option value="2">Medium</option>
-                        <option value="3">Large</option>
-                    </select>
-
-                    <select
-                        name="age"
-                        id="age"
-                        className="bg-[#727272ab] text-center col-span-2 md:col-span-1 py-6 rounded-xl border border-background placeholder-[#ffffffce] cursor-pointer hover:bg-[#ffffff87] focus:outline-none"
-                        onChange={handleInputChange}
-                    >
-                        <option value="">Select Age</option>
-                        <option value="1">Infant</option>
-                        <option value="2">Young</option>
-                        <option value="3">Adult</option>
-                        <option value="4">Senior</option>
-                    </select>
-                    <input value={"Search Now"} type='submit' className="bg-accent-100 text-center col-span-2 md:col-span-1 py-6 rounded-xl border border-background cursor-pointer hover:bg-accent-200" />
-                </div>
-            </form>
+                    {/* Filters */}
+                    <div className="flex flex-col sm:flex-row gap-3">
+                        <input
+                            name="breed"
+                            id="breed"
+                            className="flex-grow bg-white rounded-xl px-4 py-3 text-text placeholder:text-text/50 border border-transparent focus:border-primary focus:outline-none"
+                            type="text"
+                            placeholder="Enter breed"
+                            onChange={handleInputChange}
+                        />
+                        <select
+                            name="size"
+                            id="size"
+                            className="bg-white rounded-xl px-4 py-3 text-text border border-transparent focus:border-primary focus:outline-none cursor-pointer"
+                            onChange={handleInputChange}
+                        >
+                            <option value="">Any size</option>
+                            <option value="1">Small</option>
+                            <option value="2">Medium</option>
+                            <option value="3">Large</option>
+                        </select>
+                        <select
+                            name="age"
+                            id="age"
+                            className="bg-white rounded-xl px-4 py-3 text-text border border-transparent focus:border-primary focus:outline-none cursor-pointer"
+                            onChange={handleInputChange}
+                        >
+                            <option value="">Any age</option>
+                            <option value="1">Infant</option>
+                            <option value="2">Young</option>
+                            <option value="3">Adult</option>
+                            <option value="4">Senior</option>
+                        </select>
+                        <button
+                            type="submit"
+                            className="bg-accent-100 text-white font-semibold rounded-xl px-6 py-3 hover:bg-accent-200 active:scale-95 transition duration-200 whitespace-nowrap"
+                        >
+                            Search Now
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     )
 }

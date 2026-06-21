@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const List = ({ id, name, img, address, city, province }) => {
     return (
         <Link
-            className="w-full flex flex-col sm:flex-row rounded-3xl gap-3 sm:gap-9 bg-background hover:bg-background-secondary hover:scale-105 duration-200 active:scale-95 drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]"
+            className="w-full flex flex-col sm:flex-row rounded-3xl overflow-hidden gap-3 sm:gap-9 bg-background hover:bg-background-secondary hover:-translate-y-1 active:translate-y-0 transition duration-200"
             to={`/shelterDetail/${id}/`}
         >
             <img

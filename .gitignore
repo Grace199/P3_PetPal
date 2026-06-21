@@ -1,0 +1,36 @@
+# ---- Secrets / env ----
+.env
+.env.*
+!.env.example
+*/.env
+*/.env.*
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*/venv/
+.pytest_cache/
+
+# ---- Databases ----
+*.sqlite3
+db.sqlite3
+
+# ---- Node / frontend ----
+node_modules/
+/frontend/build/
+/frontend/node_modules/
+# Stray root npm files (the real frontend project lives in frontend/)
+/package.json
+/package-lock.json
+
+# ---- Uploaded media (keep the default placeholder, ignore user uploads) ----
+backend_fastapi/media/avatars/*
+!backend_fastapi/media/avatars/default-avatar.jpg
+
+# ---- OS / editor ----
+.DS_Store
+*.log
+.idea/
+.vscode/
