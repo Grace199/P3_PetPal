@@ -3,7 +3,8 @@
  */
 
 // Base URL of the FastAPI backend. Override via REACT_APP_API_URL if needed.
-const domain = process.env.REACT_APP_API_URL || "http://localhost:8000";
+// (strip any trailing slash so domain + "/path/" never doubles up)
+const domain = (process.env.REACT_APP_API_URL || "http://localhost:8000").replace(/\/+$/, "");
 
 export async function ajax(url, settings) {
     return await fetch(domain + url, settings);
